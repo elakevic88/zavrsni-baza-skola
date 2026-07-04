@@ -1,3 +1,0 @@
--- Zad 2
--- Napraviti insert upite za sve tri tablice iz onih csv-ova
--- za svaki od original, denorm i norm treba biti po jedan, stavi _0, _N i _D
