@@ -1,0 +1,109 @@
+CREATE TABLE ZUPANIJE (
+  ID_Zupanija INTEGER PRIMARY KEY,
+  Naziv TEXT NOT NULL
+);
+
+CREATE TABLE POSTE (
+  ID_Posta INTEGER PRIMARY KEY,
+  Postanski_broj INTEGER NOT NULL,
+  Mjesto TEXT NOT NULL,
+  ZUPANIJE_ID_Zupanija INTEGER NOT NULL,
+  FOREIGN KEY (ZUPANIJE_ID_Zupanija) REFERENCES ZUPANIJE(ID_Zupanija)
+);
+
+CREATE TABLE SKOLE (
+  ID_Skola INTEGER PRIMARY KEY,
+  Naziv TEXT NOT NULL,
+  Adresa TEXT NOT NULL
+);
+
+CREATE TABLE ZVANJA (
+  ID_Zvanje INTEGER PRIMARY KEY,
+  Naziv TEXT NOT NULL
+);
+
+CREATE TABLE RAZREDI (
+  ID_Razred INTEGER PRIMARY KEY,
+  Broj_razreda INTEGER NOT NULL,
+  Slovo_razreda TEXT NOT NULL,
+  SKOLE_ID_Skola INTEGER NOT NULL,
+  FOREIGN KEY (SKOLE_ID_Skola) REFERENCES SKOLE(ID_Skola)
+);
+
+-- KRŠI 1NF: Lista_zavrsenih_skola je više vrijednosti u jednom stupcu
+-- npr. "PMF Split; FOI Zagreb; ETF" — atomičnost je narušena
+CREATE TABLE NASTAVNICI (
+  ID_Nastavnik INTEGER PRIMARY KEY,
+  Ime TEXT NOT NULL,
+  Prezime TEXT NOT NULL,
+  Datum_rodjenja TEXT NOT NULL,
+  Pocetak_rada TEXT NOT NULL,
+  Kraj_rada TEXT,
+  Lista_zavrsenih_skola TEXT,
+  ZVANJA_ID_Zvanje INTEGER NOT NULL,
+  FOREIGN KEY (ZVANJA_ID_Zvanje) REFERENCES ZVANJA(ID_Zvanje)
+);
+
+CREATE TABLE PREDMETI (
+  ID_Predmet INTEGER PRIMARY KEY,
+  Naziv TEXT NOT NULL
+);
+
+-- KRŠI 3NF: Broj_upisanih_predmeta je izvedena vrijednost
+-- može se uvijek izračunati iz P_UCENIK tablice
+-- čuvanje ovdje stvara rizik nekonzistentnosti
+CREATE TABLE UCENICI (
+  ID_Ucenik INTEGER PRIMARY KEY,
+  Ime TEXT NOT NULL,
+  Prezime TEXT NOT NULL,
+  Datum_rodjenja TEXT NOT NULL,
+  OIB INTEGER UNIQUE NOT NULL,
+  Ime_oca TEXT NOT NULL,
+  Adresa TEXT NOT NULL,
+  Broj_upisanih_predmeta INTEGER,
+  RAZREDI_ID_Razred INTEGER NOT NULL,
+  POSTE_ID_Posta INTEGER NOT NULL,
+  FOREIGN KEY (RAZREDI_ID_Razred) REFERENCES RAZREDI(ID_Razred),
+  FOREIGN KEY (POSTE_ID_Posta) REFERENCES POSTE(ID_Posta)
+);
+
+CREATE TABLE OCJENE (
+  ID_Ocjena INTEGER PRIMARY KEY,
+  Ocjena TEXT NOT NULL,
+  Broj_ocjene INTEGER NOT NULL
+);
+
+-- KRŠI 2NF: Broj_sati_tjedno ovisi samo o predmetu
+-- a ne o kombinaciji (predmet + nastavnik) koja je primarni ključ
+CREATE TABLE N_PREDMET (
+  PREDMETI_ID_Predmet INTEGER NOT NULL,
+  NASTAVNICI_ID_Nastavnik INTEGER NOT NULL,
+  Broj_sati_tjedno INTEGER,
+  PRIMARY KEY (PREDMETI_ID_Predmet, NASTAVNICI_ID_Nastavnik),
+  FOREIGN KEY (PREDMETI_ID_Predmet) REFERENCES PREDMETI(ID_Predmet),
+  FOREIGN KEY (NASTAVNICI_ID_Nastavnik) REFERENCES NASTAVNICI(ID_Nastavnik)
+);
+
+CREATE TABLE N_RAZRED (
+  RAZREDI_ID_Razred INTEGER NOT NULL,
+  NASTAVNICI_ID_Nastavnik INTEGER NOT NULL,
+  PRIMARY KEY (RAZREDI_ID_Razred, NASTAVNICI_ID_Nastavnik),
+  FOREIGN KEY (RAZREDI_ID_Razred) REFERENCES RAZREDI(ID_Razred),
+  FOREIGN KEY (NASTAVNICI_ID_Nastavnik) REFERENCES NASTAVNICI(ID_Nastavnik)
+);
+
+CREATE TABLE P_UCENIK (
+  UCENICI_ID_Ucenik INTEGER NOT NULL,
+  PREDMETI_ID_Predmet INTEGER NOT NULL,
+  PRIMARY KEY (UCENICI_ID_Ucenik, PREDMETI_ID_Predmet),
+  FOREIGN KEY (UCENICI_ID_Ucenik) REFERENCES UCENICI(ID_Ucenik),
+  FOREIGN KEY (PREDMETI_ID_Predmet) REFERENCES PREDMETI(ID_Predmet)
+);
+
+CREATE TABLE ZAVRSNA_O (
+  UCENICI_ID_Ucenik INTEGER NOT NULL,
+  OCJENE_ID_Ocjena INTEGER NOT NULL,
+  PRIMARY KEY (UCENICI_ID_Ucenik, OCJENE_ID_Ocjena),
+  FOREIGN KEY (UCENICI_ID_Ucenik) REFERENCES UCENICI(ID_Ucenik),
+  FOREIGN KEY (OCJENE_ID_Ocjena) REFERENCES OCJENE(ID_Ocjena)
+);

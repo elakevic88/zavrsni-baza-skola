@@ -1,0 +1,153 @@
+digraph schema {
+  rankdir=LR;
+  graph [fontname="Helvetica", bgcolor="white", nodesep=0.6, ranksep=1.0];
+  node [shape=plain, fontname="Helvetica"];
+  edge [fontname="Helvetica", fontsize=10, color="#555555", arrowsize=0.7];
+
+  "NASTAVNICI" [label=<
+    <table border="1" cellborder="0" cellspacing="0" cellpadding="6" bgcolor="white">
+      <tr><td colspan="2" bgcolor="#2c3e50"><font color="white"><b>NASTAVNICI</b></font></td></tr>
+      <tr><td align="left" port="ID_Nastavnik" bgcolor="#fff7e0"><b>ID_Nastavnik</b> <font color="#b8860b"><b>PK</b></font></td><td align="left" bgcolor="#fff7e0"><font color="#666666">INTEGER</font></td></tr>
+      <tr><td align="left" port="Ime">Ime</td><td align="left"><font color="#666666">TEXT</font></td></tr>
+      <tr><td align="left" port="Prezime">Prezime</td><td align="left"><font color="#666666">TEXT</font></td></tr>
+      <tr><td align="left" port="Datum_rodjenja">Datum_rodjenja</td><td align="left"><font color="#666666">TEXT</font></td></tr>
+      <tr><td align="left" port="Pocetak_rada">Pocetak_rada</td><td align="left"><font color="#666666">TEXT</font></td></tr>
+      <tr><td align="left" port="Kraj_rada">Kraj_rada</td><td align="left"><font color="#666666">TEXT</font></td></tr>
+      <tr><td align="left" port="ZVANJA_ID_Zvanje">ZVANJA_ID_Zvanje <font color="#4169e1"><b>FK</b></font></td><td align="left"><font color="#666666">INTEGER</font></td></tr>
+    </table>
+  >];
+
+  "NASTAVNIK_SKOLE" [label=<
+    <table border="1" cellborder="0" cellspacing="0" cellpadding="6" bgcolor="white">
+      <tr><td colspan="2" bgcolor="#2c3e50"><font color="white"><b>NASTAVNIK_SKOLE</b></font></td></tr>
+      <tr><td align="left" port="ID" bgcolor="#fff7e0"><b>ID</b> <font color="#b8860b"><b>PK</b></font></td><td align="left" bgcolor="#fff7e0"><font color="#666666">INTEGER</font></td></tr>
+      <tr><td align="left" port="NASTAVNICI_ID_Nastavnik">NASTAVNICI_ID_Nastavnik <font color="#4169e1"><b>FK</b></font></td><td align="left"><font color="#666666">INTEGER</font></td></tr>
+      <tr><td align="left" port="Naziv_skole">Naziv_skole</td><td align="left"><font color="#666666">TEXT</font></td></tr>
+    </table>
+  >];
+
+  "N_PREDMET" [label=<
+    <table border="1" cellborder="0" cellspacing="0" cellpadding="6" bgcolor="white">
+      <tr><td colspan="2" bgcolor="#2c3e50"><font color="white"><b>N_PREDMET</b></font></td></tr>
+      <tr><td align="left" port="PREDMETI_ID_Predmet" bgcolor="#fff7e0"><b>PREDMETI_ID_Predmet</b> <font color="#b8860b"><b>PK</b></font></td><td align="left" bgcolor="#fff7e0"><font color="#666666">INTEGER</font></td></tr>
+      <tr><td align="left" port="NASTAVNICI_ID_Nastavnik" bgcolor="#fff7e0"><b>NASTAVNICI_ID_Nastavnik</b> <font color="#b8860b"><b>PK</b></font></td><td align="left" bgcolor="#fff7e0"><font color="#666666">INTEGER</font></td></tr>
+    </table>
+  >];
+
+  "N_RAZRED" [label=<
+    <table border="1" cellborder="0" cellspacing="0" cellpadding="6" bgcolor="white">
+      <tr><td colspan="2" bgcolor="#2c3e50"><font color="white"><b>N_RAZRED</b></font></td></tr>
+      <tr><td align="left" port="RAZREDI_ID_Razred" bgcolor="#fff7e0"><b>RAZREDI_ID_Razred</b> <font color="#b8860b"><b>PK</b></font></td><td align="left" bgcolor="#fff7e0"><font color="#666666">INTEGER</font></td></tr>
+      <tr><td align="left" port="NASTAVNICI_ID_Nastavnik" bgcolor="#fff7e0"><b>NASTAVNICI_ID_Nastavnik</b> <font color="#b8860b"><b>PK</b></font></td><td align="left" bgcolor="#fff7e0"><font color="#666666">INTEGER</font></td></tr>
+    </table>
+  >];
+
+  "OCJENE" [label=<
+    <table border="1" cellborder="0" cellspacing="0" cellpadding="6" bgcolor="white">
+      <tr><td colspan="2" bgcolor="#2c3e50"><font color="white"><b>OCJENE</b></font></td></tr>
+      <tr><td align="left" port="ID_Ocjena" bgcolor="#fff7e0"><b>ID_Ocjena</b> <font color="#b8860b"><b>PK</b></font></td><td align="left" bgcolor="#fff7e0"><font color="#666666">INTEGER</font></td></tr>
+      <tr><td align="left" port="Ocjena">Ocjena</td><td align="left"><font color="#666666">TEXT</font></td></tr>
+      <tr><td align="left" port="Broj_ocjene">Broj_ocjene</td><td align="left"><font color="#666666">INTEGER</font></td></tr>
+    </table>
+  >];
+
+  "POSTE" [label=<
+    <table border="1" cellborder="0" cellspacing="0" cellpadding="6" bgcolor="white">
+      <tr><td colspan="2" bgcolor="#2c3e50"><font color="white"><b>POSTE</b></font></td></tr>
+      <tr><td align="left" port="ID_Posta" bgcolor="#fff7e0"><b>ID_Posta</b> <font color="#b8860b"><b>PK</b></font></td><td align="left" bgcolor="#fff7e0"><font color="#666666">INTEGER</font></td></tr>
+      <tr><td align="left" port="Postanski_broj">Postanski_broj</td><td align="left"><font color="#666666">INTEGER</font></td></tr>
+      <tr><td align="left" port="Mjesto">Mjesto</td><td align="left"><font color="#666666">TEXT</font></td></tr>
+      <tr><td align="left" port="ZUPANIJE_ID_Zupanija">ZUPANIJE_ID_Zupanija <font color="#4169e1"><b>FK</b></font></td><td align="left"><font color="#666666">INTEGER</font></td></tr>
+    </table>
+  >];
+
+  "PREDMETI" [label=<
+    <table border="1" cellborder="0" cellspacing="0" cellpadding="6" bgcolor="white">
+      <tr><td colspan="2" bgcolor="#2c3e50"><font color="white"><b>PREDMETI</b></font></td></tr>
+      <tr><td align="left" port="ID_Predmet" bgcolor="#fff7e0"><b>ID_Predmet</b> <font color="#b8860b"><b>PK</b></font></td><td align="left" bgcolor="#fff7e0"><font color="#666666">INTEGER</font></td></tr>
+      <tr><td align="left" port="Naziv">Naziv</td><td align="left"><font color="#666666">TEXT</font></td></tr>
+      <tr><td align="left" port="Broj_sati_tjedno">Broj_sati_tjedno</td><td align="left"><font color="#666666">INTEGER</font></td></tr>
+    </table>
+  >];
+
+  "P_UCENIK" [label=<
+    <table border="1" cellborder="0" cellspacing="0" cellpadding="6" bgcolor="white">
+      <tr><td colspan="2" bgcolor="#2c3e50"><font color="white"><b>P_UCENIK</b></font></td></tr>
+      <tr><td align="left" port="UCENICI_ID_Ucenik" bgcolor="#fff7e0"><b>UCENICI_ID_Ucenik</b> <font color="#b8860b"><b>PK</b></font></td><td align="left" bgcolor="#fff7e0"><font color="#666666">INTEGER</font></td></tr>
+      <tr><td align="left" port="PREDMETI_ID_Predmet" bgcolor="#fff7e0"><b>PREDMETI_ID_Predmet</b> <font color="#b8860b"><b>PK</b></font></td><td align="left" bgcolor="#fff7e0"><font color="#666666">INTEGER</font></td></tr>
+    </table>
+  >];
+
+  "RAZREDI" [label=<
+    <table border="1" cellborder="0" cellspacing="0" cellpadding="6" bgcolor="white">
+      <tr><td colspan="2" bgcolor="#2c3e50"><font color="white"><b>RAZREDI</b></font></td></tr>
+      <tr><td align="left" port="ID_Razred" bgcolor="#fff7e0"><b>ID_Razred</b> <font color="#b8860b"><b>PK</b></font></td><td align="left" bgcolor="#fff7e0"><font color="#666666">INTEGER</font></td></tr>
+      <tr><td align="left" port="Broj_razreda">Broj_razreda</td><td align="left"><font color="#666666">INTEGER</font></td></tr>
+      <tr><td align="left" port="Slovo_razreda">Slovo_razreda</td><td align="left"><font color="#666666">TEXT</font></td></tr>
+      <tr><td align="left" port="SKOLE_ID_Skola">SKOLE_ID_Skola <font color="#4169e1"><b>FK</b></font></td><td align="left"><font color="#666666">INTEGER</font></td></tr>
+    </table>
+  >];
+
+  "SKOLE" [label=<
+    <table border="1" cellborder="0" cellspacing="0" cellpadding="6" bgcolor="white">
+      <tr><td colspan="2" bgcolor="#2c3e50"><font color="white"><b>SKOLE</b></font></td></tr>
+      <tr><td align="left" port="ID_Skola" bgcolor="#fff7e0"><b>ID_Skola</b> <font color="#b8860b"><b>PK</b></font></td><td align="left" bgcolor="#fff7e0"><font color="#666666">INTEGER</font></td></tr>
+      <tr><td align="left" port="Naziv">Naziv</td><td align="left"><font color="#666666">TEXT</font></td></tr>
+      <tr><td align="left" port="Adresa">Adresa</td><td align="left"><font color="#666666">TEXT</font></td></tr>
+    </table>
+  >];
+
+  "UCENICI" [label=<
+    <table border="1" cellborder="0" cellspacing="0" cellpadding="6" bgcolor="white">
+      <tr><td colspan="2" bgcolor="#2c3e50"><font color="white"><b>UCENICI</b></font></td></tr>
+      <tr><td align="left" port="ID_Ucenik" bgcolor="#fff7e0"><b>ID_Ucenik</b> <font color="#b8860b"><b>PK</b></font></td><td align="left" bgcolor="#fff7e0"><font color="#666666">INTEGER</font></td></tr>
+      <tr><td align="left" port="Ime">Ime</td><td align="left"><font color="#666666">TEXT</font></td></tr>
+      <tr><td align="left" port="Prezime">Prezime</td><td align="left"><font color="#666666">TEXT</font></td></tr>
+      <tr><td align="left" port="Datum_rodjenja">Datum_rodjenja</td><td align="left"><font color="#666666">TEXT</font></td></tr>
+      <tr><td align="left" port="OIB">OIB</td><td align="left"><font color="#666666">INTEGER</font></td></tr>
+      <tr><td align="left" port="Ime_oca">Ime_oca</td><td align="left"><font color="#666666">TEXT</font></td></tr>
+      <tr><td align="left" port="Adresa">Adresa</td><td align="left"><font color="#666666">TEXT</font></td></tr>
+      <tr><td align="left" port="RAZREDI_ID_Razred">RAZREDI_ID_Razred <font color="#4169e1"><b>FK</b></font></td><td align="left"><font color="#666666">INTEGER</font></td></tr>
+      <tr><td align="left" port="POSTE_ID_Posta">POSTE_ID_Posta <font color="#4169e1"><b>FK</b></font></td><td align="left"><font color="#666666">INTEGER</font></td></tr>
+    </table>
+  >];
+
+  "ZAVRSNA_O" [label=<
+    <table border="1" cellborder="0" cellspacing="0" cellpadding="6" bgcolor="white">
+      <tr><td colspan="2" bgcolor="#2c3e50"><font color="white"><b>ZAVRSNA_O</b></font></td></tr>
+      <tr><td align="left" port="UCENICI_ID_Ucenik" bgcolor="#fff7e0"><b>UCENICI_ID_Ucenik</b> <font color="#b8860b"><b>PK</b></font></td><td align="left" bgcolor="#fff7e0"><font color="#666666">INTEGER</font></td></tr>
+      <tr><td align="left" port="OCJENE_ID_Ocjena" bgcolor="#fff7e0"><b>OCJENE_ID_Ocjena</b> <font color="#b8860b"><b>PK</b></font></td><td align="left" bgcolor="#fff7e0"><font color="#666666">INTEGER</font></td></tr>
+    </table>
+  >];
+
+  "ZUPANIJE" [label=<
+    <table border="1" cellborder="0" cellspacing="0" cellpadding="6" bgcolor="white">
+      <tr><td colspan="2" bgcolor="#2c3e50"><font color="white"><b>ZUPANIJE</b></font></td></tr>
+      <tr><td align="left" port="ID_Zupanija" bgcolor="#fff7e0"><b>ID_Zupanija</b> <font color="#b8860b"><b>PK</b></font></td><td align="left" bgcolor="#fff7e0"><font color="#666666">INTEGER</font></td></tr>
+      <tr><td align="left" port="Naziv">Naziv</td><td align="left"><font color="#666666">TEXT</font></td></tr>
+    </table>
+  >];
+
+  "ZVANJA" [label=<
+    <table border="1" cellborder="0" cellspacing="0" cellpadding="6" bgcolor="white">
+      <tr><td colspan="2" bgcolor="#2c3e50"><font color="white"><b>ZVANJA</b></font></td></tr>
+      <tr><td align="left" port="ID_Zvanje" bgcolor="#fff7e0"><b>ID_Zvanje</b> <font color="#b8860b"><b>PK</b></font></td><td align="left" bgcolor="#fff7e0"><font color="#666666">INTEGER</font></td></tr>
+      <tr><td align="left" port="Naziv">Naziv</td><td align="left"><font color="#666666">TEXT</font></td></tr>
+    </table>
+  >];
+
+  "NASTAVNICI":"ZVANJA_ID_Zvanje" -> "ZVANJA":"ID_Zvanje" [label="ZVANJA_ID_Zvanje -> ID_Zvanje"];
+  "NASTAVNIK_SKOLE":"NASTAVNICI_ID_Nastavnik" -> "NASTAVNICI":"ID_Nastavnik" [label="NASTAVNICI_ID_Nastavnik -> ID_Nastavnik"];
+  "N_PREDMET":"NASTAVNICI_ID_Nastavnik" -> "NASTAVNICI":"ID_Nastavnik" [label="NASTAVNICI_ID_Nastavnik -> ID_Nastavnik"];
+  "N_PREDMET":"PREDMETI_ID_Predmet" -> "PREDMETI":"ID_Predmet" [label="PREDMETI_ID_Predmet -> ID_Predmet"];
+  "N_RAZRED":"NASTAVNICI_ID_Nastavnik" -> "NASTAVNICI":"ID_Nastavnik" [label="NASTAVNICI_ID_Nastavnik -> ID_Nastavnik"];
+  "N_RAZRED":"RAZREDI_ID_Razred" -> "RAZREDI":"ID_Razred" [label="RAZREDI_ID_Razred -> ID_Razred"];
+  "POSTE":"ZUPANIJE_ID_Zupanija" -> "ZUPANIJE":"ID_Zupanija" [label="ZUPANIJE_ID_Zupanija -> ID_Zupanija"];
+  "P_UCENIK":"PREDMETI_ID_Predmet" -> "PREDMETI":"ID_Predmet" [label="PREDMETI_ID_Predmet -> ID_Predmet"];
+  "P_UCENIK":"UCENICI_ID_Ucenik" -> "UCENICI":"ID_Ucenik" [label="UCENICI_ID_Ucenik -> ID_Ucenik"];
+  "RAZREDI":"SKOLE_ID_Skola" -> "SKOLE":"ID_Skola" [label="SKOLE_ID_Skola -> ID_Skola"];
+  "UCENICI":"POSTE_ID_Posta" -> "POSTE":"ID_Posta" [label="POSTE_ID_Posta -> ID_Posta"];
+  "UCENICI":"RAZREDI_ID_Razred" -> "RAZREDI":"ID_Razred" [label="RAZREDI_ID_Razred -> ID_Razred"];
+  "ZAVRSNA_O":"OCJENE_ID_Ocjena" -> "OCJENE":"ID_Ocjena" [label="OCJENE_ID_Ocjena -> ID_Ocjena"];
+  "ZAVRSNA_O":"UCENICI_ID_Ucenik" -> "UCENICI":"ID_Ucenik" [label="UCENICI_ID_Ucenik -> ID_Ucenik"];
+}

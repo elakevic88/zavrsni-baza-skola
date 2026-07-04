@@ -1,0 +1,33 @@
+﻿classSecID,classSecCurriculum,classSecYearLevel,classSecRank,studentTotal,classSecName
+1701,STEM,7,1,31,Kepler
+1702,STEM,7,2,31,Edison
+2701,SPA,7,1,32,Da Vinci
+2702,SPA,7,2,31,Picasso
+3701,SPS,7,1,31,Diwa
+3702,SPS,7,2,31,Lahi
+4701,BEC,7,1,32,Rose
+4702,BEC,7,2,31,Sampaguita
+1801,STEM,8,1,32,Curie
+1802,STEM,8,2,31,Archimedes
+2801,SPA,8,1,31,Monet
+2802,SPA,8,2,31,Van Gogh
+3801,SPS,8,1,31,Buklod
+3802,SPS,8,2,31,Unlad
+4801,BEC,8,1,32,Lavender
+4802,BEC,8,2,31,Maroon
+1901,STEM,9,1,32,Dalton
+1902,STEM,9,2,31,Lavoisier
+2901,SPA,9,1,31,Dali
+2902,SPA,9,2,31,Matisse
+3901,SPS,9,1,31,Gawad
+3902,SPS,9,2,31,Tagumpay
+4901,BEC,9,1,32,Helium
+4902,BEC,9,2,31,Magnesium
+11001,STEM,10,1,32,Einstein
+11002,STEM,10,2,31,Newton
+21001,SPA,10,1,31,Warhol
+21002,SPA,10,2,31,Kahlo
+31001,SPS,10,1,31,Pugay
+31002,SPS,10,2,31,Sulat
+41001,BEC,10,1,32,Compassion
+41002,BEC,10,2,31,Bravery
