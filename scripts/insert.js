@@ -118,12 +118,6 @@ async function generateSchema(dbPath) {
 }
 
 // glavni dio programa
-
-// Zad 1.
-//
-// kreirati sve tri sheme iz create_queries foldera, nek budu spremljene u databases\dbs, i za svaku pozvati ovu funkciju koja crta slike
-// pogledati imaju li sheme smisla, prva treba biti kao ona drawio, druga treba biti dovedena do 3NF, vidit šta je to i jel je dobro doveo 
-// do 3NF, i treća bi trebala biti kao druga uz dodano nekoliko tablica
 async function main() {
     const queries = path.join(__dirname, '..', 'databases', 'create_queries');
     const target = path.join(__dirname, '..', 'databases', 'dbs');

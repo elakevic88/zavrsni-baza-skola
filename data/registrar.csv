@@ -1,4 +1,430 @@
-﻿registrarStaffID,staffFirstName,staffMiddleName,staffLastName,staffBirthDate,staffGender
-1,Heather,Wayne,Reynolds,1/23/1995,F
-2,Steven,Santana,Carlson,2/1/1990,F
-3,Patrick,Carter,Petersen,4/22/1989,M
+﻿registrarStaffID,staffFirstName,staffMiddleName,staffLastName,staffBirthDate,staffGender,staffTitle,staffFaculty,staffStartDate
+1,Heather,Wayne,Reynolds,1/23/1995,F,Professor,Faculty of Education,2006-09-01
+2,Steven,Santana,Carlson,2/1/1990,F,Associate Professor,Faculty of Science; Faculty of Technology,2007-09-01
+3,Patrick,Carter,Petersen,4/22/1989,M,Assistant,Faculty of Business,2010-09-01
+4,Howard,Robby,Spleving,9/18/1963,M,Head of Department,Faculty of Science; Faculty of Engineering,2005-09-01
+5,Shayla,Kathlin,Josefson,2/6/1975,F,Professor,Faculty of Humanities,2008-09-01
+6,Ricoriki,Colin,Oury,4/25/1962,M,Associate Professor,Faculty of Education; Faculty of Science,2006-09-01
+7,Cora,Cindie,Labon,3/13/1990,F,Assistant,Faculty of Arts,2012-09-01
+8,Edmon,Terrance,Hurrion,9/2/1988,M,Head of Department,Faculty of Engineering,2009-09-01
+9,Carey,Davida,Cumbridge,1/27/1963,F,Professor,Faculty of Business; Faculty of Economics,2005-09-01
+10,Leonidas,Rhett,Janse,11/13/1996,M,Associate Professor,Faculty of Information Technology,2014-09-01
+11,Diarmid,Leo,Hathwood,6/27/1983,M,Assistant,Faculty of Science,2011-09-01
+12,Wilbert,Chrissy,Seden,4/12/1994,M,Head of Department,Faculty of Humanities,2013-09-01
+13,Charmine,Marris,Isacke,8/28/1975,F,Professor,Faculty of Education; Faculty of Arts,2007-09-01
+14,Anita,Vanya,Swanson,6/4/1972,F,Associate Professor,Faculty of Business,2005-09-01
+15,Delia,Mahalia,Poulson,3/16/1969,F,Assistant,Faculty of Science,2010-09-01
+16,Netta,Maggie,Cappleman,11/17/1961,F,Head of Department,Faculty of Engineering,2005-09-01
+17,Fidelio,Dan,Rennock,1/6/1976,M,Professor,Faculty of Information Technology; Faculty of Science,2008-09-01
+18,Hyacinth,Beverlee,Mazzeo,12/25/1996,F,Associate Professor,Faculty of Arts,2015-09-01
+19,Nolana,Cathrin,Dudney,4/22/1994,F,Assistant,Faculty of Business; Faculty of Education,2012-09-01
+20,Gilberta,Viviene,Pickersgill,2/24/1982,F,Head of Department,Faculty of Science,2008-09-01
+21,Court,Fabian,Hastler,9/22/1995,M,Professor,Faculty of Business,2009-09-01
+22,Ethan,Pip,Lowensohn,4/19/1980,M,Associate Professor,Faculty of Humanities,2010-09-01
+23,Locke,Magnum,Tillett,3/16/1998,M,Assistant,Faculty of Engineering,2011-09-01
+24,Clim,Anthony,Ife,7/18/1992,M,Head of Department,Faculty of Arts,2012-09-01
+25,Sheena,Rosalyn,Lenglet,4/15/1965,F,Professor,Faculty of Information Technology,2013-09-01
+26,Edyth,Phaidra,Brann,9/1/1998,F,Associate Professor,Faculty of Economics,2014-09-01
+27,Forbes,Ewart,Hungerford,4/12/1987,M,Assistant,Faculty of Social Sciences,2015-09-01
+28,Delphine,Maureen,Woolen,6/13/1995,F,Head of Department,Faculty of Education,2016-09-01
+29,Fonsie,Jervis,Cranston,12/22/1968,M,Professor,Faculty of Science,2017-09-01
+30,Flossie,Romola,Josupeit,6/26/1979,F,Associate Professor,Faculty of Business,2018-09-01
+31,Mariana,Aubree,Sugg,9/13/1973,F,Assistant,Faculty of Humanities,2019-09-01
+32,Tobye,Marilee,Rishman,8/1/1962,F,Head of Department,Faculty of Engineering,2020-09-01
+33,Darb,Laina,Hammor,8/15/1966,F,Professor,Faculty of Arts,2005-09-01
+34,Briant,Archibald,Flude,7/3/1971,M,Associate Professor,Faculty of Information Technology,2006-09-01
+35,Aloise,Devina,Elcy,11/2/1994,F,Assistant,Faculty of Economics,2007-09-01
+36,Diannne,Rosabel,Pittem,8/25/1970,F,Head of Department,Faculty of Social Sciences,2008-09-01
+37,Emmalynn,Birdie,Sheran,12/9/1983,F,Professor,Faculty of Education,2009-09-01
+38,Lawrence,Drew,Ainslie,2/6/1973,M,Associate Professor,Faculty of Science,2010-09-01
+39,Rogerio,Seward,Titchen,3/16/1970,M,Assistant,Faculty of Business,2011-09-01
+40,Martyn,Alisander,Zimek,2/24/1975,M,Head of Department,Faculty of Humanities,2012-09-01
+41,Bidget,Megen,Ettritch,1/26/1969,F,Professor,Faculty of Engineering,2013-09-01
+42,Sly,Patric,Sawbridge,10/11/1988,M,Associate Professor,Faculty of Arts,2014-09-01
+43,Bondy,Ogden,Keaves,1/29/1978,M,Assistant,Faculty of Information Technology,2015-09-01
+44,Madella,Kelcy,Skunes,12/7/1970,F,Head of Department,Faculty of Economics,2016-09-01
+45,Llewellyn,Edan,Livock,3/30/1967,M,Professor,Faculty of Social Sciences,2017-09-01
+46,Carree,Aleen,Bolles,7/24/1996,F,Associate Professor,Faculty of Education,2018-09-01
+47,Loretta,Gloriana,Ortell,2/13/1964,F,Assistant,Faculty of Science,2019-09-01
+48,Cullen,Christophorus,Monard,1/7/1965,M,Head of Department,Faculty of Business,2020-09-01
+49,Lionel,Woody,Fontanet,3/6/1989,M,Professor,Faculty of Humanities,2005-09-01
+50,Wait,Harland,Rowcastle,12/9/1969,M,Associate Professor,Faculty of Engineering,2006-09-01
+51,Emelda,Stesha,Savill,9/29/1990,F,Assistant,Faculty of Arts,2007-09-01
+52,Rudd,Niels,Yakunikov,1/15/1988,M,Head of Department,Faculty of Information Technology,2008-09-01
+53,Garner,Tito,Smerdon,10/6/1965,M,Professor,Faculty of Economics,2009-09-01
+54,Michael,Thedric,Claydon,5/5/1962,M,Associate Professor,Faculty of Social Sciences,2010-09-01
+55,Vail,Ramsay,Henri,1/14/1986,M,Assistant,Faculty of Education,2011-09-01
+56,Edsel,Natty,Lumbers,4/26/1987,M,Head of Department,Faculty of Science,2012-09-01
+57,Frank,Sayre,Nuzzi,4/13/1996,M,Professor,Faculty of Business,2013-09-01
+58,Patsy,Dick,Peschmann,9/6/1988,M,Associate Professor,Faculty of Humanities,2014-09-01
+59,Dante,Guillaume,Tourot,8/12/1969,M,Assistant,Faculty of Engineering,2015-09-01
+60,Lin,Lay,Pizer,4/4/1992,M,Head of Department,Faculty of Arts,2016-09-01
+61,Sol,Brewer,Sharrock,2/27/1966,M,Professor,Faculty of Information Technology,2017-09-01
+62,Dante,Sylvester,Carey,6/27/1978,M,Associate Professor,Faculty of Economics,2018-09-01
+63,Faun,Bobinette,Arstingall,8/10/1995,F,Assistant,Faculty of Social Sciences,2019-09-01
+64,Aylmar,Bartram,Colmore,12/20/1970,M,Head of Department,Faculty of Education,2020-09-01
+65,Deena,Rozalie,Clopton,9/4/1991,F,Professor,Faculty of Science,2005-09-01
+66,Jo ann,Colleen,Leavry,12/16/1971,F,Associate Professor,Faculty of Business,2006-09-01
+67,Shelagh,Abagail,Goter,2/22/1985,F,Assistant,Faculty of Humanities,2007-09-01
+68,Giulietta,Scarlett,Biscomb,4/15/1971,F,Head of Department,Faculty of Engineering,2008-09-01
+69,Dinnie,Alla,Valenti,3/27/1978,F,Professor,Faculty of Arts,2009-09-01
+70,Allsun,Lind,Nagle,8/10/1976,F,Associate Professor,Faculty of Information Technology,2010-09-01
+71,Matt,Mohandis,Dommett,12/6/1986,M,Assistant,Faculty of Economics,2011-09-01
+72,Ramon,Daryle,Frean,3/8/1993,M,Head of Department,Faculty of Social Sciences,2012-09-01
+73,Olivette,Carmina,Neiland,8/25/1986,F,Professor,Faculty of Education,2013-09-01
+74,Waly,Anne-corinne,Markel,12/16/1987,F,Associate Professor,Faculty of Science,2014-09-01
+75,Carmina,Ethel,Longhorne,3/21/1970,F,Assistant,Faculty of Business,2015-09-01
+76,Spence,Chase,Shackleton,8/4/1970,M,Head of Department,Faculty of Humanities,2016-09-01
+77,Mariel,Alie,Gooch,10/1/1990,F,Professor,Faculty of Engineering,2017-09-01
+78,Miles,Yule,Lothlorien,7/31/1990,M,Associate Professor,Faculty of Arts,2018-09-01
+79,Adolph,Jdavie,Mariaud,8/10/1981,M,Assistant,Faculty of Information Technology,2019-09-01
+80,Alf,Waldo,Helstrip,5/4/1986,M,Head of Department,Faculty of Economics,2020-09-01
+81,Stesha,Rosalia,Tottie,11/15/1995,F,Professor,Faculty of Social Sciences,2005-09-01
+82,Tristan,Tris,Gonin,1/20/1969,M,Associate Professor,Faculty of Education,2006-09-01
+83,Anthiathia,Loralee,Mongin,1/17/1993,F,Assistant,Faculty of Science,2007-09-01
+84,Vallie,Nell,Huggins,7/20/1986,F,Head of Department,Faculty of Business,2008-09-01
+85,Jelene,Felicity,Faull,5/21/1981,F,Professor,Faculty of Humanities,2009-09-01
+86,Stacia,Henriette,Leaney,10/21/1970,F,Associate Professor,Faculty of Engineering,2010-09-01
+87,Merrill,Elonore,Strood,8/10/1970,F,Assistant,Faculty of Arts,2011-09-01
+88,Marcille,Cammy,Okill,2/22/1989,F,Head of Department,Faculty of Information Technology,2012-09-01
+89,Guilbert,Horacio,Powers,3/1/1963,M,Professor,Faculty of Economics,2013-09-01
+90,Tanney,Philbert,Anstiss,10/17/1968,M,Associate Professor,Faculty of Social Sciences,2014-09-01
+91,Manon,Loree,Marriott,3/15/1967,F,Assistant,Faculty of Education,2015-09-01
+92,Catrina,Ekaterina,Fernandez,1/9/1969,F,Head of Department,Faculty of Science,2016-09-01
+93,Leena,Sib,Stansbie,11/28/1979,F,Professor,Faculty of Business,2017-09-01
+94,Sheeree,Hanna,Bacher,9/20/1991,F,Associate Professor,Faculty of Humanities,2018-09-01
+95,Sutton,Daren,Beaushaw,6/10/1983,M,Assistant,Faculty of Engineering,2019-09-01
+96,Garner,Gaspard,Welsh,1/8/1971,M,Head of Department,Faculty of Arts,2020-09-01
+97,Felicity,Engracia,Duckworth,3/28/1996,F,Professor,Faculty of Information Technology,2005-09-01
+98,Thain,Beaufort,Jeavon,11/21/1984,M,Associate Professor,Faculty of Economics,2006-09-01
+99,Anabal,Ginnifer,Cremins,8/23/1980,F,Assistant,Faculty of Social Sciences,2007-09-01
+100,Kristyn,Abbi,Cowburn,5/27/1986,F,Head of Department,Faculty of Education,2008-09-01
+101,Teador,Fowler,Triebner,9/4/1991,M,Professor,Faculty of Science,2009-09-01
+102,Chase,Angelo,Ryrie,5/19/1963,M,Associate Professor,Faculty of Business,2010-09-01
+103,Ferd,Reamonn,Puffett,9/4/1969,M,Assistant,Faculty of Humanities,2011-09-01
+104,Shayne,Fania,Revens,3/13/1999,F,Head of Department,Faculty of Engineering,2012-09-01
+105,Syman,Rodolphe,Catterill,4/10/1995,M,Professor,Faculty of Arts,2013-09-01
+106,Creighton,Irving,Sturdgess,8/3/1964,M,Associate Professor,Faculty of Information Technology,2014-09-01
+107,Carmita,Garnette,McNiven,7/30/1974,F,Assistant,Faculty of Economics,2015-09-01
+108,Julee,Rena,Wilkison,10/17/1989,F,Head of Department,Faculty of Social Sciences,2016-09-01
+109,Marty,Mitch,Waddicor,7/2/1987,M,Professor,Faculty of Education,2017-09-01
+110,Aharon,Chet,Curd,12/14/1989,M,Associate Professor,Faculty of Science,2018-09-01
+111,Bernadine,Casi,Humbey,12/9/1995,F,Assistant,Faculty of Business,2019-09-01
+112,Brian,Ced,Shorton,2/11/1995,M,Head of Department,Faculty of Humanities,2020-09-01
+113,Basilio,Tomlin,Galliver,9/12/1961,M,Professor,Faculty of Engineering,2005-09-01
+114,Duffy,Maury,Hansel,5/14/1978,M,Associate Professor,Faculty of Arts,2006-09-01
+115,Simona,Riane,New,3/21/1976,F,Assistant,Faculty of Information Technology,2007-09-01
+116,Carlin,Ryon,Dennidge,6/16/1968,M,Head of Department,Faculty of Economics,2008-09-01
+117,Philippa,Kala,Baradel,8/5/1977,F,Professor,Faculty of Social Sciences,2009-09-01
+118,Jean,Lillian,Varnam,8/20/1981,F,Associate Professor,Faculty of Education,2010-09-01
+119,Jakie,Hal,Cleugher,7/31/1978,M,Assistant,Faculty of Science,2011-09-01
+120,Lishe,Jemmy,Setterington,5/1/1960,F,Head of Department,Faculty of Business,2012-09-01
+121,Kassie,Kristyn,Toffolo,8/17/1985,F,Professor,Faculty of Humanities,2013-09-01
+122,Lisle,Herby,Di Biagio,8/30/1974,M,Associate Professor,Faculty of Engineering,2014-09-01
+123,Micaela,Mallory,Tunnick,10/8/1985,F,Assistant,Faculty of Arts,2015-09-01
+124,Davide,Gabe,Stent,1/30/1970,M,Head of Department,Faculty of Information Technology,2016-09-01
+125,Eulalie,Jena,Dilawey,2/1/1985,F,Professor,Faculty of Economics,2017-09-01
+126,Richie,Lennie,Rickasse,3/8/1992,M,Associate Professor,Faculty of Social Sciences,2018-09-01
+127,Rafi,Mike,Gulliver,4/2/1969,M,Assistant,Faculty of Education,2019-09-01
+128,Maxy,Brander,Corssen,1/17/1993,M,Head of Department,Faculty of Science,2020-09-01
+129,Ara,Sunny,Bonifazio,8/25/1981,M,Professor,Faculty of Business,2005-09-01
+130,Fulton,Penn,Tremblet,5/21/1962,M,Associate Professor,Faculty of Humanities,2006-09-01
+131,Mill,Hermie,McCauley,11/7/1968,M,Assistant,Faculty of Engineering,2007-09-01
+132,Amaleta,Hanna,Brody,8/10/1973,F,Head of Department,Faculty of Arts,2008-09-01
+133,Rayner,Silvano,Martineau,10/15/1963,M,Professor,Faculty of Information Technology,2009-09-01
+134,Gaylor,Symon,Rowbrey,9/22/1970,M,Associate Professor,Faculty of Economics,2010-09-01
+135,Bette-ann,Jobina,Krook,8/30/1975,F,Assistant,Faculty of Social Sciences,2011-09-01
+136,Jami,Elyse,Deverille,9/30/1962,F,Head of Department,Faculty of Education,2012-09-01
+137,Blinni,Rosaleen,Pettitt,10/4/1991,F,Professor,Faculty of Science,2013-09-01
+138,Gaynor,Michaeline,Tonks,4/21/1995,F,Associate Professor,Faculty of Business,2014-09-01
+139,Adlai,Neal,Weson,12/14/1967,M,Assistant,Faculty of Humanities,2015-09-01
+140,Putnem,Raphael,Errigo,10/17/1979,M,Head of Department,Faculty of Engineering,2016-09-01
+141,Garret,Giovanni,Meatyard,9/12/1969,M,Professor,Faculty of Arts,2017-09-01
+142,Doll,Emmeline,Andreacci,1/5/1973,F,Associate Professor,Faculty of Information Technology,2018-09-01
+143,Alexandr,Monty,Brannigan,7/6/1983,M,Assistant,Faculty of Economics,2019-09-01
+144,Lutero,Talbert,Cudbird,5/24/1996,M,Head of Department,Faculty of Social Sciences,2020-09-01
+145,Jermain,Hamel,Biford,8/7/1978,M,Professor,Faculty of Education,2005-09-01
+146,Aggi,Inger,LaBastida,2/25/1987,F,Associate Professor,Faculty of Science,2006-09-01
+147,Lyda,Giacinta,Dickings,7/15/1970,F,Assistant,Faculty of Business,2007-09-01
+148,Happy,Audi,Sercombe,10/10/1962,F,Head of Department,Faculty of Humanities,2008-09-01
+149,Millicent,Binny,Paunton,7/22/1978,F,Professor,Faculty of Engineering,2009-09-01
+150,Arleta,Johnette,Speek,12/16/1991,F,Associate Professor,Faculty of Arts,2010-09-01
+151,Fabio,Bordy,Dash,2/6/1980,M,Assistant,Faculty of Information Technology,2011-09-01
+152,Rhody,Dulcinea,McArley,12/19/1987,F,Head of Department,Faculty of Economics,2012-09-01
+153,Cobb,Tonnie,Moseley,9/29/1999,M,Professor,Faculty of Social Sciences,2013-09-01
+154,Isaak,Avram,Fortescue,7/10/1981,M,Associate Professor,Faculty of Education,2014-09-01
+155,Batholomew,Harman,Darridon,8/31/1960,M,Assistant,Faculty of Science,2015-09-01
+156,Vinson,Isidor,Lerego,3/12/1974,M,Head of Department,Faculty of Business,2016-09-01
+157,Jarib,Pen,Saylor,6/2/1970,M,Professor,Faculty of Humanities,2017-09-01
+158,Rosana,Mellisa,Lailey,1/2/1976,F,Associate Professor,Faculty of Engineering,2018-09-01
+159,Aile,Anastassia,Sainsberry,3/9/1968,F,Assistant,Faculty of Arts,2019-09-01
+160,Kora,Roxi,Ironside,7/5/1973,F,Head of Department,Faculty of Information Technology,2020-09-01
+161,Jacquelin,Gabrila,Loalday,6/22/1965,F,Professor,Faculty of Economics,2005-09-01
+162,Eyde,Christean,Scanes,1/24/1998,F,Associate Professor,Faculty of Social Sciences,2006-09-01
+163,Evered,Davide,Boyer,9/17/1967,M,Assistant,Faculty of Education,2007-09-01
+164,Tobin,Ethe,Bools,11/11/1984,M,Head of Department,Faculty of Science,2008-09-01
+165,Flinn,Jermaine,Bertome,11/13/1989,M,Professor,Faculty of Business,2009-09-01
+166,Simonette,Suzie,Surgeon,9/23/1980,F,Associate Professor,Faculty of Humanities,2010-09-01
+167,Arlen,Tiff,Pien,1/15/1969,F,Assistant,Faculty of Engineering,2011-09-01
+168,Felicity,Lil,Ninnotti,6/11/1995,F,Head of Department,Faculty of Arts,2012-09-01
+169,Abagael,Britta,Darlaston,3/17/1999,F,Professor,Faculty of Information Technology,2013-09-01
+170,Brannon,Rocky,Cattlow,2/13/1978,M,Associate Professor,Faculty of Economics,2014-09-01
+171,Addison,Allister,Speak,11/6/1975,M,Assistant,Faculty of Social Sciences,2015-09-01
+172,Maude,Brittaney,Casillis,7/27/1970,F,Head of Department,Faculty of Education,2016-09-01
+173,Pacorro,Nickolai,Brandes,4/10/1976,M,Professor,Faculty of Science,2017-09-01
+174,Tabbitha,Marty,Wreford,8/6/1975,F,Associate Professor,Faculty of Business,2018-09-01
+175,Lethia,Tandy,Burkin,5/6/1964,F,Assistant,Faculty of Humanities,2019-09-01
+176,Didi,Juliette,Libri,4/15/1981,F,Head of Department,Faculty of Engineering,2020-09-01
+177,Yvette,Orella,Fochs,9/10/1983,F,Professor,Faculty of Arts,2005-09-01
+178,Florie,Max,Hasluck,5/23/1967,F,Associate Professor,Faculty of Information Technology,2006-09-01
+179,Coraline,Alicea,Christy,12/14/1972,F,Assistant,Faculty of Economics,2007-09-01
+180,Rey,Lauri,Trustie,6/24/1978,F,Head of Department,Faculty of Social Sciences,2008-09-01
+181,Leonhard,Tudor,Barnett,11/25/1987,M,Professor,Faculty of Education,2009-09-01
+182,Wit,Gregoor,Kuhnke,10/26/1995,M,Associate Professor,Faculty of Science,2010-09-01
+183,Shandie,Tedra,De Marchi,12/23/1980,F,Assistant,Faculty of Business,2011-09-01
+184,Evangelina,Hildagard,Shorte,7/1/1972,F,Head of Department,Faculty of Humanities,2012-09-01
+185,Wilden,Lefty,Antao,4/1/1970,M,Professor,Faculty of Engineering,2013-09-01
+186,Pepe,Mathias,Bavidge,4/21/1973,M,Associate Professor,Faculty of Arts,2014-09-01
+187,Ruthie,Jackquelin,McCerery,3/6/1993,F,Assistant,Faculty of Information Technology,2015-09-01
+188,Alex,Gwenneth,Bonds,1/20/1986,F,Head of Department,Faculty of Economics,2016-09-01
+189,Fair,Waldemar,Tongs,3/15/1977,M,Professor,Faculty of Social Sciences,2017-09-01
+190,Modestine,Nanci,Skowcraft,1/28/1966,F,Associate Professor,Faculty of Education,2018-09-01
+191,Laetitia,Dodi,Grinikhinov,12/21/1990,F,Assistant,Faculty of Science,2019-09-01
+192,Tami,Rivy,Slograve,10/19/1985,F,Head of Department,Faculty of Business,2020-09-01
+193,Raviv,Cob,Challis,6/4/1994,M,Professor,Faculty of Humanities,2005-09-01
+194,Arnie,Hill,Frushard,1/26/1964,M,Associate Professor,Faculty of Engineering,2006-09-01
+195,Sandro,Ettore,Claessens,7/12/1988,M,Assistant,Faculty of Arts,2007-09-01
+196,Jule,Cesaro,Ebbing,11/17/1983,M,Head of Department,Faculty of Information Technology,2008-09-01
+197,Hilde,Loretta,Dellenty,6/22/1988,F,Professor,Faculty of Economics,2009-09-01
+198,Regen,Avrom,Le Prevost,4/15/1991,M,Associate Professor,Faculty of Social Sciences,2010-09-01
+199,Humfrey,Russ,Bingell,4/2/1975,M,Assistant,Faculty of Education,2011-09-01
+200,Zelig,Tommy,Millichip,6/27/1991,M,Head of Department,Faculty of Science,2012-09-01
+201,Beltran,Anton,Brahan,11/22/1976,M,Professor,Faculty of Business,2013-09-01
+202,Lew,Leif,Hicks,5/13/1987,M,Associate Professor,Faculty of Humanities,2014-09-01
+203,Lil,Bernardina,Heselwood,8/2/1991,F,Assistant,Faculty of Engineering,2015-09-01
+204,Kyle,Thornton,Van der Mark,12/2/1985,M,Head of Department,Faculty of Arts,2016-09-01
+205,Laure,Oralee,Dinse,5/27/1992,F,Professor,Faculty of Information Technology,2017-09-01
+206,Kahaleel,Giustino,Goudy,6/27/1966,M,Associate Professor,Faculty of Economics,2018-09-01
+207,Estelle,Melodee,Jeynes,7/12/1977,F,Assistant,Faculty of Social Sciences,2019-09-01
+208,Nari,Blakeley,Nissle,7/21/1986,F,Head of Department,Faculty of Education,2020-09-01
+209,Manfred,Boyce,Thomlinson,1/10/1965,M,Professor,Faculty of Science,2005-09-01
+210,Morton,Niko,Wisker,6/15/1978,M,Associate Professor,Faculty of Business,2006-09-01
+211,Bernette,Ruby,Clapton,5/31/1982,F,Assistant,Faculty of Humanities,2007-09-01
+212,Abran,Antoni,Vinnicombe,5/26/1978,M,Head of Department,Faculty of Engineering,2008-09-01
+213,Derrick,Garold,McClory,6/25/1993,M,Professor,Faculty of Arts,2009-09-01
+214,Robers,Griffith,Haselwood,10/11/1985,M,Associate Professor,Faculty of Information Technology,2010-09-01
+215,Rurik,Redd,Pengilley,3/23/1980,M,Assistant,Faculty of Economics,2011-09-01
+216,Avrom,Keven,Gullyes,1/27/1992,M,Head of Department,Faculty of Social Sciences,2012-09-01
+217,Law,Jozef,Renowden,10/22/1994,M,Professor,Faculty of Education,2013-09-01
+218,Daniela,Isabelita,Florey,12/22/1996,F,Associate Professor,Faculty of Science,2014-09-01
+219,Elsbeth,Johna,Larder,7/13/1983,F,Assistant,Faculty of Business,2015-09-01
+220,Jemimah,Shirley,Middler,3/27/1974,F,Head of Department,Faculty of Humanities,2016-09-01
+221,Perri,Fanchon,Glabach,2/14/1967,F,Professor,Faculty of Engineering,2017-09-01
+222,Raffarty,Elwin,Lie,1/23/1966,M,Associate Professor,Faculty of Arts,2018-09-01
+223,Shayne,Kurtis,Lapre,12/30/1986,M,Assistant,Faculty of Information Technology,2019-09-01
+224,Jeddy,Darill,Blankenship,4/19/1981,M,Head of Department,Faculty of Economics,2020-09-01
+225,Cullan,Ken,Lyddon,7/12/1973,M,Professor,Faculty of Social Sciences,2005-09-01
+226,Charles,Berkly,Sloam,4/25/1962,M,Associate Professor,Faculty of Education,2006-09-01
+227,Papageno,Cleon,Matignon,4/24/1973,M,Assistant,Faculty of Science,2007-09-01
+228,Judd,Bondy,Bouldon,4/3/1994,M,Head of Department,Faculty of Business,2008-09-01
+229,Garfield,Raynard,Tresise,8/21/1978,M,Professor,Faculty of Humanities,2009-09-01
+230,Bartram,Markus,Spargo,3/7/1997,M,Associate Professor,Faculty of Engineering,2010-09-01
+231,Blaire,Elfie,Buckles,5/20/1998,F,Assistant,Faculty of Arts,2011-09-01
+232,Cherie,Merrily,Child,9/13/1962,F,Head of Department,Faculty of Information Technology,2012-09-01
+233,Zeke,Massimo,Fransemai,5/6/1992,M,Professor,Faculty of Economics,2013-09-01
+234,Angel,Noam,Collete,1/12/1991,M,Associate Professor,Faculty of Social Sciences,2014-09-01
+235,Darrel,Glynn,Erwin,2/6/1995,M,Assistant,Faculty of Education,2015-09-01
+236,Roxi,Carol,Vlasenkov,4/26/1995,F,Head of Department,Faculty of Science,2016-09-01
+237,Ambur,Lelia,Mahomet,2/8/1975,F,Professor,Faculty of Business,2017-09-01
+238,Nancey,Karlene,Malinson,8/17/1980,F,Associate Professor,Faculty of Humanities,2018-09-01
+239,Randall,Taddeusz,Meese,4/5/1977,M,Assistant,Faculty of Engineering,2019-09-01
+240,Stephanie,Walliw,Robke,5/16/1972,F,Head of Department,Faculty of Arts,2020-09-01
+241,Creight,Orren,Gricewood,10/9/1976,M,Professor,Faculty of Information Technology,2005-09-01
+242,Hadlee,Crichton,Eastridge,3/21/1970,M,Associate Professor,Faculty of Economics,2006-09-01
+243,Laurens,Donnell,Bethel,12/4/1963,M,Assistant,Faculty of Social Sciences,2007-09-01
+244,Ursola,Tamera,Oller,10/17/1966,F,Head of Department,Faculty of Education,2008-09-01
+245,Sarah,Kerianne,Ferraretto,6/21/1991,F,Professor,Faculty of Science,2009-09-01
+246,Wolfy,Lawton,Paule,1/3/1964,M,Associate Professor,Faculty of Business,2010-09-01
+247,Brittne,Eileen,Paulus,9/16/1993,F,Assistant,Faculty of Humanities,2011-09-01
+248,Violante,Nady,Dixcee,10/4/1969,F,Head of Department,Faculty of Engineering,2012-09-01
+249,Benedetto,Trev,Cottam,4/20/1983,M,Professor,Faculty of Arts,2013-09-01
+250,Devon,Nevsa,Tedder,12/4/1974,F,Associate Professor,Faculty of Information Technology,2014-09-01
+251,Jermain,Currie,Tooze,2/22/1961,M,Assistant,Faculty of Economics,2015-09-01
+252,Patricio,Ruggiero,Shepherdson,9/8/1974,M,Head of Department,Faculty of Social Sciences,2016-09-01
+253,Arvie,Ethelbert,Frankum,1/22/1963,M,Professor,Faculty of Education,2017-09-01
+254,Maynard,Wit,Branchflower,5/30/1989,M,Associate Professor,Faculty of Science,2018-09-01
+255,Laetitia,Kissee,Dobey,5/21/1961,F,Assistant,Faculty of Business,2019-09-01
+256,Magda,Isobel,Reggler,8/28/1965,F,Head of Department,Faculty of Humanities,2020-09-01
+257,Bernadene,Marty,Donahue,8/28/1973,F,Professor,Faculty of Engineering,2005-09-01
+258,Swen,Fitzgerald,Milburne,4/2/1974,M,Associate Professor,Faculty of Arts,2006-09-01
+259,Flossie,Frederica,Hawkswell,6/18/1977,F,Assistant,Faculty of Information Technology,2007-09-01
+260,Mireille,Ofilia,Teager,5/18/1960,F,Head of Department,Faculty of Economics,2008-09-01
+261,Hamilton,Silas,Bum,8/2/1980,M,Professor,Faculty of Social Sciences,2009-09-01
+262,Queenie,Junette,Rentoll,1/1/1993,F,Associate Professor,Faculty of Education,2010-09-01
+263,Ed,Gregg,Beasant,8/28/1999,M,Assistant,Faculty of Science,2011-09-01
+264,Cornell,Antone,Kirvin,3/21/1999,M,Head of Department,Faculty of Business,2012-09-01
+265,Hieronymus,Haily,Gilcriest,10/20/1981,M,Professor,Faculty of Humanities,2013-09-01
+266,Lorne,Dwain,Ingreda,12/19/1973,M,Associate Professor,Faculty of Engineering,2014-09-01
+267,Holt,Yurik,Spikins,5/19/1981,M,Assistant,Faculty of Arts,2015-09-01
+268,Humfried,Rubin,Soper,1/28/1969,M,Head of Department,Faculty of Information Technology,2016-09-01
+269,Rozanna,Tallulah,Baptiste,8/11/1962,F,Professor,Faculty of Economics,2017-09-01
+270,Saunders,Ogden,Swaddle,12/15/1990,M,Associate Professor,Faculty of Social Sciences,2018-09-01
+271,Fannie,Kristina,Hagart,5/2/1988,F,Assistant,Faculty of Education,2019-09-01
+272,Inesita,Avivah,Robjents,8/25/1993,F,Head of Department,Faculty of Science,2020-09-01
+273,Tera,Aeriel,Salmon,1/20/1997,F,Professor,Faculty of Business,2005-09-01
+274,Gibb,Murray,Ovill,12/26/1981,M,Associate Professor,Faculty of Humanities,2006-09-01
+275,Lura,Marquita,Limbrick,4/23/1996,F,Assistant,Faculty of Engineering,2007-09-01
+276,Astrid,Min,Cowherd,7/17/1993,F,Head of Department,Faculty of Arts,2008-09-01
+277,Vlad,Averill,Assandri,6/30/1970,M,Professor,Faculty of Information Technology,2009-09-01
+278,Virginia,Lianna,Mozzini,11/13/1963,F,Associate Professor,Faculty of Economics,2010-09-01
+279,Duncan,Cesaro,Murfill,6/1/1984,M,Assistant,Faculty of Social Sciences,2011-09-01
+280,Ambrosius,Emilio,O'Leagham,4/29/1969,M,Head of Department,Faculty of Education,2012-09-01
+281,Karissa,Doe,Dilawey,2/22/1970,F,Professor,Faculty of Science,2013-09-01
+282,Mariette,Lydie,Permain,11/9/1978,F,Associate Professor,Faculty of Business,2014-09-01
+283,Cullie,Justus,Poat,9/4/1976,M,Assistant,Faculty of Humanities,2015-09-01
+284,Carlie,Madelin,Blencowe,3/9/1961,F,Head of Department,Faculty of Engineering,2016-09-01
+285,Melodie,Monica,Genthner,10/28/1985,F,Professor,Faculty of Arts,2017-09-01
+286,Jory,Forrest,Danilchenko,4/10/1998,M,Associate Professor,Faculty of Information Technology,2018-09-01
+287,Diarmid,Christiano,Wardhough,10/3/1986,M,Assistant,Faculty of Economics,2019-09-01
+288,Randal,Launce,Willett,3/10/1968,M,Head of Department,Faculty of Social Sciences,2020-09-01
+289,Netti,Guenevere,Moggie,2/19/1998,F,Professor,Faculty of Education,2005-09-01
+290,Amory,Garrick,Ishchenko,1/9/1972,M,Associate Professor,Faculty of Science,2006-09-01
+291,Stan,Sollie,Busswell,2/2/1966,M,Assistant,Faculty of Business,2007-09-01
+292,Rowen,Ike,Hinsch,8/10/1982,M,Head of Department,Faculty of Humanities,2008-09-01
+293,Jedidiah,Forester,Gon,8/27/1990,M,Professor,Faculty of Engineering,2009-09-01
+294,Gay,Wakefield,Blunsden,2/11/1964,M,Associate Professor,Faculty of Arts,2010-09-01
+295,Florie,Kizzie,Biskup,6/15/1964,F,Assistant,Faculty of Information Technology,2011-09-01
+296,Tory,Leelah,Brewett,8/21/1979,F,Head of Department,Faculty of Economics,2012-09-01
+297,Janelle,Ruthann,Shipway,7/19/1999,F,Professor,Faculty of Social Sciences,2013-09-01
+298,Cristen,Elka,Arunowicz,1/21/1994,F,Associate Professor,Faculty of Education,2014-09-01
+299,Pearce,Stacee,Karp,11/21/1997,M,Assistant,Faculty of Science,2015-09-01
+300,Nollie,Launce,Gerrens,1/25/1981,M,Head of Department,Faculty of Business,2016-09-01
+301,Marten,Barnett,Murrock,8/1/1960,M,Professor,Faculty of Humanities,2017-09-01
+302,Selby,Raviv,Schofield,8/13/1999,M,Associate Professor,Faculty of Engineering,2018-09-01
+303,Maynord,Tobin,Bisley,1/18/1994,M,Assistant,Faculty of Arts,2019-09-01
+304,Kelley,Lita,Crat,11/6/1997,F,Head of Department,Faculty of Information Technology,2020-09-01
+305,Bert,Rolland,McGavin,6/16/1986,M,Professor,Faculty of Economics,2005-09-01
+306,Jaclyn,Halley,Fayre,6/2/1966,F,Associate Professor,Faculty of Social Sciences,2006-09-01
+307,Illa,Leia,Coveley,6/18/1992,F,Assistant,Faculty of Education,2007-09-01
+308,Olenolin,Colan,Tomsen,9/9/1983,M,Head of Department,Faculty of Science,2008-09-01
+309,Inger,Lynnett,Massow,2/7/1966,F,Professor,Faculty of Business,2009-09-01
+310,Major,Wilburt,Hunston,4/1/1962,M,Associate Professor,Faculty of Humanities,2010-09-01
+311,Breanne,Glennie,Remmer,5/10/1963,F,Assistant,Faculty of Engineering,2011-09-01
+312,Thaxter,De witt,Morrott,12/4/1982,M,Head of Department,Faculty of Arts,2012-09-01
+313,Rey,Gordie,Ege,7/29/1967,M,Professor,Faculty of Information Technology,2013-09-01
+314,Janene,Lilllie,Oliphant,12/24/1961,F,Associate Professor,Faculty of Economics,2014-09-01
+315,Thornton,Baryram,Waeland,8/6/1992,M,Assistant,Faculty of Social Sciences,2015-09-01
+316,Scottie,Hamid,Laurisch,2/24/1965,M,Head of Department,Faculty of Education,2016-09-01
+317,Arielle,Cinnamon,Mansel,7/28/1985,F,Professor,Faculty of Science,2017-09-01
+318,Dolly,Joellyn,Dibb,11/3/1989,F,Associate Professor,Faculty of Business,2018-09-01
+319,Cristabel,Giorgia,Nannetti,9/23/1985,F,Assistant,Faculty of Humanities,2019-09-01
+320,Bobbie,Imojean,Matchitt,12/6/1991,F,Head of Department,Faculty of Engineering,2020-09-01
+321,Colet,Boyd,Truelock,4/19/1969,M,Professor,Faculty of Arts,2005-09-01
+322,Carling,Benedetto,Boog,7/7/1987,M,Associate Professor,Faculty of Information Technology,2006-09-01
+323,Else,Julianna,Garment,7/3/1989,F,Assistant,Faculty of Economics,2007-09-01
+324,Chase,Aharon,Gulberg,5/10/1968,M,Head of Department,Faculty of Social Sciences,2008-09-01
+325,Cortney,Yvette,Abeles,4/14/1980,F,Professor,Faculty of Education,2009-09-01
+326,Drugi,Kimball,Banks,12/13/1971,M,Associate Professor,Faculty of Science,2010-09-01
+327,Wendeline,Sophronia,Viner,5/24/1962,F,Assistant,Faculty of Business,2011-09-01
+328,Ingemar,Alanson,Waggitt,5/4/1960,M,Head of Department,Faculty of Humanities,2012-09-01
+329,Gretchen,Lonnie,Maydwell,10/10/1982,F,Professor,Faculty of Engineering,2013-09-01
+330,Eachelle,Calley,Wagg,11/25/1974,F,Associate Professor,Faculty of Arts,2014-09-01
+331,Zena,Edythe,Whyborne,4/24/1989,F,Assistant,Faculty of Information Technology,2015-09-01
+332,Ramona,Kriste,Finby,10/27/1970,F,Head of Department,Faculty of Economics,2016-09-01
+333,Greggory,Corby,Sprules,10/1/1998,M,Professor,Faculty of Social Sciences,2017-09-01
+334,Nial,Ambrose,Raun,1/28/1977,M,Associate Professor,Faculty of Education,2018-09-01
+335,Vin,Rickie,McNellis,2/13/1998,M,Assistant,Faculty of Science,2019-09-01
+336,Emalee,Malorie,Cawcutt,2/8/1978,F,Head of Department,Faculty of Business,2020-09-01
+337,Whitman,Mannie,O'Hern,6/8/1998,M,Professor,Faculty of Humanities,2005-09-01
+338,Alfonse,Dare,Scholling,10/10/1984,M,Associate Professor,Faculty of Engineering,2006-09-01
+339,Cindelyn,Jobie,Summerhayes,12/10/1968,F,Assistant,Faculty of Arts,2007-09-01
+340,Deerdre,Ciel,Harburtson,6/5/1969,F,Head of Department,Faculty of Information Technology,2008-09-01
+341,Rosene,Cammy,Mewett,7/8/1986,F,Professor,Faculty of Economics,2009-09-01
+342,Lloyd,Dicky,Ivain,11/3/1974,M,Associate Professor,Faculty of Social Sciences,2010-09-01
+343,Gabbie,Kristos,Michelin,1/12/1966,M,Assistant,Faculty of Education,2011-09-01
+344,Arny,Terrel,Antognetti,2/2/1978,M,Head of Department,Faculty of Science,2012-09-01
+345,Viviana,Bertina,Headly,10/30/1989,F,Professor,Faculty of Business,2013-09-01
+346,Brose,Armand,Ghirigori,9/6/1970,M,Associate Professor,Faculty of Humanities,2014-09-01
+347,Angelo,Virgilio,Gillard,7/28/1990,M,Assistant,Faculty of Engineering,2015-09-01
+348,Derick,Burlie,People,3/8/1977,M,Head of Department,Faculty of Arts,2016-09-01
+349,Murdoch,Judas,Hexum,6/2/1989,M,Professor,Faculty of Information Technology,2017-09-01
+350,Karlie,Devon,MacCoveney,5/3/1979,F,Associate Professor,Faculty of Economics,2018-09-01
+351,Regan,Onfroi,Fowley,8/13/1964,M,Assistant,Faculty of Social Sciences,2019-09-01
+352,Anna-diana,Debby,Dennington,3/22/1987,F,Head of Department,Faculty of Education,2020-09-01
+353,Lauraine,Aubine,Worsalls,8/12/1967,F,Professor,Faculty of Science,2005-09-01
+354,Theodosia,Corilla,Risebrow,2/18/1997,F,Associate Professor,Faculty of Business,2006-09-01
+355,Job,Dorian,Raison,7/31/1990,M,Assistant,Faculty of Humanities,2007-09-01
+356,Jerry,Betti,Manterfield,11/25/1972,F,Head of Department,Faculty of Engineering,2008-09-01
+357,Gay,Vivi,MacCall,5/29/1989,F,Professor,Faculty of Arts,2009-09-01
+358,Janey,Terri,Pardie,7/3/1979,F,Associate Professor,Faculty of Information Technology,2010-09-01
+359,Terrell,Henderson,Buss,9/10/1994,M,Assistant,Faculty of Economics,2011-09-01
+360,Wilone,Aimee,Dunk,4/14/1973,F,Head of Department,Faculty of Social Sciences,2012-09-01
+361,Nancy,Emmye,Ellse,8/31/1994,F,Professor,Faculty of Education,2013-09-01
+362,Claudius,Christoforo,Wrassell,2/21/1994,M,Associate Professor,Faculty of Science,2014-09-01
+363,Hannis,Catie,Wynch,8/24/1961,F,Assistant,Faculty of Business,2015-09-01
+364,Delcina,Glori,Huddles,2/20/1988,F,Head of Department,Faculty of Humanities,2016-09-01
+365,Sollie,Grove,Lorraway,9/28/1978,M,Professor,Faculty of Engineering,2017-09-01
+366,Drucy,Amandie,Giacoboni,3/14/1998,F,Associate Professor,Faculty of Arts,2018-09-01
+367,Nathan,Gerald,Peres,11/3/1968,M,Assistant,Faculty of Information Technology,2019-09-01
+368,Deni,Pearle,Grisewood,3/20/1985,F,Head of Department,Faculty of Economics,2020-09-01
+369,Weston,Siward,McCreedy,12/30/1983,M,Professor,Faculty of Social Sciences,2005-09-01
+370,Shelden,Julian,Livoir,8/5/1991,M,Associate Professor,Faculty of Education,2006-09-01
+371,Rolando,Reuben,Filip,12/18/1969,M,Assistant,Faculty of Science,2007-09-01
+372,Dorette,Marysa,O'Towey,9/22/1974,F,Head of Department,Faculty of Business,2008-09-01
+373,Fania,Aaren,Daber,2/6/1967,F,Professor,Faculty of Humanities,2009-09-01
+374,Peterus,Jordon,Barmadier,1/24/1985,M,Associate Professor,Faculty of Engineering,2010-09-01
+375,Robers,Pascale,Rooson,2/11/1980,M,Assistant,Faculty of Arts,2011-09-01
+376,Milt,Sigfrid,Barsham,7/4/1990,M,Head of Department,Faculty of Information Technology,2012-09-01
+377,Wilhelm,Denny,Inns,7/23/1963,M,Professor,Faculty of Economics,2013-09-01
+378,Frasco,Brion,Follett,10/17/1995,M,Associate Professor,Faculty of Social Sciences,2014-09-01
+379,Wilburt,Fabio,Liddiard,8/22/1997,M,Assistant,Faculty of Education,2015-09-01
+380,Biddie,Audre,Taylot,7/8/1969,F,Head of Department,Faculty of Science,2016-09-01
+381,Coleen,Faunie,Rolin,11/27/1974,F,Professor,Faculty of Business,2017-09-01
+382,Ara,Clerkclaude,Moine,10/27/1965,M,Associate Professor,Faculty of Humanities,2018-09-01
+383,Estel,Mariana,Skeech,11/16/1962,F,Assistant,Faculty of Engineering,2019-09-01
+384,Nadia,Adriane,Bristowe,5/9/1992,F,Head of Department,Faculty of Arts,2020-09-01
+385,Margeaux,Sharona,Tonkinson,12/12/1976,F,Professor,Faculty of Information Technology,2005-09-01
+386,Allis,Calley,Ruppel,6/15/1965,F,Associate Professor,Faculty of Economics,2006-09-01
+387,Frances,Adi,Boylan,8/25/1999,F,Assistant,Faculty of Social Sciences,2007-09-01
+388,Keefe,Patten,Duggan,2/29/1992,M,Head of Department,Faculty of Education,2008-09-01
+389,Eli,Orland,Robatham,3/13/1985,M,Professor,Faculty of Science,2009-09-01
+390,Sax,Hollis,Galpen,9/20/1965,M,Associate Professor,Faculty of Business,2010-09-01
+391,Stevana,Gerhardine,Hebborne,6/9/1995,F,Assistant,Faculty of Humanities,2011-09-01
+392,Rossie,Alick,Haygreen,1/17/1994,M,Head of Department,Faculty of Engineering,2012-09-01
+393,Dulciana,Adora,Nizard,4/16/1961,F,Professor,Faculty of Arts,2013-09-01
+394,Keane,Urban,Knewstub,12/25/1992,M,Associate Professor,Faculty of Information Technology,2014-09-01
+395,Aeriela,Siusan,Chadburn,6/19/1965,F,Assistant,Faculty of Economics,2015-09-01
+396,Lazarus,Ban,Miners,3/26/1975,M,Head of Department,Faculty of Social Sciences,2016-09-01
+397,Sandra,Perl,Pretty,6/12/1971,F,Professor,Faculty of Education,2017-09-01
+398,Ulick,Gerik,Hellcat,2/25/1973,M,Associate Professor,Faculty of Science,2018-09-01
+399,Reed,Shepard,Sieb,11/9/1992,M,Assistant,Faculty of Business,2019-09-01
+400,Yuri,Kimball,Exeter,5/1/1964,M,Head of Department,Faculty of Humanities,2020-09-01
+401,Avivah,Inger,Greedier,2/20/1979,F,Professor,Faculty of Engineering,2005-09-01
+402,Georg,Lorant,Varley,5/20/1976,M,Associate Professor,Faculty of Arts,2006-09-01
+403,Cassaundra,Tandy,Martugin,11/28/1973,F,Assistant,Faculty of Information Technology,2007-09-01
+404,Kristoforo,Gunther,Brickham,5/23/1989,M,Head of Department,Faculty of Economics,2008-09-01
+405,Lemmy,Hart,Conechie,4/6/1992,M,Professor,Faculty of Social Sciences,2009-09-01
+406,Junie,Calida,Morrell,2/5/1979,F,Associate Professor,Faculty of Education,2010-09-01
+407,Gale,Dacia,Howick,7/1/1991,F,Assistant,Faculty of Science,2011-09-01
+408,Bertrand,Fons,Crosse,9/3/1969,M,Head of Department,Faculty of Business,2012-09-01
+409,Carita,Linet,Lampett,5/7/1986,F,Professor,Faculty of Humanities,2013-09-01
+410,Jenifer,Idette,Yearnsley,9/10/1978,F,Associate Professor,Faculty of Engineering,2014-09-01
+411,Myer,Mycah,Barnham,8/19/1990,M,Assistant,Faculty of Arts,2015-09-01
+412,Cassius,Garv,Matskiv,11/11/1974,M,Head of Department,Faculty of Information Technology,2016-09-01
+413,Cordi,Tera,Tidgewell,9/13/1960,F,Professor,Faculty of Economics,2017-09-01
+414,Chen,Land,Crowdace,7/4/1990,M,Associate Professor,Faculty of Social Sciences,2018-09-01
+415,Ephrayim,Claudius,Cometson,10/5/1987,M,Assistant,Faculty of Education,2019-09-01
+416,Alejoa,Burg,Innett,4/19/1992,M,Head of Department,Faculty of Science,2020-09-01
+417,Nydia,Rora,Treherne,9/29/1979,F,Professor,Faculty of Business,2005-09-01
+418,Chane,Ansel,Bourgeois,4/16/1971,M,Associate Professor,Faculty of Humanities,2006-09-01
+419,Shell,Willdon,Sammes,2/14/1992,M,Assistant,Faculty of Engineering,2007-09-01
+420,Enrico,Tadd,Baelde,6/24/1977,M,Head of Department,Faculty of Arts,2008-09-01
+421,Konrad,Pauly,Edgecumbe,9/14/1986,M,Professor,Faculty of Information Technology,2009-09-01
+422,Kendal,Boothe,Dowson,8/21/1970,M,Associate Professor,Faculty of Economics,2010-09-01
+423,Bran,Israel,Mayou,4/30/1974,M,Assistant,Faculty of Social Sciences,2011-09-01
+424,Wilmer,Obidiah,Crielly,11/11/1988,M,Head of Department,Faculty of Education,2012-09-01
+425,Gustie,Faina,Bourdas,12/28/1999,F,Professor,Faculty of Science,2013-09-01
+426,Gale,Tomasina,Worsnap,7/24/1968,F,Associate Professor,Faculty of Business,2014-09-01
+427,Electra,Glynis,Sissons,12/13/1988,F,Assistant,Faculty of Humanities,2015-09-01
+428,Karalynn,Angil,Gilleson,1/22/1966,F,Head of Department,Faculty of Engineering,2016-09-01
+429,Hedda,Kaylil,Syphas,6/13/1965,F,Professor,Faculty of Arts,2017-09-01

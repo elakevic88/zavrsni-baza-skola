@@ -1,7 +1,201 @@
-﻿bldgID,bldgName
-1,DepEd Bldg. 1
-2,DepEd Bldg. 2
-3,Francisco Bldg.
-4,Constan Bldg.
-5,Palma Bldg.
-6,Rizal Bldg.
+﻿bldgID,bldgName,schoolName
+1,DepEd Bldg. 1,Central High School
+2,DepEd Bldg. 2,North High School
+3,Francisco Bldg.,Eastside High School
+4,Constan Bldg.,Westview High School
+5,Palma Bldg.,Southridge High School
+6,Rizal Bldg.,Riverside High School
+7,DepEd Bldg. 1 471,Central High School
+8,DepEd Bldg. 2 417,North High School
+9,Francisco Bldg. 824,Eastside High School
+10,Constan Bldg. 625,Westview High School
+11,Palma Bldg. 375,Southridge High School
+12,Rizal Bldg. 64,Riverside High School
+13,DepEd Bldg. 1 621,Central High School
+14,DepEd Bldg. 2 357,North High School
+15,Francisco Bldg. 671,Eastside High School
+16,Constan Bldg. 71,Westview High School
+17,Palma Bldg. 133,Southridge High School
+18,Rizal Bldg. 62,Riverside High School
+19,DepEd Bldg. 1 366,Central High School
+20,DepEd Bldg. 2 301,North High School
+21,Francisco Bldg. 462,Eastside High School
+22,Constan Bldg. 867,Westview High School
+23,Palma Bldg. 490,Southridge High School
+24,Rizal Bldg. 17,Riverside High School
+25,DepEd Bldg. 1 990,Central High School
+26,DepEd Bldg. 2 379,North High School
+27,Francisco Bldg. 816,Eastside High School
+28,Constan Bldg. 729,Westview High School
+29,Palma Bldg. 283,Southridge High School
+30,Rizal Bldg. 998,Riverside High School
+31,DepEd Bldg. 1 229,Central High School
+32,DepEd Bldg. 2 799,North High School
+33,Francisco Bldg. 494,Eastside High School
+34,Constan Bldg. 844,Westview High School
+35,Palma Bldg. 441,Southridge High School
+36,Rizal Bldg. 509,Riverside High School
+37,DepEd Bldg. 1 827,Central High School
+38,DepEd Bldg. 2 432,North High School
+39,Francisco Bldg. 436,Eastside High School
+40,Constan Bldg. 797,Westview High School
+41,Palma Bldg. 766,Southridge High School
+42,Rizal Bldg. 671,Riverside High School
+43,DepEd Bldg. 1 196,Central High School
+44,DepEd Bldg. 2 887,North High School
+45,Francisco Bldg. 930,Eastside High School
+46,Constan Bldg. 680,Westview High School
+47,Palma Bldg. 44,Southridge High School
+48,Rizal Bldg. 692,Riverside High School
+49,DepEd Bldg. 1 277,Central High School
+50,DepEd Bldg. 2 618,North High School
+51,Francisco Bldg. 320,Eastside High School
+52,Constan Bldg. 23,Westview High School
+53,Palma Bldg. 278,Southridge High School
+54,Rizal Bldg. 12,Riverside High School
+55,DepEd Bldg. 1 470,Central High School
+56,DepEd Bldg. 2 455,North High School
+57,Francisco Bldg. 529,Eastside High School
+58,Constan Bldg. 558,Westview High School
+59,Palma Bldg. 578,Southridge High School
+60,Rizal Bldg. 942,Riverside High School
+61,DepEd Bldg. 1 401,Central High School
+62,DepEd Bldg. 2 418,North High School
+63,Francisco Bldg. 579,Eastside High School
+64,Constan Bldg. 619,Westview High School
+65,Palma Bldg. 330,Southridge High School
+66,Rizal Bldg. 551,Riverside High School
+67,DepEd Bldg. 1 245,Central High School
+68,DepEd Bldg. 2 5,North High School
+69,Francisco Bldg. 173,Eastside High School
+70,Constan Bldg. 875,Westview High School
+71,Palma Bldg. 95,Southridge High School
+72,Rizal Bldg. 799,Riverside High School
+73,DepEd Bldg. 1 148,Central High School
+74,DepEd Bldg. 2 41,North High School
+75,Francisco Bldg. 31,Eastside High School
+76,Constan Bldg. 255,Westview High School
+77,Palma Bldg. 777,Southridge High School
+78,Rizal Bldg. 710,Riverside High School
+79,DepEd Bldg. 1 179,Central High School
+80,DepEd Bldg. 2 150,North High School
+81,Francisco Bldg. 873,Eastside High School
+82,Constan Bldg. 720,Westview High School
+83,Palma Bldg. 771,Southridge High School
+84,Rizal Bldg. 406,Riverside High School
+85,DepEd Bldg. 1 564,Central High School
+86,DepEd Bldg. 2 535,North High School
+87,Francisco Bldg. 143,Eastside High School
+88,Constan Bldg. 196,Westview High School
+89,Palma Bldg. 652,Southridge High School
+90,Rizal Bldg. 350,Riverside High School
+91,DepEd Bldg. 1 218,Central High School
+92,DepEd Bldg. 2 449,North High School
+93,Francisco Bldg. 879,Eastside High School
+94,Constan Bldg. 739,Westview High School
+95,Palma Bldg. 95,Southridge High School
+96,Rizal Bldg. 594,Riverside High School
+97,DepEd Bldg. 1 482,Central High School
+98,DepEd Bldg. 2 181,North High School
+99,Francisco Bldg. 397,Eastside High School
+100,Constan Bldg. 83,Westview High School
+101,Palma Bldg. 761,Southridge High School
+102,Rizal Bldg. 337,Riverside High School
+103,DepEd Bldg. 1 908,Central High School
+104,DepEd Bldg. 2 320,North High School
+105,Francisco Bldg. 479,Eastside High School
+106,Constan Bldg. 706,Westview High School
+107,Palma Bldg. 93,Southridge High School
+108,Rizal Bldg. 474,Riverside High School
+109,DepEd Bldg. 1 99,Central High School
+110,DepEd Bldg. 2 964,North High School
+111,Francisco Bldg. 437,Eastside High School
+112,Constan Bldg. 620,Westview High School
+113,Palma Bldg. 605,Southridge High School
+114,Rizal Bldg. 661,Riverside High School
+115,DepEd Bldg. 1 908,Central High School
+116,DepEd Bldg. 2 295,North High School
+117,Francisco Bldg. 424,Eastside High School
+118,Constan Bldg. 466,Westview High School
+119,Palma Bldg. 521,Southridge High School
+120,Rizal Bldg. 512,Riverside High School
+121,DepEd Bldg. 1 484,Central High School
+122,DepEd Bldg. 2 165,North High School
+123,Francisco Bldg. 699,Eastside High School
+124,Constan Bldg. 193,Westview High School
+125,Palma Bldg. 214,Southridge High School
+126,Rizal Bldg. 879,Riverside High School
+127,DepEd Bldg. 1 915,Central High School
+128,DepEd Bldg. 2 539,North High School
+129,Francisco Bldg. 156,Eastside High School
+130,Constan Bldg. 199,Westview High School
+131,Palma Bldg. 410,Southridge High School
+132,Rizal Bldg. 1,Riverside High School
+133,DepEd Bldg. 1 974,Central High School
+134,DepEd Bldg. 2 71,North High School
+135,Francisco Bldg. 286,Eastside High School
+136,Constan Bldg. 665,Westview High School
+137,Palma Bldg. 322,Southridge High School
+138,Rizal Bldg. 862,Riverside High School
+139,DepEd Bldg. 1 653,Central High School
+140,DepEd Bldg. 2 872,North High School
+141,Francisco Bldg. 820,Eastside High School
+142,Constan Bldg. 323,Westview High School
+143,Palma Bldg. 405,Southridge High School
+144,Rizal Bldg. 961,Riverside High School
+145,DepEd Bldg. 1 379,Central High School
+146,DepEd Bldg. 2 32,North High School
+147,Francisco Bldg. 587,Eastside High School
+148,Constan Bldg. 666,Westview High School
+149,Palma Bldg. 992,Southridge High School
+150,Rizal Bldg. 257,Riverside High School
+151,DepEd Bldg. 1 531,Central High School
+152,DepEd Bldg. 2 609,North High School
+153,Francisco Bldg. 795,Eastside High School
+154,Constan Bldg. 832,Westview High School
+155,Palma Bldg. 831,Southridge High School
+156,Rizal Bldg. 772,Riverside High School
+157,DepEd Bldg. 1 867,Central High School
+158,DepEd Bldg. 2 609,North High School
+159,Francisco Bldg. 992,Eastside High School
+160,Constan Bldg. 679,Westview High School
+161,Palma Bldg. 890,Southridge High School
+162,Rizal Bldg. 574,Riverside High School
+163,DepEd Bldg. 1 864,Central High School
+164,DepEd Bldg. 2 487,North High School
+165,Francisco Bldg. 540,Eastside High School
+166,Constan Bldg. 483,Westview High School
+167,Palma Bldg. 432,Southridge High School
+168,Rizal Bldg. 129,Riverside High School
+169,DepEd Bldg. 1 997,Central High School
+170,DepEd Bldg. 2 849,North High School
+171,Francisco Bldg. 674,Eastside High School
+172,Constan Bldg. 978,Westview High School
+173,Palma Bldg. 92,Southridge High School
+174,Rizal Bldg. 269,Riverside High School
+175,DepEd Bldg. 1 464,Central High School
+176,DepEd Bldg. 2 781,North High School
+177,Francisco Bldg. 390,Eastside High School
+178,Constan Bldg. 970,Westview High School
+179,Palma Bldg. 434,Southridge High School
+180,Rizal Bldg. 154,Riverside High School
+181,DepEd Bldg. 1 807,Central High School
+182,DepEd Bldg. 2 72,North High School
+183,Francisco Bldg. 353,Eastside High School
+184,Constan Bldg. 147,Westview High School
+185,Palma Bldg. 968,Southridge High School
+186,Rizal Bldg. 808,Riverside High School
+187,DepEd Bldg. 1 776,Central High School
+188,DepEd Bldg. 2 44,North High School
+189,Francisco Bldg. 323,Eastside High School
+190,Constan Bldg. 565,Westview High School
+191,Palma Bldg. 108,Southridge High School
+192,Rizal Bldg. 250,Riverside High School
+193,DepEd Bldg. 1 554,Central High School
+194,DepEd Bldg. 2 518,North High School
+195,Francisco Bldg. 440,Eastside High School
+196,Constan Bldg. 648,Westview High School
+197,Palma Bldg. 355,Southridge High School
+198,Rizal Bldg. 125,Riverside High School
+199,DepEd Bldg. 1 360,Central High School
+200,DepEd Bldg. 2 596,North High School
