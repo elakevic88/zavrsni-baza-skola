@@ -53,8 +53,7 @@ for (let i = 1; i < zgrade.length; i++) {
     const id = parseInt(stupci[0]);
     const naziv = ocisti(stupci[2]);
     const adresa = listaAdresa[(i - 1) % listaAdresa.length];
-    baza.prepare('INSERT INTO SKOLE (ID_Skola, Naziv, Adresa) VALUES (?, ?, ?)')
-        .run(id, naziv, adresa);
+    baza.prepare('INSERT INTO SKOLE (ID_Skola, Naziv, Adresa) VALUES (?, ?, ?)').run(id, naziv, adresa);
 }
 console.log('Uspješno unesene škole');
 

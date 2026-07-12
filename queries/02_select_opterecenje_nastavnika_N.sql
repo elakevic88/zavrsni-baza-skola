@@ -1,5 +1,5 @@
 SELECT n.Ime, n.Prezime, zv.Naziv AS Zvanje, z.Naziv AS Zupanija,
-       COUNT(DISTINCT np.PREDMETI_ID_Predmet) AS Broj_Predmeta
+    COUNT(DISTINCT np.PREDMETI_ID_Predmet) AS Broj_Predmeta
 FROM NASTAVNICI n
 INNER JOIN ZVANJA zv ON n.ZVANJA_ID_Zvanje = zv.ID_Zvanje
 INNER JOIN N_PREDMET np ON n.ID_Nastavnik = np.NASTAVNICI_ID_Nastavnik
