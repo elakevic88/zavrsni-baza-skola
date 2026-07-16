@@ -84,7 +84,7 @@ async function generateSchema(dbPath) {
 
     const tableCount = Object.keys(schema).length;
     if (tableCount === 0) {
-        console.error('U bazi nije pronađena nijedna tablica.');
+        console.error('Nema tablice!');
         return;
     }
     console.log(`Pronađeno ${tableCount} tablica: ${Object.keys(schema).join(', ')}`);
@@ -102,7 +102,7 @@ async function generateSchema(dbPath) {
         await sharp(Buffer.from(svg), { density: 200 }).png().toFile(outPng);
         console.log(`PNG spremljen: ${outPng}`);
     } catch (err) {
-        console.warn(`Konverzija u PNG nije uspjela (sharp): ${err.message}. SVG datoteka je i dalje dostupna i može se otvoriti u pregledniku.`);
+        console.warn(`Error: ${err.message}.`);
     }
 }
 
@@ -135,7 +135,7 @@ async function main() {
             console.log(`Stvorena baza podataka: ${dbPath}`);
             await generateSchema(dbPath);
         } catch (error) {
-            console.error(`Greška prilikom procesiranja datoteke ${file}:`, error);
+            console.error(`Greška kod dadoteke ${file}:`, error);
         }
     }
 }
