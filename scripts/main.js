@@ -3,6 +3,7 @@ const fs = require('fs');
 const path = require('path');
 const { performance } = require('perf_hooks');
 
+// -> povezivanje sve 3 baze
 const originalDb = new Database(
     path.join(__dirname, '../databases/dbs/01_schema_original.db'),
     { readonly: true }
@@ -15,6 +16,21 @@ const denormDb = new Database(
     path.join(__dirname, '../databases/dbs/03_schema_denormalized.db'),
     { readonly: true }
 );
+
+
+function ucitajSql(imeDatoteke) {
+    const putanja = path.join(__dirname, '../queries', imeDatoteke);
+    return fs.readFileSync(putanja, 'utf8')
+        .replace(/^\uFEFF/, '')
+        .replace(/\r/g, '')
+        .replace(/ŠKOLE/g, 'SKOLE')
+        .replace(/UČENICI/g, 'UCENICI')
+        .replace(/ZAVRŠNA_O/g, 'ZAVRSNA_O')
+        .replace(/POŠTE/g, 'POSTE')
+        .replace(/ŽUPANIJE/g, 'ZUPANIJE')
+        .replace(/NASTAVNIČE/g, 'NASTAVNICI')
+        .trim();
+}
 
 // -> vrijeme ivršavanja
 function izmjeriVrijeme(baza, sql, ponavljanja = 50) {
@@ -45,7 +61,6 @@ function izmjeriThroughput(baza, sql, trajanjeSek = 2) {
     return Math.round(brojac / trajanjeSek);
 }
 
-
 // -> veličina baze na disku u megabajtima
 function velicina(imeDatoteke) {
     const putanja = path.join(__dirname, '../databases/dbs', imeDatoteke);
@@ -63,17 +78,24 @@ function analizaPlana(baza, sql) {
 
 // -> hop
 function prebrojHopove(sql) {
-    const joinObrasc = /\bJOIN\b/gi;
-    const pronadjeni = sql.match(joinObrasc);
-    const brojJoinova = pronadjeni ? pronadjeni.length : 0;
-    const brojTablica = brojJoinova + 1;
-    const hopovi = brojJoinova;
-    return { hopovi, brojTablica };
+    const tekst = sql.toUpperCase();
+    if (tekst.includes("FROM NASTAVNIK_INFO") ||
+        tekst.includes("FROM UCENIK_PREGLED")) {
+        return {
+            hopovi: 0,
+            brojTablica: 1
+        };
+    }
+    const brojJoinova = (tekst.match(/\bJOIN\b/g) || []).length;
+    return {
+        hopovi: brojJoinova,
+        brojTablica: brojJoinova + 1
+    };
 }
 
 // -> ispisi
 function ispisi(naziv, rezultati) {
-    console.log(`\n${naziv}`);
+    console.log(`\n ${naziv}`);
     console.log(`Prosjek: ${rezultati.vrijeme.prosjek.toFixed(3)} ms`);
     console.log(`Min: ${rezultati.vrijeme.min.toFixed(3)} ms`);
     console.log(`Max: ${rezultati.vrijeme.max.toFixed(3)} ms`);
@@ -88,31 +110,19 @@ function ispisi(naziv, rezultati) {
 const upitiOriginalna = [
     {
         naziv: 'Opterećenje nastavnika',
-        sql: `SELECT n.Ime, n.Prezime, COUNT(np.PREDMETI_ID_Predmet) AS Broj_predmeta
-              FROM NASTAVNICI n
-              JOIN N_PREDMET np ON n.ID_Nastavnik = np.NASTAVNICI_ID_Nastavnik
-              GROUP BY n.Ime, n.Prezime
-              ORDER BY Broj_predmeta DESC`
+        sql: ucitajSql('01_select_opterecenje_nastavnika_O.sql')
     },
     {
         naziv: 'Rang škola po broju učenika',
-        sql: `SELECT s.Naziv AS Skola, COUNT(u.ID_Ucenik) AS Broj_ucenika
-              FROM SKOLE s
-              INNER JOIN RAZREDI r ON s.ID_Skola = r.SKOLE_ID_Skola
-              INNER JOIN UCENICI u ON r.ID_Razred = u.RAZREDI_ID_Razred
-              GROUP BY s.Naziv`
+        sql: ucitajSql('01_select_rang_skola_O.sql')
     },
     {
         naziv: 'Optimizirani upit nastavnika',
-        sql: `SELECT n.Ime, n.Prezime, zv.Naziv AS Zvanje,
-                     COUNT(DISTINCT np.PREDMETI_ID_Predmet) AS Broj_Predmeta
-              FROM NASTAVNICI n
-              INNER JOIN ZVANJA zv ON n.ZVANJA_ID_Zvanje = zv.ID_Zvanje
-              INNER JOIN N_PREDMET np ON n.ID_Nastavnik = np.NASTAVNICI_ID_Nastavnik
-              INNER JOIN N_RAZRED nr ON n.ID_Nastavnik = nr.NASTAVNICI_ID_Nastavnik
-              INNER JOIN RAZREDI r ON nr.RAZREDI_ID_Razred = r.ID_Razred
-              INNER JOIN SKOLE s ON r.SKOLE_ID_Skola = s.ID_Skola
-              GROUP BY n.ID_Nastavnik`
+        sql: ucitajSql('01_select_optimiziran_nastavnik_O.sql')
+    },
+    {
+        naziv: 'Podaci učenika s lokacijom',
+        sql: ucitajSql('01_select_optimiziran_ucenik_O.sql')
     }
 ];
 
@@ -120,100 +130,59 @@ const upitiOriginalna = [
 const upitiNormalizirana = [
     {
         naziv: 'Opterećenje nastavnika',
-        sql: `SELECT n.Ime, n.Prezime, COUNT(np.PREDMETI_ID_Predmet) AS Broj_predmeta
-              FROM NASTAVNICI n
-              JOIN N_PREDMET np ON n.ID_Nastavnik = np.NASTAVNICI_ID_Nastavnik
-              GROUP BY n.Ime, n.Prezime
-              ORDER BY Broj_predmeta DESC`
+        sql: ucitajSql('02_select_opterecenje_nastavnika_N.sql')
     },
     {
         naziv: 'Rang škola po broju učenika',
-        sql: `SELECT s.Naziv AS Skola, COUNT(u.ID_Ucenik) AS Broj_ucenika
-              FROM SKOLE s
-              INNER JOIN RAZREDI r ON s.ID_Skola = r.SKOLE_ID_Skola
-              INNER JOIN UCENICI u ON r.ID_Razred = u.RAZREDI_ID_Razred
-              GROUP BY s.Naziv`
+        sql: ucitajSql('02_select_rang_skola_N.sql')
     },
     {
         naziv: 'Optimizirani upit nastavnika',
-        sql: `SELECT n.Ime, n.Prezime, zv.Naziv AS Zvanje,
-                     COUNT(DISTINCT np.PREDMETI_ID_Predmet) AS Broj_Predmeta
-              FROM NASTAVNICI n
-              INNER JOIN ZVANJA zv ON n.ZVANJA_ID_Zvanje = zv.ID_Zvanje
-              INNER JOIN N_PREDMET np ON n.ID_Nastavnik = np.NASTAVNICI_ID_Nastavnik
-              INNER JOIN N_RAZRED nr ON n.ID_Nastavnik = nr.NASTAVNICI_ID_Nastavnik
-              INNER JOIN RAZREDI r ON nr.RAZREDI_ID_Razred = r.ID_Razred
-              INNER JOIN SKOLE s ON r.SKOLE_ID_Skola = s.ID_Skola
-              GROUP BY n.ID_Nastavnik`
+        sql: ucitajSql('02_select_optimiziran_nastavnik_N.sql')
     },
     {
         naziv: 'Optimizirani upit učenika (5 JOINova)',
-        sql: `SELECT u.Ime, u.Prezime, r.Broj_razreda, r.Slovo_razreda,
-                     s.Naziv AS Naziv_skole, p.Mjesto, z.Naziv AS Naziv_zupanije
-              FROM UCENICI u
-              JOIN RAZREDI r ON u.RAZREDI_ID_Razred = r.ID_Razred
-              JOIN SKOLE s ON r.SKOLE_ID_Skola = s.ID_Skola
-              JOIN POSTE p ON u.POSTE_ID_Posta = p.ID_Posta
-              JOIN ZUPANIJE z ON p.ZUPANIJE_ID_Zupanija = z.ID_Zupanija`
+        sql: ucitajSql('02_select_optimiziran_ucenik_N.sql')
     }
 ];
 
-
-// -> upiti - denormalozirana (flai i join)
+// -> upiti - denormalozirana (flat i join)
 const upitiDenormalizirana = [
     {
         naziv: 'Opterećenje nastavnika (JOIN)',
-        sql: `SELECT n.Ime, n.Prezime, COUNT(np.PREDMETI_ID_Predmet) AS Broj_predmeta
-              FROM NASTAVNICI n
-              JOIN N_PREDMET np ON n.ID_Nastavnik = np.NASTAVNICI_ID_Nastavnik
-              GROUP BY n.Ime, n.Prezime
-              ORDER BY Broj_predmeta DESC`
+        sql: ucitajSql('03_select_opterecenje_nastavnika_D.sql')
     },
     {
-        naziv: 'Opterećenje nastavnika (NASTAVNIK_INFO - 0 hopova)',
-        sql: `SELECT Ime, Prezime, Naziv_zvanja AS Zvanje, Broj_predmeta
-              FROM NASTAVNIK_INFO
-              ORDER BY Broj_predmeta DESC`
+        naziv: 'Opterećenje nastavnika (NASTAVNIK_INFO)',
+        sql: ucitajSql('03_select_nastavnik_info_D.sql')
     },
     {
         naziv: 'Rang škola po broju učenika (JOIN)',
-        sql: `SELECT s.Naziv AS Skola, COUNT(u.ID_Ucenik) AS Broj_ucenika
-              FROM SKOLE s
-              INNER JOIN RAZREDI r ON s.ID_Skola = r.SKOLE_ID_Skola
-              INNER JOIN UCENICI u ON r.ID_Razred = u.RAZREDI_ID_Razred
-              GROUP BY s.Naziv`
+        sql: ucitajSql('03_select_rang_skola_D.sql')
     },
     {
-        naziv: 'Rang škola po broju učenika (UCENIK_PREGLED - 0 hopova)',
-        sql: `SELECT Naziv_skole AS Skola, Naziv_zupanije AS Zupanija, COUNT(ID_Ucenik) AS Broj_ucenika
-              FROM UCENIK_PREGLED
-              GROUP BY Naziv_skole, Naziv_zupanije`
+        naziv: 'Rang škola po broju učenika (UCENIK_PREGLED)',
+        sql: ucitajSql('03_select_ucenik_pregled_D.sql')
     },
     {
-        naziv: 'Podaci učenika s lokacijom (5 JOINova)',
-        sql: `SELECT u.Ime, u.Prezime, r.Broj_razreda, r.Slovo_razreda,
-                     s.Naziv AS Naziv_skole, p.Mjesto, z.Naziv AS Naziv_zupanije
-              FROM UCENICI u
-              JOIN RAZREDI r ON u.RAZREDI_ID_Razred = r.ID_Razred
-              JOIN SKOLE s ON r.SKOLE_ID_Skola = s.ID_Skola
-              JOIN POSTE p ON u.POSTE_ID_Posta = p.ID_Posta
-              JOIN ZUPANIJE z ON p.ZUPANIJE_ID_Zupanija = z.ID_Zupanija`
+        naziv: 'Podaci učenika s lokacijom (JOIN)',
+        sql: ucitajSql('03_select_optimiziran_ucenik_D.sql')
     },
     {
-        naziv: 'Podaci učenika s lokacijom (UCENIK_PREGLED - 0 hopova)',
-        sql: `SELECT Ime, Prezime, Broj_razreda, Slovo_razreda,
-                     Naziv_skole, Mjesto, Naziv_zupanije
-              FROM UCENIK_PREGLED`
+        naziv: 'Podaci učenika s lokacijom (UCENIK_PREGLED)',
+        sql: ucitajSql('03_select_ucenik_podaci_D.sql')
+    },
+    {
+        naziv: 'Optimizirani upit nastavnika (NASTAVNIK_INFO)',
+        sql: ucitajSql('03_select_optimiziran_nastavnik_info_D.sql')
     }
 ];
 
-console.log('Usporedba performansi baza podataka');
- 
 // -> veličine baza
 console.log(`Originalna: ${velicina('01_schema_original.db')} MB`);
 console.log(`Normalizirana: ${velicina('02_schema_normalized.db')} MB`);
 console.log(`Denormalizirana: ${velicina('03_schema_denormalized.db')} MB`);
- 
+
 // -> originalna baza
 console.log('ORIGINALNA BAZA (nenormalizirana)');
 for (const upit of upitiOriginalna) {
@@ -225,34 +194,34 @@ for (const upit of upitiOriginalna) {
     };
     ispisi(upit.naziv, rezultati);
 }
- 
+
 // -> normalizirana baza
 console.log('NORMALIZIRANA BAZA (3NF)');
 for (const upit of upitiNormalizirana) {
     const rezultati = {
-        vrijeme:    izmjeriVrijeme(normDb, upit.sql),
+        vrijeme: izmjeriVrijeme(normDb, upit.sql),
         throughput: izmjeriThroughput(normDb, upit.sql),
-        hop:        prebrojHopove(upit.sql),
-        plan:       analizaPlana(normDb, upit.sql)
+        hop: prebrojHopove(upit.sql),
+        plan: analizaPlana(normDb, upit.sql)
     };
     ispisi(upit.naziv, rezultati);
 }
- 
+
 // -> denormalizirana baza
 console.log('DENORMALIZIRANA BAZA');
 for (const upit of upitiDenormalizirana) {
     const rezultati = {
         vrijeme: izmjeriVrijeme(denormDb, upit.sql),
         throughput: izmjeriThroughput(denormDb, upit.sql),
-        hop: prebrojHopove(upit.sql),
+        hop:  prebrojHopove(upit.sql),
         plan: analizaPlana(denormDb, upit.sql)
     };
     ispisi(upit.naziv, rezultati);
 }
- 
+
 // -> usporedba tablica
 console.log('USPOREDBA: isti upit na sve tri baze');
- 
+
 const usporedba = [
     {
         naziv: 'Rang škola po broju učenika',
@@ -262,25 +231,25 @@ const usporedba = [
         denormFlat: upitiDenormalizirana[3].sql
     },
     {
-        naziv: 'Opterećenje nastavnika',
-        original:  upitiOriginalna[0].sql,
+        naziv: 'Opterecenje nastavnika',
+        original: upitiOriginalna[0].sql,
         norm: upitiNormalizirana[0].sql,
         denormJoin: upitiDenormalizirana[0].sql,
         denormFlat: upitiDenormalizirana[1].sql
     }
 ];
- 
+
 for (const u of usporedba) {
     console.log(`\n${u.naziv}`);
-    console.log(`${'Baza'.padEnd(35)} ${'Prosjek (ms)'.padEnd(14)} ${'Throughput'.padEnd(12)} ${'HOPovi'}`);
- 
+    console.log(`${'Baza'.padEnd(35)} ${'Prosjek (ms)'.padEnd(14)} ${'Throughput'.padEnd(12)} ${'HOP-ovi'}`);
+
     const redovi = [
         { naziv: 'Originalna', sql: u.original, db: originalDb },
         { naziv: 'Normalizirana', sql: u.norm, db: normDb },
         { naziv: 'Denormalizirana (JOIN)', sql: u.denormJoin, db: denormDb },
         { naziv: 'Denormalizirana (flat tablica)', sql: u.denormFlat, db: denormDb }
     ];
- 
+
     for (const red of redovi) {
         const vr = izmjeriVrijeme(red.db, red.sql, 20);
         const th = izmjeriThroughput(red.db, red.sql, 1);
@@ -288,12 +257,10 @@ for (const u of usporedba) {
         console.log(`${red.naziv.padEnd(35)} ${vr.prosjek.toFixed(3).padEnd(14)} ${th.toString().padEnd(12)} ${hp.hopovi}`);
     }
 }
- 
+
 // -> spremamo u csv dadoteku
-const csvRedovi = [
-    'Baza,Upit,ProsjekMs,MinMs,MaxMs,ThroughputQs,Hopovi,BrojTablica,Skeniranja,Pretrazivanja'
-];
- 
+const csvRedovi = ['Baza,Upit,ProsjekMs,MinMs,MaxMs,ThroughputQs,Hopovi,BrojTablica,Skeniranja,Pretrazivanja'];
+
 function dodajUCsv(nazivBaze, upiti, db) {
     for (const upit of upiti) {
         const vr = izmjeriVrijeme(db, upit.sql, 20);
@@ -303,18 +270,18 @@ function dodajUCsv(nazivBaze, upiti, db) {
         csvRedovi.push(`${nazivBaze},"${upit.naziv}",${vr.prosjek.toFixed(3)},${vr.min.toFixed(3)},${vr.max.toFixed(3)},${th},${hp.hopovi},${hp.brojTablica},${pl.skeniranja},${pl.pretrazivanja}`);
     }
 }
- 
-dodajUCsv('Originalna',    upitiOriginalna,    originalDb);
+
+dodajUCsv('Originalna', upitiOriginalna, originalDb);
 dodajUCsv('Normalizirana', upitiNormalizirana, normDb);
 dodajUCsv('Denormalizirana', upitiDenormalizirana, denormDb);
- 
+
 fs.writeFileSync(
     path.join(__dirname, '../rezultati.csv'),
     csvRedovi.join('\n'),
     'utf8'
 );
 console.log('\nRezultati spremljeni u: rezultati.csv');
- 
+
 originalDb.close();
 normDb.close();
 denormDb.close();

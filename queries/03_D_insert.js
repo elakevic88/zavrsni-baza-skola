@@ -191,7 +191,7 @@ for (let i = 0; i < ucenici.length; i++) {
     const oib = String(id).padStart(11, '0');
 
     db.prepare('INSERT INTO UCENICI (ID_Ucenik, Ime, Prezime, Datum_rodjenja, OIB, Ime_oca, Adresa, Broj_upisanih_predmeta, RAZREDI_ID_Razred, POSTE_ID_Posta) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)')
-        .run(id, ime, prezime, datumRodjenja, oib, imeOca, adresa, brojPredmeta, razredId, postaId);
+    .run(id, ime, prezime, datumRodjenja, oib, imeOca, adresa, brojPredmeta, razredId, postaId);
 }
 console.log('Uspješno uneseni učenici');
 

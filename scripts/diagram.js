@@ -4,16 +4,9 @@ const Database = require('better-sqlite3');
 const { instance } = require('@viz-js/viz');
 const sharp = require('sharp');
 
-// helper funkcija za dohvat sheme baze
+
 function getSchema(db) {
-    const tables = db
-        .prepare(
-            `SELECT name FROM sqlite_master
-       WHERE type='table' AND name NOT LIKE 'sqlite_%'
-       ORDER BY name`
-        )
-        .all()
-        .map((r) => r.name);
+    const tables = db.prepare(`SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%' ORDER BY name`).all().map((r) => r.name);
 
     const schema = {};
     for (const table of tables) {
@@ -33,10 +26,10 @@ function escapeHtml(str) {
 
 function buildDot(schema) {
     let dot = 'digraph schema {\n';
-    dot += '  rankdir=LR;\n';
-    dot += '  graph [fontname="Helvetica", bgcolor="white", nodesep=0.6, ranksep=1.0];\n';
-    dot += '  node [shape=plain, fontname="Helvetica"];\n';
-    dot += '  edge [fontname="Helvetica", fontsize=10, color="#555555", arrowsize=0.7];\n\n';
+    dot += 'rankdir=LR;\n';
+    dot += 'graph [fontname="Helvetica", bgcolor="white", nodesep=0.6, ranksep=1.0];\n';
+    dot += 'node [shape=plain, fontname="Helvetica"];\n';
+    dot += 'edge [fontname="Helvetica", fontsize=10, color="#555555", arrowsize=0.7];\n\n';
 
     for (const [table, { columns, fks }] of Object.entries(schema)) {
         const fkCols = new Set(fks.map((fk) => fk.from));
@@ -50,29 +43,24 @@ function buildDot(schema) {
                 else if (isFk) badge = ' <font color="#4169e1"><b>FK</b></font>';
                 const nameLabel = isPk ? `<b>${escapeHtml(col.name)}</b>` : escapeHtml(col.name);
                 const bg = isPk ? ' bgcolor="#fff7e0"' : '';
-                return `      <tr><td align="left" port="${escapeHtml(col.name)}"${bg}>${nameLabel}${badge}</td><td align="left"${bg}><font color="#666666">${escapeHtml(col.type || '')}</font></td></tr>`;
-            })
-            .join('\n');
+                return `<tr><td align="left" port="${escapeHtml(col.name)}"${bg}>${nameLabel}${badge}</td><td align="left"${bg}><font color="#666666">${escapeHtml(col.type || '')}</font></td></tr>`;
+            }).join('\n');
 
-        dot += `  "${table}" [label=<
-    <table border="1" cellborder="0" cellspacing="0" cellpadding="6" bgcolor="white">
-      <tr><td colspan="2" bgcolor="#2c3e50"><font color="white"><b>${escapeHtml(table)}</b></font></td></tr>
-${rows}
-    </table>
-  >];\n\n`;
+        dot += `"${table}" [label=<
+        <table border="1" cellborder="0" cellspacing="0" cellpadding="6" bgcolor="white">
+        <tr><td colspan="2" bgcolor="#2c3e50"><font color="white"><b>${escapeHtml(table)}</b></font></td></tr>
+        ${rows}</table>>];\n\n`;
     }
 
     for (const [table, { fks }] of Object.entries(schema)) {
         for (const fk of fks) {
-            dot += `  "${table}":"${fk.from}" -> "${fk.table}":"${fk.to}" [label="${fk.from} -> ${fk.to}"];\n`;
+            dot += `"${table}":"${fk.from}" -> "${fk.table}":"${fk.to}" [label="${fk.from} -> ${fk.to}"];\n`;
         }
     }
-
     dot += '}\n';
     return dot;
 }
 
-// helper funkcija za prikaz sheme baze
 async function generateSchema(dbPath) {
     if (!fs.existsSync(dbPath)) {
         console.error(`Baza nije pronađena na putanji: ${dbPath}`);
@@ -111,13 +99,10 @@ async function generateSchema(dbPath) {
         await sharp(Buffer.from(svg), { density: 200 }).png().toFile(outPng);
         console.log(`PNG spremljen: ${outPng}`);
     } catch (err) {
-        console.warn(
-            `Konverzija u PNG nije uspjela (sharp): ${err.message}. SVG datoteka je i dalje dostupna i može se otvoriti u pregledniku.`
-        );
+        console.warn(`Konverzija u PNG nije uspjela (sharp): ${err.message}. SVG datoteka je i dalje dostupna i može se otvoriti u pregledniku.`);
     }
 }
 
-// glavni dio programa
 async function main() {
     const queries = path.join(__dirname, '..', 'databases', 'create_queries');
     const target = path.join(__dirname, '..', 'databases', 'dbs');

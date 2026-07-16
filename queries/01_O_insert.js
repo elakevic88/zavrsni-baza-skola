@@ -31,8 +31,7 @@ for (let i = 1; i < gradovi.length; i++) {
   if (!red) continue;
   const [zupanijaId, gradId, naziv, zip] = red.split(',');
   const idPoste = parseInt(zupanijaId) * 1000 + parseInt(gradId);
-  baza.prepare('INSERT INTO POSTE (ID_Posta, Postanski_broj, Mjesto, ZUPANIJE_ID_Zupanija) VALUES (?, ?, ?, ?)')
-    .run(idPoste, parseInt(zip) || 0, ocisti(naziv), parseInt(zupanijaId));
+  baza.prepare('INSERT INTO POSTE (ID_Posta, Postanski_broj, Mjesto, ZUPANIJE_ID_Zupanija) VALUES (?, ?, ?, ?)').run(idPoste, parseInt(zip) || 0, ocisti(naziv), parseInt(zupanijaId));
 }
 console.log('Uspješno unešene pošte');
 
@@ -53,8 +52,7 @@ for (let i = 1; i < zgrade.length; i++) {
   const [id, , nazivSkole] = red.split(',');
   const adresa = listaAdresa[(i - 1) % listaAdresa.length];
   
-  baza.prepare('INSERT INTO SKOLE (ID_Skola, Naziv, Adresa) VALUES (?, ?, ?)')
-    .run(parseInt(id), ocisti(nazivSkole), adresa);
+  baza.prepare('INSERT INTO SKOLE (ID_Skola, Naziv, Adresa) VALUES (?, ?, ?)').run(parseInt(id), ocisti(nazivSkole), adresa);
 }
 console.log('Uspješno unesene škole');
 
@@ -87,8 +85,7 @@ for (let i = 1; i < razredi.length; i++) {
   
   const skolaId = sveSkole.length > 0 ? sveSkole[(i - 1) % sveSkole.length].ID_Skola : 1;
 
-  baza.prepare('INSERT INTO RAZREDI (ID_Razred, Broj_razreda, Slovo_razreda, SKOLE_ID_Skola) VALUES (?, ?, ?, ?)')
-    .run(id, razred, imeRazreda.charAt(0), skolaId);
+  baza.prepare('INSERT INTO RAZREDI (ID_Razred, Broj_razreda, Slovo_razreda, SKOLE_ID_Skola) VALUES (?, ?, ?, ?)').run(id, razred, imeRazreda.charAt(0), skolaId);
 }
 console.log('Uspješno uneseni razredi');
 
@@ -108,8 +105,7 @@ for (let i = 1; i < registrari.length; i++) {
 
   baza.prepare(`
     INSERT INTO NASTAVNICI (ID_Nastavnik, Ime, Prezime, Datum_rodjenja, Pocetak_rada, Kraj_rada, Lista_zavrsenih_skola, ZVANJA_ID_Zvanje)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-  `).run(id, ime, prezime, datumRodjenja, pocetakRada, null, zavrseniFakulteti, zvanjeId);
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?)`).run(id, ime, prezime, datumRodjenja, pocetakRada, null, zavrseniFakulteti, zvanjeId);
 }
 console.log('Uspješno uneseni nastavnici');
 
@@ -143,8 +139,7 @@ for (const nastavnik of sviNastavnici) {
       baza.prepare(`
         INSERT OR IGNORE INTO N_PREDMET
         (PREDMETI_ID_Predmet, NASTAVNICI_ID_Nastavnik, Broj_sati_tjedno)
-        VALUES (?, ?, ?)
-      `).run(predmetId, nastavnik.ID_Nastavnik, brojSati);
+        VALUES (?, ?, ?)`).run(predmetId, nastavnik.ID_Nastavnik, brojSati);
     }
   }
 }
@@ -207,8 +202,7 @@ for (let i = 0; i < ucenici.length; i++) {
 
   baza.prepare(`
     INSERT INTO UCENICI (ID_Ucenik, Ime, Prezime, Datum_rodjenja, OIB, Ime_oca, Adresa, Broj_upisanih_predmeta, RAZREDI_ID_Razred, POSTE_ID_Posta)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-  `).run(ucenikId, ime, prezime, datumRodjenja, oib, imeOca, adresaTekst, brojPredmeta, razredId, postaId);
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`).run(ucenikId, ime, prezime, datumRodjenja, oib, imeOca, adresaTekst, brojPredmeta, razredId, postaId);
 }
 console.log('Uspješno uneseni učenici');
 
@@ -223,8 +217,7 @@ for (let i = 1; i < razredi.length; i++) {
   if (!red) continue;
   const [razredId] = red.split(',');
   const nastavnikId = sviNastavnici[(i - 1) % sviNastavnici.length].ID_Nastavnik;
-  baza.prepare('INSERT INTO N_RAZRED (RAZREDI_ID_Razred, NASTAVNICI_ID_Nastavnik) VALUES (?, ?)')
-    .run(parseInt(razredId), nastavnikId);
+  baza.prepare('INSERT INTO N_RAZRED (RAZREDI_ID_Razred, NASTAVNICI_ID_Nastavnik) VALUES (?, ?)').run(parseInt(razredId), nastavnikId);
 }
 console.log('Uspješno unesen nastavnik razred');
 
@@ -234,8 +227,7 @@ for (let i = 1; i < upisi.length; i++) {
   const [, ucenikId, razredId] = red.split(',');
   const predmetiRazreda = razredPredmeti[parseInt(razredId)] || [];
   for (const predmetId of predmetiRazreda) {
-    baza.prepare('INSERT OR IGNORE INTO P_UCENIK (UCENICI_ID_Ucenik, PREDMETI_ID_Predmet) VALUES (?, ?)')
-      .run(parseInt(ucenikId), predmetId);
+    baza.prepare('INSERT OR IGNORE INTO P_UCENIK (UCENICI_ID_Ucenik, PREDMETI_ID_Predmet) VALUES (?, ?)').run(parseInt(ucenikId), predmetId);
   }
 }
 console.log('Uspješno unesen predmet učenik');
@@ -257,8 +249,7 @@ for (let i = 1; i < ispiti.length; i++) {
   const ucenikId = upisMap[parseInt(enrollId)];
   if (!ucenikId) continue;
   const ocjena = moguceOcjene[Math.floor(Math.random() * moguceOcjene.length)];
-  baza.prepare('INSERT OR IGNORE INTO ZAVRSNA_O (UCENICI_ID_Ucenik, OCJENE_ID_Ocjena) VALUES (?, ?)')
-    .run(ucenikId, ocjena);
+  baza.prepare('INSERT OR IGNORE INTO ZAVRSNA_O (UCENICI_ID_Ucenik, OCJENE_ID_Ocjena) VALUES (?, ?)').run(ucenikId, ocjena);
 }
 console.log('Uspješno unesena završna ocjena');
 
