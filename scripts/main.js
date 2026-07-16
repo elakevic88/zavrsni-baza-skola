@@ -23,12 +23,6 @@ function ucitajSql(imeDatoteke) {
     return fs.readFileSync(putanja, 'utf8')
         .replace(/^\uFEFF/, '')
         .replace(/\r/g, '')
-        .replace(/ŠKOLE/g, 'SKOLE')
-        .replace(/UČENICI/g, 'UCENICI')
-        .replace(/ZAVRŠNA_O/g, 'ZAVRSNA_O')
-        .replace(/POŠTE/g, 'POSTE')
-        .replace(/ŽUPANIJE/g, 'ZUPANIJE')
-        .replace(/NASTAVNIČE/g, 'NASTAVNICI')
         .trim();
 }
 
@@ -36,6 +30,9 @@ function ucitajSql(imeDatoteke) {
 function izmjeriVrijeme(baza, sql, ponavljanja = 50) {
     const stmt = baza.prepare(sql);
     const vremena = [];
+    
+    try { stmt.all(); } catch(e) {}
+    
     for (let i = 0; i < ponavljanja; i++) {
         const pocetak = performance.now();
         stmt.all();
@@ -54,11 +51,16 @@ function izmjeriThroughput(baza, sql, trajanjeSek = 2) {
     const stmt = baza.prepare(sql);
     let brojac = 0;
     const pocetak = performance.now();
-    while ((performance.now() - pocetak) < trajanjeSek * 1000) {
+    let proteklo;
+    
+    do {
         stmt.all();
         brojac++;
-    }
-    return Math.round(brojac / trajanjeSek);
+        proteklo = performance.now() - pocetak;
+    } while (proteklo < trajanjeSek * 1000);
+    
+    const stvarnoTrajanjeSek = proteklo / 1000;
+    return Math.round(brojac / stvarnoTrajanjeSek);
 }
 
 // -> veličina baze na disku u megabajtima

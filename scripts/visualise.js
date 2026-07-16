@@ -2,30 +2,20 @@ const fs = require('fs');
 const path = require('path');
 const { instance } = require('@viz-js/viz');
 const sharp = require('sharp');
-
+const { parse } = require('csv-parse/sync');
 
 const csvPutanja = path.join(__dirname, '../rezultati.csv');
-const csvSadrzaj = fs.readFileSync(csvPutanja, 'utf8').replace(/\r/g, '').trim();
-const redovi = csvSadrzaj.split('\n');
+const csvSadrzaj = fs.readFileSync(csvPutanja, 'utf8').replace(/^\uFEFF/, '').replace(/\r/g, '').trim();
+
+const redovi = parse(csvSadrzaj, {
+    columns: false,
+    skip_empty_lines: true,
+    from_line: 2 
+});
 
 const podaci = [];
-for (let i = 1; i < redovi.length; i++) {
-    const red = redovi[i];
-    const stupci = [];
-    let trenutni = '';
-    let uNavodnicima = false;
-    for (const znak of red) {
-        if (znak === '"') {
-            uNavodnicima = !uNavodnicima;
-        } else if (znak === ',' && !uNavodnicima) {
-            stupci.push(trenutni);
-            trenutni = '';
-        } else {
-            trenutni += znak;
-        }
-    }
-    stupci.push(trenutni);
-
+for (let i = 0; i < redovi.length; i++) {
+    const stupci = redovi[i];
     podaci.push({
         baza: stupci[0],
         upit: stupci[1],

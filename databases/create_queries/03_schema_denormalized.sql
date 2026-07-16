@@ -1,6 +1,3 @@
--- Denormalizirana SHEMA
--- Sadrži sve tablice normalizirane sheme + dodatne denormalizirane
-
 CREATE TABLE ZUPANIJE (
   ID_Zupanija INTEGER PRIMARY KEY,
   Naziv TEXT NOT NULL

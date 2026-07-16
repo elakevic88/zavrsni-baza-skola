@@ -30,8 +30,6 @@ CREATE TABLE RAZREDI (
   FOREIGN KEY (SKOLE_ID_Skola) REFERENCES SKOLE(ID_Skola)
 );
 
--- KRŠI 1NF: Lista_zavrsenih_skola je više vrijednosti u jednom stupcu
--- npr. "PMF Split; FOI Zagreb; ETF" — atomičnost je narušena
 CREATE TABLE NASTAVNICI (
   ID_Nastavnik INTEGER PRIMARY KEY,
   Ime TEXT NOT NULL,
@@ -49,9 +47,6 @@ CREATE TABLE PREDMETI (
   Naziv TEXT NOT NULL
 );
 
--- KRŠI 3NF: Broj_upisanih_predmeta je izvedena vrijednost
--- može se uvijek izračunati iz P_UCENIK tablice
--- čuvanje ovdje stvara rizik nekonzistentnosti
 CREATE TABLE UCENICI (
   ID_Ucenik INTEGER PRIMARY KEY,
   Ime TEXT NOT NULL,
@@ -73,8 +68,6 @@ CREATE TABLE OCJENE (
   Broj_ocjene INTEGER NOT NULL
 );
 
--- KRŠI 2NF: Broj_sati_tjedno ovisi samo o predmetu
--- a ne o kombinaciji (predmet + nastavnik) koja je primarni ključ
 CREATE TABLE N_PREDMET (
   PREDMETI_ID_Predmet INTEGER NOT NULL,
   NASTAVNICI_ID_Nastavnik INTEGER NOT NULL,
@@ -107,3 +100,17 @@ CREATE TABLE ZAVRSNA_O (
   FOREIGN KEY (UCENICI_ID_Ucenik) REFERENCES UCENICI(ID_Ucenik),
   FOREIGN KEY (OCJENE_ID_Ocjena) REFERENCES OCJENE(ID_Ocjena)
 );
+
+CREATE INDEX idx_poste_zupanija ON POSTE(ZUPANIJE_ID_Zupanija);
+CREATE INDEX idx_razredi_skola ON RAZREDI(SKOLE_ID_Skola);
+CREATE INDEX idx_nastavnici_zvanje ON NASTAVNICI(ZVANJA_ID_Zvanje);
+CREATE INDEX idx_ucenici_razred ON UCENICI(RAZREDI_ID_Razred);
+CREATE INDEX idx_ucenici_posta ON UCENICI(POSTE_ID_Posta);
+CREATE INDEX idx_n_predmet_predmet ON N_PREDMET(PREDMETI_ID_Predmet);
+CREATE INDEX idx_n_predmet_nastavnik ON N_PREDMET(NASTAVNICI_ID_Nastavnik);
+CREATE INDEX idx_n_razred_razred ON N_RAZRED(RAZREDI_ID_Razred);
+CREATE INDEX idx_n_razred_nastavnik ON N_RAZRED(NASTAVNICI_ID_Nastavnik);
+CREATE INDEX idx_p_ucenik_ucenik ON P_UCENIK(UCENICI_ID_Ucenik);
+CREATE INDEX idx_p_ucenik_predmet ON P_UCENIK(PREDMETI_ID_Predmet);
+CREATE INDEX idx_zavrsna_o_ucenik ON ZAVRSNA_O(UCENICI_ID_Ucenik);
+CREATE INDEX idx_zavrsna_o_ocjena ON ZAVRSNA_O(OCJENE_ID_Ocjena);

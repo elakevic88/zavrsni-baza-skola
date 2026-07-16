@@ -68,7 +68,10 @@ async function generateSchema(dbPath) {
     }
 
     const parsedPath = path.parse(dbPath);
-    const outputDir = "";
+    const outputDir = path.join(__dirname, '..', 'databases', 'shema_visualisation');
+    if (!fs.existsSync(outputDir)) {
+        fs.mkdirSync(outputDir, { recursive: true });
+    }
     const baseName = parsedPath.name + '_shema';
 
     const outDot = path.join(outputDir, `${baseName}.dot`);
