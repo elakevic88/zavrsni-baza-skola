@@ -139,7 +139,6 @@ edge [fontname="Helvetica", fontsize=10, color="#555555", arrowsize=0.7];
 <tr><td align="left" port="Naziv">Naziv</td><td align="left"><font color="#666666">TEXT</font></td></tr></table>>];
 
 "NASTAVNICI":"ZVANJA_ID_Zvanje" -> "ZVANJA":"ID_Zvanje" [label="ZVANJA_ID_Zvanje -> ID_Zvanje"];
-"NASTAVNIK_INFO":"ID_Nastavnik" -> "NASTAVNICI":"ID_Nastavnik" [label="ID_Nastavnik -> ID_Nastavnik"];
 "NASTAVNIK_SKOLE":"NASTAVNICI_ID_Nastavnik" -> "NASTAVNICI":"ID_Nastavnik" [label="NASTAVNICI_ID_Nastavnik -> ID_Nastavnik"];
 "N_PREDMET":"NASTAVNICI_ID_Nastavnik" -> "NASTAVNICI":"ID_Nastavnik" [label="NASTAVNICI_ID_Nastavnik -> ID_Nastavnik"];
 "N_PREDMET":"PREDMETI_ID_Predmet" -> "PREDMETI":"ID_Predmet" [label="PREDMETI_ID_Predmet -> ID_Predmet"];

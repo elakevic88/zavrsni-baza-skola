@@ -10,7 +10,7 @@ const csvSadrzaj = fs.readFileSync(csvPutanja, 'utf8').replace(/^\uFEFF/, '').re
 const redovi = parse(csvSadrzaj, {
     columns: false,
     skip_empty_lines: true,
-    from_line: 2 
+    from_line: 2
 });
 
 const podaci = [];
@@ -29,12 +29,10 @@ for (let i = 0; i < redovi.length; i++) {
         pretrazivanja: parseInt(stupci[9])
     });
 }
- 
+
 const boje = {
     'Originalna': '#e74c3c',
     'Normalizirana': '#3498db',
-    'Denorm JOIN': '#27ae60',
-    'Denorm FLAT': '#16a085',
     'Denormalizirana': '#2ecc71'
 };
 
@@ -48,44 +46,27 @@ const sheme = [
         filter: r => r.baza === 'Normalizirana'
     },
     {
-        naziv: 'Denorm JOIN',
-        filter: r =>
-            r.baza === 'Denormalizirana' &&
-            r.upit.includes('(JOIN)')
-    },
-    {
-        naziv: 'Denorm FLAT',
-        filter: r =>
-            r.baza === 'Denormalizirana' &&
-            !r.upit.includes('(JOIN)')
+        naziv: 'Denormalizirana',
+        filter: r => r.baza === 'Denormalizirana'
     }
 ];
 
 const jedinstveniUpiti = [
     {
         naslov: 'Opterećenje nastavnika',
-        upiti: [
-            'Opterećenje nastavnika',
-            'Opterećenje nastavnika (JOIN)',
-            'Opterećenje nastavnika (NASTAVNIK_INFO)'
-        ]
+        upiti: ['Opterećenje nastavnika']
     },
     {
         naslov: 'Rang škola po broju učenika',
-        upiti: [
-            'Rang škola po broju učenika',
-            'Rang škola po broju učenika (JOIN)',
-            'Rang škola po broju učenika (UCENIK_PREGLED)'
-        ]
+        upiti: ['Rang škola po broju učenika']
+    },
+    {
+        naslov: 'Optimizirani upit nastavnika',
+        upiti: ['Optimizirani upit nastavnika']
     },
     {
         naslov: 'Podaci učenika s lokacijom',
-        upiti: [
-            'Podaci učenika s lokacijom',
-            'Optimizirani upit učenika (5 JOINova)',
-            'Podaci učenika s lokacijom (JOIN)',
-            'Podaci učenika s lokacijom (UCENIK_PREGLED)'
-        ]
+        upiti: ['Podaci učenika s lokacijom']
     }
 ];
 
@@ -102,13 +83,7 @@ function buildTableDot(podaci) {
     dot += 'node [shape=plain, fontname="Helvetica"];\n\n';
 
     let rows = podaci.map(r => {
-        let oznaka = r.baza;
-
-        if (r.baza === 'Denormalizirana') {
-            oznaka = r.upit.includes('(JOIN)')
-                ? 'Denorm JOIN'
-                : 'Denorm FLAT';
-        }
+        const oznaka = r.baza;
         const bojaBaze = boje[oznaka] || '#95a5a6';
         const hopKlasa = r.hopovi === 0 ? 'color="#27ae60" fontweight="bold"' : '';
 
@@ -128,18 +103,75 @@ function buildTableDot(podaci) {
 
     dot += `tablica [label=<
     <table border="0" cellborder="1" cellspacing="0" cellpadding="10" bgcolor="white">
-      <tr bgcolor="#2c3e50">
-        <td><font color="white"><b>Baza</b></font></td>
-        <td><font color="white"><b>Upit</b></font></td>
-        <td><font color="white"><b>Prosjek (ms)</b></font></td>
-        <td><font color="white"><b>Min (ms)</b></font></td>
-        <td><font color="white"><b>Max (ms)</b></font></td>
-        <td><font color="white"><b>Throughput (q/s)</b></font></td>
-        <td><font color="white"><b>HOP</b></font></td>
-        <td><font color="white"><b>Tablice</b></font></td>
-        <td><font color="white"><b>SCAN</b></font></td>
-        <td><font color="white"><b>SEARCH</b></font></td>
-      </tr>${rows} </table>>];\n`;
+
+    <tr bgcolor="#2c3e50">
+        <td align="center">
+            <font color="white"><b>Baza</b></font><br/>
+            <font color="white" point-size="9">Shema baze</font>
+        </td>
+
+        <td align="center">
+            <font color="white"><b>Upit</b></font><br/>
+            <font color="white" point-size="9">Naziv upita</font>
+        </td>
+
+        <td align="center">
+            <font color="white"><b>Prosjek (ms)</b></font><br/>
+            <font color="white" point-size="9">Prosječno vrijeme izvršavanja</font>
+        </td>
+
+        <td align="center">
+            <font color="white"><b>Min (ms)</b></font><br/>
+            <font color="white" point-size="9">Minimalno vrijeme</font>
+        </td>
+
+        <td align="center">
+            <font color="white"><b>Max (ms)</b></font><br/>
+            <font color="white" point-size="9">Maksimalno vrijeme</font>
+        </td>
+
+        <td align="center">
+            <font color="white"><b>Throughput</b></font><br/>
+            <font color="white" point-size="9">Broj upita u sekundi</font>
+        </td>
+
+        <td align="center">
+            <font color="white"><b>HOP</b></font><br/>
+            <font color="white" point-size="9">Broj skokova</font>
+        </td>
+
+        <td align="center">
+            <font color="white"><b>Tablice</b></font><br/>
+            <font color="white" point-size="9">Broj tablica</font>
+        </td>
+
+        <td align="center">
+            <font color="white"><b>SCAN</b></font><br/>
+            <font color="white" point-size="9">Potpuna skeniranja</font>
+        </td>
+
+        <td align="center">
+            <font color="white"><b>SEARCH</b></font><br/>
+            <font color="white" point-size="9">Pretraživanja indeksa</font>
+        </td>
+    </tr>
+
+    <tr bgcolor="#ecf0f1">
+        <td align="center"><font point-size="10"><b>Shema baze</b></font></td>
+        <td align="center"><font point-size="10"><b>Naziv upita</b></font></td>
+        <td align="center"><font point-size="10">Prosječno vrijeme izvršavanja</font></td>
+        <td align="center"><font point-size="10">Minimalno vrijeme</font></td>
+        <td align="center"><font point-size="10">Maksimalno vrijeme</font></td>
+        <td align="center"><font point-size="10">Broj izvršenih upita u sekundi</font></td>
+        <td align="center"><font point-size="10">Broj JOIN operacija</font></td>
+        <td align="center"><font point-size="10">Broj korištenih tablica</font></td>
+        <td align="center"><font point-size="10">Potpuno skeniranje tablica</font></td>
+        <td align="center"><font point-size="10">Pretraživanje pomoću indeksa</font></td>
+    </tr>
+
+    ${rows}
+
+    </table>>];\n`;
 
     dot += '}\n';
     return dot;
@@ -255,7 +287,7 @@ function buildAverageChartDot() {
         </table>
         >
     ];`;
-    dot += `naslov->"${p.naziv}"[style=invis];`;
+        dot += `naslov->"${p.naziv}"[style=invis];`;
 
     });
     dot += "}";
@@ -272,12 +304,22 @@ async function spremiSliku(dot, outputIme) {
         const viz = await instance();
         const svg = viz.renderString(dot, { format: 'svg' });
 
-        await sharp(Buffer.from(svg), {
+        const img = sharp(Buffer.from(svg), {
             density: 200,
             limitInputPixels: false
-        }).resize({
-            width: 2600,
-            withoutEnlargement: true
+        });
+
+        const meta = await img.metadata();
+
+        await img
+            .extract({
+                left: 0,
+                top: 55,
+                width: meta.width,
+                height: meta.height - 55
+            }).resize({
+                width: 2600,
+                withoutEnlargement: true
             }).png().toFile(outPng);
 
         console.log(`Spremljena slika: ${outPng}`);
@@ -302,7 +344,7 @@ async function main() {
     const throughputDot = buildChartDot('Throughput (upita/sekundi) — više je bolje', 'throughput', maxThroughput);
     await spremiSliku(throughputDot, 'graf_throughput');
 
-    const hopoviDot = buildChartDot('HOP metrika — broj skokova između tablica (0 = bez JOIN-ova)', 'hopovi', maxHopovi);
+    const hopoviDot = buildChartDot('HOP metrika — broj skokova između tablica', 'hopovi', maxHopovi);
     await spremiSliku(hopoviDot, 'graf_hopovi');
 
     const prosjekDot = buildAverageChartDot();

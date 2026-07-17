@@ -17,7 +17,6 @@ const denormDb = new Database(
     { readonly: true }
 );
 
-
 function ucitajSql(imeDatoteke) {
     const putanja = path.join(__dirname, '../queries', imeDatoteke);
     return fs.readFileSync(putanja, 'utf8')
@@ -27,22 +26,33 @@ function ucitajSql(imeDatoteke) {
 }
 
 // -> vrijeme ivršavanja
-function izmjeriVrijeme(baza, sql, ponavljanja = 50) {
+function izmjeriVrijeme(baza, sql, ponavljanja = 500) {
     const stmt = baza.prepare(sql);
     const vremena = [];
-    
-    try { stmt.all(); } catch(e) {}
-    
+
+    for (let i = 0; i < 2; i++) {
+        try { stmt.all(); } catch (e) {}
+    }
+
     for (let i = 0; i < ponavljanja; i++) {
         const pocetak = performance.now();
         stmt.all();
         vremena.push(performance.now() - pocetak);
     }
+
+    vremena.sort((a, b) => a - b);
+
+    const medijan = vremena[Math.floor(vremena.length / 2)];
     const prosjek = vremena.reduce((a, b) => a + b, 0) / vremena.length;
+
+    const rez = Math.floor(vremena.length * 0.1);
+    const obrezano = vremena.slice(rez, vremena.length - rez);
+    const trimmedProsjek = obrezano.reduce((a, b) => a + b, 0) / obrezano.length;
+
     return {
-        prosjek,
-        min: Math.min(...vremena),
-        max: Math.max(...vremena)
+        prosjek: trimmedProsjek,
+        min: vremena[0],
+        max: vremena[vremena.length - 1]
     };
 }
 
@@ -102,7 +112,7 @@ function ispisi(naziv, rezultati) {
     console.log(`Min: ${rezultati.vrijeme.min.toFixed(3)} ms`);
     console.log(`Max: ${rezultati.vrijeme.max.toFixed(3)} ms`);
     console.log(`Throughput: ${rezultati.throughput} upita/s`);
-    console.log(`HOP (skokova): ${rezultati.hop.hopovi} (spaja ${rezultati.hop.brojTablica} tablice)`);
+    console.log(`HOP (broj skokova): ${rezultati.hop.hopovi} (uključuje ${rezultati.hop.brojTablica} tablica)`);
     console.log(`SCAN: ${rezultati.plan.skeniranja}`);
     console.log(`SEARCH: ${rezultati.plan.pretrazivanja}`);
     console.log(`Plan: ${rezultati.plan.detalji}`);
@@ -143,40 +153,28 @@ const upitiNormalizirana = [
         sql: ucitajSql('02_select_optimiziran_nastavnik_N.sql')
     },
     {
-        naziv: 'Optimizirani upit učenika (5 JOINova)',
+        naziv: 'Podaci učenika s lokacijom',
         sql: ucitajSql('02_select_optimiziran_ucenik_N.sql')
     }
 ];
 
-// -> upiti - denormalozirana (flat i join)
+// -> upiti - denormalozirana 
 const upitiDenormalizirana = [
     {
-        naziv: 'Opterećenje nastavnika (JOIN)',
-        sql: ucitajSql('03_select_opterecenje_nastavnika_D.sql')
-    },
-    {
-        naziv: 'Opterećenje nastavnika (NASTAVNIK_INFO)',
+        naziv: 'Opterećenje nastavnika',
         sql: ucitajSql('03_select_nastavnik_info_D.sql')
     },
     {
-        naziv: 'Rang škola po broju učenika (JOIN)',
-        sql: ucitajSql('03_select_rang_skola_D.sql')
-    },
-    {
-        naziv: 'Rang škola po broju učenika (UCENIK_PREGLED)',
+        naziv: 'Rang škola po broju učenika',
         sql: ucitajSql('03_select_ucenik_pregled_D.sql')
     },
     {
-        naziv: 'Podaci učenika s lokacijom (JOIN)',
-        sql: ucitajSql('03_select_optimiziran_ucenik_D.sql')
-    },
-    {
-        naziv: 'Podaci učenika s lokacijom (UCENIK_PREGLED)',
-        sql: ucitajSql('03_select_ucenik_podaci_D.sql')
-    },
-    {
-        naziv: 'Optimizirani upit nastavnika (NASTAVNIK_INFO)',
+        naziv: 'Optimizirani upit nastavnika',
         sql: ucitajSql('03_select_optimiziran_nastavnik_info_D.sql')
+    },
+    {
+        naziv: 'Podaci učenika s lokacijom',
+        sql: ucitajSql('03_select_ucenik_podaci_D.sql')
     }
 ];
 
@@ -215,57 +213,76 @@ for (const upit of upitiDenormalizirana) {
     const rezultati = {
         vrijeme: izmjeriVrijeme(denormDb, upit.sql),
         throughput: izmjeriThroughput(denormDb, upit.sql),
-        hop:  prebrojHopove(upit.sql),
+        hop: prebrojHopove(upit.sql),
         plan: analizaPlana(denormDb, upit.sql)
     };
     ispisi(upit.naziv, rezultati);
 }
 
 // -> usporedba tablica
-console.log('USPOREDBA: isti upit na sve tri baze');
-
 const usporedba = [
+    {
+        naziv: 'Opterećenje nastavnika',
+        original: upitiOriginalna[0].sql,
+        norm: upitiNormalizirana[0].sql,
+        denorm: upitiDenormalizirana[0].sql
+    },
     {
         naziv: 'Rang škola po broju učenika',
         original: upitiOriginalna[1].sql,
         norm: upitiNormalizirana[1].sql,
-        denormJoin: upitiDenormalizirana[2].sql,
-        denormFlat: upitiDenormalizirana[3].sql
+        denorm: upitiDenormalizirana[1].sql
     },
     {
-        naziv: 'Opterecenje nastavnika',
-        original: upitiOriginalna[0].sql,
-        norm: upitiNormalizirana[0].sql,
-        denormJoin: upitiDenormalizirana[0].sql,
-        denormFlat: upitiDenormalizirana[1].sql
+        naziv: 'Optimizirani upit nastavnika',
+        original: upitiOriginalna[2].sql,
+        norm: upitiNormalizirana[2].sql,
+        denorm: upitiDenormalizirana[2].sql
+    },
+    {
+        naziv: 'Podaci učenika s lokacijom',
+        original: upitiOriginalna[3].sql,
+        norm: upitiNormalizirana[3].sql,
+        denorm: upitiDenormalizirana[3].sql
     }
 ];
 
 for (const u of usporedba) {
     console.log(`\n${u.naziv}`);
-    console.log(`${'Baza'.padEnd(35)} ${'Prosjek (ms)'.padEnd(14)} ${'Throughput'.padEnd(12)} ${'HOP-ovi'}`);
+    console.log(`${'Baza'.padEnd(20)} ${'Prosjek (ms)'.padEnd(15)} ${'Throughput'.padEnd(15)} ${'HOP'.padEnd(6)}`);
 
     const redovi = [
-        { naziv: 'Originalna', sql: u.original, db: originalDb },
-        { naziv: 'Normalizirana', sql: u.norm, db: normDb },
-        { naziv: 'Denormalizirana (JOIN)', sql: u.denormJoin, db: denormDb },
-        { naziv: 'Denormalizirana (flat tablica)', sql: u.denormFlat, db: denormDb }
+        {
+            naziv: 'Originalna',
+            sql: u.original,
+            db: originalDb
+        },
+        {
+            naziv: 'Normalizirana',
+            sql: u.norm,
+            db: normDb
+        },
+        {
+            naziv: 'Denormalizirana',
+            sql: u.denorm,
+            db: denormDb
+        }
     ];
 
     for (const red of redovi) {
-        const vr = izmjeriVrijeme(red.db, red.sql, 20);
+        const vr = izmjeriVrijeme(red.db, red.sql, 500);
         const th = izmjeriThroughput(red.db, red.sql, 1);
         const hp = prebrojHopove(red.sql);
-        console.log(`${red.naziv.padEnd(35)} ${vr.prosjek.toFixed(3).padEnd(14)} ${th.toString().padEnd(12)} ${hp.hopovi}`);
+
+        console.log(`${red.naziv.padEnd(20)} ${vr.prosjek.toFixed(3).padEnd(15)} ${th.toString().padEnd(15)} ${hp.hopovi}`);
     }
 }
 
 // -> spremamo u csv dadoteku
-const csvRedovi = ['Baza,Upit,ProsjekMs,MinMs,MaxMs,ThroughputQs,Hopovi,BrojTablica,Skeniranja,Pretrazivanja'];
-
+const csvRedovi = ['Baza, Upit, ProsjekMs, MinMs, MaxMs, ThroughputQs, Hopovi, BrojTablica, Skeniranja, Pretrazivanja'];
 function dodajUCsv(nazivBaze, upiti, db) {
     for (const upit of upiti) {
-        const vr = izmjeriVrijeme(db, upit.sql, 20);
+        const vr = izmjeriVrijeme(db, upit.sql, 500); 
         const th = izmjeriThroughput(db, upit.sql, 1);
         const hp = prebrojHopove(upit.sql);
         const pl = analizaPlana(db, upit.sql);
@@ -282,7 +299,7 @@ fs.writeFileSync(
     csvRedovi.join('\n'),
     'utf8'
 );
-console.log('\nRezultati spremljeni u: rezultati.csv');
+console.log('\nSpremljeno u rezultati.csv');
 
 originalDb.close();
 normDb.close();

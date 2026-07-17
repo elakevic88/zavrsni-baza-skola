@@ -132,10 +132,17 @@ CREATE TABLE NASTAVNIK_INFO (
   Datum_rodjenja TEXT NOT NULL,
   Pocetak_rada TEXT NOT NULL,
   Naziv_zvanja TEXT NOT NULL,
-  Broj_predmeta INTEGER NOT NULL,
-  FOREIGN KEY (ID_Nastavnik) REFERENCES NASTAVNICI(ID_Nastavnik)
+  Broj_predmeta INTEGER NOT NULL
 );
 
-CREATE INDEX idx_ucenik_pregled_skola    ON UCENIK_PREGLED(Naziv_skole);
-CREATE INDEX idx_ucenik_pregled_razred   ON UCENIK_PREGLED(Broj_razreda, Slovo_razreda);
-CREATE INDEX idx_ucenik_pregled_zupanija ON UCENIK_PREGLED(Naziv_zupanije);
+CREATE INDEX idx_ucenik_pregled_skola_zupanija ON UCENIK_PREGLED(Naziv_skole, Naziv_zupanije);
+CREATE INDEX idx_ucenik_pregled_razred ON UCENIK_PREGLED(Broj_razreda, Slovo_razreda);
+CREATE INDEX idx_nastavnik_info_order
+ON NASTAVNIK_INFO(
+    Broj_predmeta DESC,
+    Ime,
+    Prezime,
+    Datum_rodjenja,
+    Pocetak_rada,
+    Naziv_zvanja
+);

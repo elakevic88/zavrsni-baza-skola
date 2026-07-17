@@ -1,16 +1,13 @@
-Baza,Upit,ProsjekMs,MinMs,MaxMs,ThroughputQs,Hopovi,BrojTablica,Skeniranja,Pretrazivanja
-Originalna,"Opterećenje nastavnika",0.294,0.272,0.460,2999,5,6,1,5
-Originalna,"Rang škola po broju učenika",0.753,0.553,1.359,1546,2,3,1,2
-Originalna,"Optimizirani upit nastavnika",2.968,2.694,3.739,338,4,5,1,4
-Originalna,"Podaci učenika s lokacijom",1.576,1.465,2.082,573,4,5,1,4
-Normalizirana,"Opterećenje nastavnika",0.299,0.269,0.475,3301,5,6,1,5
-Normalizirana,"Rang škola po broju učenika",3.567,2.701,6.665,328,4,5,1,4
-Normalizirana,"Optimizirani upit nastavnika",2.186,1.889,3.249,475,1,2,1,1
-Normalizirana,"Optimizirani upit učenika (5 JOINova)",1.020,0.918,1.383,966,3,4,1,3
-Denormalizirana,"Opterećenje nastavnika (JOIN)",2.241,1.910,2.920,458,2,3,1,2
-Denormalizirana,"Opterećenje nastavnika (NASTAVNIK_INFO)",0.564,0.522,0.718,1579,0,1,1,0
-Denormalizirana,"Rang škola po broju učenika (JOIN)",1.322,0.758,2.745,933,2,3,1,2
-Denormalizirana,"Rang škola po broju učenika (UCENIK_PREGLED)",0.260,0.193,0.551,3766,0,1,1,0
-Denormalizirana,"Podaci učenika s lokacijom (JOIN)",2.445,2.191,3.483,379,4,5,1,4
-Denormalizirana,"Podaci učenika s lokacijom (UCENIK_PREGLED)",1.991,1.644,3.067,525,0,1,1,0
-Denormalizirana,"Optimizirani upit nastavnika (NASTAVNIK_INFO)",0.877,0.645,2.312,900,0,1,1,0
+Baza, Upit, ProsjekMs, MinMs, MaxMs, ThroughputQs, Hopovi, BrojTablica, Skeniranja, Pretrazivanja
+Originalna,"Opterećenje nastavnika",1.957,1.891,4.580,503,2,3,1,2
+Originalna,"Rang škola po broju učenika",0.556,0.538,1.541,1557,2,3,1,2
+Originalna,"Optimizirani upit nastavnika",2.227,2.174,3.301,436,1,2,1,1
+Originalna,"Podaci učenika s lokacijom",1.514,1.446,8.346,652,4,5,1,4
+Normalizirana,"Opterećenje nastavnika",1.948,1.890,5.213,481,2,3,1,2
+Normalizirana,"Rang škola po broju učenika",2.702,2.627,6.776,352,4,5,1,4
+Normalizirana,"Optimizirani upit nastavnika",2.386,1.860,7.811,430,1,2,1,1
+Normalizirana,"Podaci učenika s lokacijom",1.683,1.451,4.347,554,4,5,1,4
+Denormalizirana,"Opterećenje nastavnika",0.557,0.510,2.211,1573,0,1,1,0
+Denormalizirana,"Rang škola po broju učenika",0.207,0.190,0.930,2275,0,1,1,0
+Denormalizirana,"Optimizirani upit nastavnika",0.593,0.500,1.995,1403,0,1,1,0
+Denormalizirana,"Podaci učenika s lokacijom",0.448,0.249,1.965,3560,0,1,1,0

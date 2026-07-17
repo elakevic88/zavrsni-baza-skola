@@ -1,9 +1,7 @@
-SELECT n.Ime, n.Prezime, zv.Naziv AS Zvanje,
-    COUNT(DISTINCT np.PREDMETI_ID_Predmet) AS Broj_Predmeta
+SELECT n.Ime, n.Prezime, n.Datum_rodjenja, n.Pocetak_rada, zv.Naziv AS Naziv_zvanja,
+COUNT(np.PREDMETI_ID_Predmet) AS Broj_predmeta
 FROM NASTAVNICI n
-INNER JOIN ZVANJA zv ON n.ZVANJA_ID_Zvanje = zv.ID_Zvanje
-INNER JOIN N_PREDMET np ON n.ID_Nastavnik = np.NASTAVNICI_ID_Nastavnik
-INNER JOIN N_RAZRED nr ON n.ID_Nastavnik = nr.NASTAVNICI_ID_Nastavnik
-INNER JOIN RAZREDI r ON nr.RAZREDI_ID_Razred = r.ID_Razred
-INNER JOIN SKOLE s ON r.SKOLE_ID_Skola = s.ID_Skola
-GROUP BY n.ID_Nastavnik;
+JOIN ZVANJA zv ON n.ZVANJA_ID_Zvanje = zv.ID_Zvanje
+LEFT JOIN N_PREDMET np ON n.ID_Nastavnik = np.NASTAVNICI_ID_Nastavnik
+GROUP BY n.ID_Nastavnik, n.Ime, n.Prezime,n.Datum_rodjenja, n.Pocetak_rada, zv.Naziv
+ORDER BY Broj_predmeta DESC;

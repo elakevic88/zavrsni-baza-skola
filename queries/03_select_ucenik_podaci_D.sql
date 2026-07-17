@@ -1,2 +1,3 @@
-SELECT Ime, Prezime, Broj_razreda, Slovo_razreda, Naziv_skole, Mjesto, Naziv_zupanije
+SELECT Naziv_skole, Naziv_zupanije, COUNT(*) AS Broj_ucenika
 FROM UCENIK_PREGLED
+GROUP BY Naziv_skole, Naziv_zupanije;
