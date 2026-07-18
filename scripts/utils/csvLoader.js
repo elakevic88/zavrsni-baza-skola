@@ -2,7 +2,6 @@ const fs = require('fs');
 const path = require('path');
 const { parse } = require('csv-parse/sync');
 
-// -> parsira csv i vraća niz redova gdje je svaki red niz stupaca
 function procitajCsv(imeDatoteke, imaHeader = true) {
     const putanja = path.join(__dirname, '../../data', imeDatoteke);
     const sadrzaj = fs.readFileSync(putanja, 'utf8').replace(/^\uFEFF/, '');
@@ -13,7 +12,6 @@ function procitajCsv(imeDatoteke, imaHeader = true) {
     });
 }
 
-// -> čišćenje stringova
 function ocisti(tekst) {
     return String(tekst || '').trim();
 }

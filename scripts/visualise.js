@@ -319,7 +319,6 @@ async function spremiSliku(dot, outputIme) {
 }
 
 async function main() {
-    console.log('Započinjem vizualizaciju u obliku slika...');
 
     const tablicaDot = buildTableDot(podaci);
     await spremiSliku(tablicaDot, 'rezultati_tablica');
@@ -328,10 +327,10 @@ async function main() {
     const maxThroughput = Math.max(...podaci.map(d => d.throughput));
     const maxHopovi = Math.max(...podaci.map(d => d.hopovi));
 
-    const vrijemeDot = buildChartDot('Prosječno vrijeme izvršavanja (ms) — niže je bolje', 'prosjekMs', maxProsjek);
+    const vrijemeDot = buildChartDot('Prosječno vrijeme izvršavanja (ms)', 'prosjekMs', maxProsjek);
     await spremiSliku(vrijemeDot, 'graf_vrijeme');
 
-    const throughputDot = buildChartDot('Throughput (upita/sekundi) — više je bolje', 'throughput', maxThroughput);
+    const throughputDot = buildChartDot('Throughput (upita/sekundi)', 'throughput', maxThroughput);
     await spremiSliku(throughputDot, 'graf_throughput');
 
     const hopoviDot = buildChartDot('HOP metrika — broj skokova između tablica', 'hopovi', maxHopovi);
