@@ -1,13 +1,13 @@
 Baza, Upit, ProsjekMs, MinMs, MaxMs, ThroughputQs, Hopovi, BrojTablica, Skeniranja, Pretrazivanja
-Originalna,"Opterećenje nastavnika",1.957,1.891,4.580,503,2,3,1,2
-Originalna,"Rang škola po broju učenika",0.556,0.538,1.541,1557,2,3,1,2
-Originalna,"Optimizirani upit nastavnika",2.227,2.174,3.301,436,1,2,1,1
-Originalna,"Podaci učenika s lokacijom",1.514,1.446,8.346,652,4,5,1,4
-Normalizirana,"Opterećenje nastavnika",1.948,1.890,5.213,481,2,3,1,2
-Normalizirana,"Rang škola po broju učenika",2.702,2.627,6.776,352,4,5,1,4
-Normalizirana,"Optimizirani upit nastavnika",2.386,1.860,7.811,430,1,2,1,1
-Normalizirana,"Podaci učenika s lokacijom",1.683,1.451,4.347,554,4,5,1,4
-Denormalizirana,"Opterećenje nastavnika",0.557,0.510,2.211,1573,0,1,1,0
-Denormalizirana,"Rang škola po broju učenika",0.207,0.190,0.930,2275,0,1,1,0
-Denormalizirana,"Optimizirani upit nastavnika",0.593,0.500,1.995,1403,0,1,1,0
-Denormalizirana,"Podaci učenika s lokacijom",0.448,0.249,1.965,3560,0,1,1,0
+Originalna,"Opterećenje nastavnika",1.945,1.894,3.896,503,2,3,1,2
+Originalna,"Rang škola po broju učenika",0.555,0.539,1.262,1630,2,3,1,2
+Originalna,"Optimizirani upit nastavnika",2.414,2.194,5.079,408,1,2,1,1
+Originalna,"Podaci učenika s lokacijom",1.490,1.442,2.200,661,4,5,1,4
+Normalizirana,"Opterećenje nastavnika",1.941,1.899,3.932,503,2,3,1,2
+Normalizirana,"Rang škola po broju učenika",0.557,0.541,1.264,1775,2,3,1,2
+Normalizirana,"Optimizirani upit nastavnika",1.882,1.833,3.392,430,1,2,1,1
+Normalizirana,"Podaci učenika s lokacijom",1.490,1.437,2.806,633,4,5,1,4
+Denormalizirana,"Opterećenje nastavnika",0.674,0.640,1.305,1487,0,1,1,0
+Denormalizirana,"Rang škola po broju učenika",0.197,0.192,0.505,5014,0,1,1,0
+Denormalizirana,"Optimizirani upit nastavnika",0.520,0.498,1.303,1887,0,1,1,0
+Denormalizirana,"Podaci učenika s lokacijom",0.253,0.249,0.969,3779,0,1,1,0

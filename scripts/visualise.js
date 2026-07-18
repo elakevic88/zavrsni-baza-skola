@@ -304,23 +304,13 @@ async function spremiSliku(dot, outputIme) {
         const viz = await instance();
         const svg = viz.renderString(dot, { format: 'svg' });
 
-        const img = sharp(Buffer.from(svg), {
+        await sharp(Buffer.from(svg), {
             density: 200,
             limitInputPixels: false
-        });
-
-        const meta = await img.metadata();
-
-        await img
-            .extract({
-                left: 0,
-                top: 55,
-                width: meta.width,
-                height: meta.height - 55
-            }).resize({
-                width: 2600,
-                withoutEnlargement: true
-            }).png().toFile(outPng);
+        }).resize({
+            width: 2600,
+            withoutEnlargement: true
+        }).png().toFile(outPng);
 
         console.log(`Spremljena slika: ${outPng}`);
     } catch (err) {

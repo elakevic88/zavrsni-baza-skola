@@ -30,7 +30,7 @@ function izmjeriVrijeme(baza, sql, ponavljanja = 500) {
     const stmt = baza.prepare(sql);
     const vremena = [];
 
-    for (let i = 0; i < 2; i++) {
+    for (let i = 0; i < 10; i++) {
         try { stmt.all(); } catch (e) {}
     }
 
@@ -42,7 +42,6 @@ function izmjeriVrijeme(baza, sql, ponavljanja = 500) {
 
     vremena.sort((a, b) => a - b);
 
-    const medijan = vremena[Math.floor(vremena.length / 2)];
     const prosjek = vremena.reduce((a, b) => a + b, 0) / vremena.length;
 
     const rez = Math.floor(vremena.length * 0.1);
@@ -162,7 +161,7 @@ const upitiNormalizirana = [
 const upitiDenormalizirana = [
     {
         naziv: 'Opterećenje nastavnika',
-        sql: ucitajSql('03_select_nastavnik_info_D.sql')
+        sql: ucitajSql('03_select_opterecenje_nastavnika_D.sql')
     },
     {
         naziv: 'Rang škola po broju učenika',
