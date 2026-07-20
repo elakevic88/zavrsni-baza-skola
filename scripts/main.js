@@ -275,21 +275,9 @@ for (const u of usporedba) {
     console.log(`${'Baza'.padEnd(20)} ${'Prosjek (ms)'.padEnd(15)} ${'Throughput'.padEnd(15)} ${'HOP'.padEnd(6)}`);
 
     const redovi = [
-        {
-            naziv: 'Originalna',
-            sql: u.original,
-            db: originalDb
-        },
-        {
-            naziv: 'Normalizirana',
-            sql: u.norm,
-            db: normDb
-        },
-        {
-            naziv: 'Denormalizirana',
-            sql: u.denorm,
-            db: denormDb
-        }
+        { naziv: 'Originalna' },
+        { naziv: 'Normalizirana' },
+        { naziv: 'Denormalizirana' }
     ];
 
     for (const red of redovi) {
