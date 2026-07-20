@@ -31,7 +31,7 @@ function izmjeriVrijeme(baza, sql, ponavljanja = 500) {
     const vremena = [];
 
     for (let i = 0; i < 10; i++) {
-        try { stmt.all(); } catch (e) {}
+        try { stmt.all(); } catch (e) { }
     }
 
     for (let i = 0; i < ponavljanja; i++) {
@@ -42,14 +42,22 @@ function izmjeriVrijeme(baza, sql, ponavljanja = 500) {
 
     vremena.sort((a, b) => a - b);
 
+    const medijan = vremena.length % 2 === 0 ? (vremena[vremena.length / 2 - 1] + vremena[vremena.length / 2]) / 2 : vremena[Math.floor(vremena.length / 2)];
+    const p5 = vremena[Math.floor(vremena.length * 0.05)];
+    const p95 = vremena[Math.floor(vremena.length * 0.95)];
     const prosjek = vremena.reduce((a, b) => a + b, 0) / vremena.length;
-
+    const varijanca = vremena.reduce((s, v) => s + Math.pow(v - prosjek, 2), 0) / vremena.length;
+    const stdDev = Math.sqrt(varijanca);
     const rez = Math.floor(vremena.length * 0.1);
     const obrezano = vremena.slice(rez, vremena.length - rez);
     const trimmedProsjek = obrezano.reduce((a, b) => a + b, 0) / obrezano.length;
 
     return {
         prosjek: trimmedProsjek,
+        medijan: medijan,
+        p5,
+        p95,
+        stdDev,
         min: vremena[0],
         max: vremena[vremena.length - 1]
     };
@@ -61,13 +69,13 @@ function izmjeriThroughput(baza, sql, trajanjeSek = 2) {
     let brojac = 0;
     const pocetak = performance.now();
     let proteklo;
-    
+
     do {
         stmt.all();
         brojac++;
         proteklo = performance.now() - pocetak;
     } while (proteklo < trajanjeSek * 1000);
-    
+
     const stvarnoTrajanjeSek = proteklo / 1000;
     return Math.round(brojac / stvarnoTrajanjeSek);
 }
@@ -108,6 +116,10 @@ function prebrojHopove(sql) {
 function ispisi(naziv, rezultati) {
     console.log(`\n ${naziv}`);
     console.log(`Prosjek: ${rezultati.vrijeme.prosjek.toFixed(3)} ms`);
+    console.log(`Medijan: ${rezultati.vrijeme.medijan.toFixed(3)} ms`);
+    console.log(`5. percentil: ${rezultati.vrijeme.p5.toFixed(3)} ms`);
+    console.log(`95. percentil: ${rezultati.vrijeme.p95.toFixed(3)} ms`);
+    console.log(`Std.dev: ${rezultati.vrijeme.stdDev.toFixed(3)} ms`);
     console.log(`Min: ${rezultati.vrijeme.min.toFixed(3)} ms`);
     console.log(`Max: ${rezultati.vrijeme.max.toFixed(3)} ms`);
     console.log(`Throughput: ${rezultati.throughput} upita/s`);
@@ -177,6 +189,8 @@ const upitiDenormalizirana = [
     }
 ];
 
+const spremljeniRezultati = {};
+
 // -> veličine baza
 console.log(`Originalna: ${velicina('01_schema_original.db')} MB`);
 console.log(`Normalizirana: ${velicina('02_schema_normalized.db')} MB`);
@@ -191,6 +205,10 @@ for (const upit of upitiOriginalna) {
         hop: prebrojHopove(upit.sql),
         plan: analizaPlana(originalDb, upit.sql)
     };
+
+    if (!spremljeniRezultati.Originalna)
+        spremljeniRezultati.Originalna = {};
+    spremljeniRezultati.Originalna[upit.naziv] = rezultati;
     ispisi(upit.naziv, rezultati);
 }
 
@@ -203,6 +221,9 @@ for (const upit of upitiNormalizirana) {
         hop: prebrojHopove(upit.sql),
         plan: analizaPlana(normDb, upit.sql)
     };
+    if (!spremljeniRezultati.Normalizirana)
+        spremljeniRezultati.Normalizirana = {};
+    spremljeniRezultati.Normalizirana[upit.naziv] = rezultati;
     ispisi(upit.naziv, rezultati);
 }
 
@@ -215,6 +236,9 @@ for (const upit of upitiDenormalizirana) {
         hop: prebrojHopove(upit.sql),
         plan: analizaPlana(denormDb, upit.sql)
     };
+    if (!spremljeniRezultati.Denormalizirana)
+        spremljeniRezultati.Denormalizirana = {};
+    spremljeniRezultati.Denormalizirana[upit.naziv] = rezultati;
     ispisi(upit.naziv, rezultati);
 }
 
@@ -269,29 +293,30 @@ for (const u of usporedba) {
     ];
 
     for (const red of redovi) {
-        const vr = izmjeriVrijeme(red.db, red.sql, 500);
-        const th = izmjeriThroughput(red.db, red.sql, 1);
-        const hp = prebrojHopove(red.sql);
+        const vr = spremljeniRezultati[red.naziv][u.naziv].vrijeme;
+        const th = spremljeniRezultati[red.naziv][u.naziv].throughput;
+        const hp = spremljeniRezultati[red.naziv][u.naziv].hop;
 
         console.log(`${red.naziv.padEnd(20)} ${vr.prosjek.toFixed(3).padEnd(15)} ${th.toString().padEnd(15)} ${hp.hopovi}`);
     }
 }
 
 // -> spremamo u csv dadoteku
-const csvRedovi = ['Baza, Upit, ProsjekMs, MinMs, MaxMs, ThroughputQs, Hopovi, BrojTablica, Skeniranja, Pretrazivanja'];
-function dodajUCsv(nazivBaze, upiti, db) {
+const csvRedovi = ['Baza,Upit,ProsjekMs,MedijanMs,MinMs,MaxMs,StdDevMs,P5Ms,P95Ms,ThroughputQs,Hopovi,BrojTablica,Skeniranja,Pretrazivanja'];
+function dodajUCsv(nazivBaze, upiti) {
     for (const upit of upiti) {
-        const vr = izmjeriVrijeme(db, upit.sql, 500); 
-        const th = izmjeriThroughput(db, upit.sql, 1);
-        const hp = prebrojHopove(upit.sql);
-        const pl = analizaPlana(db, upit.sql);
-        csvRedovi.push(`${nazivBaze},"${upit.naziv}",${vr.prosjek.toFixed(3)},${vr.min.toFixed(3)},${vr.max.toFixed(3)},${th},${hp.hopovi},${hp.brojTablica},${pl.skeniranja},${pl.pretrazivanja}`);
+        const rez = spremljeniRezultati[nazivBaze][upit.naziv];
+        const vr = rez.vrijeme;
+        const th = rez.throughput;
+        const hp = rez.hop;
+        const pl = rez.plan;
+        csvRedovi.push(`${nazivBaze},"${upit.naziv}",${vr.prosjek.toFixed(3)},${vr.medijan.toFixed(3)},${vr.min.toFixed(3)},${vr.max.toFixed(3)},${vr.stdDev.toFixed(3)},${vr.p5.toFixed(3)},${vr.p95.toFixed(3)},${th},${hp.hopovi},${hp.brojTablica},${pl.skeniranja},${pl.pretrazivanja}`);
     }
 }
 
-dodajUCsv('Originalna', upitiOriginalna, originalDb);
-dodajUCsv('Normalizirana', upitiNormalizirana, normDb);
-dodajUCsv('Denormalizirana', upitiDenormalizirana, denormDb);
+dodajUCsv('Originalna', upitiOriginalna);
+dodajUCsv('Normalizirana', upitiNormalizirana);
+dodajUCsv('Denormalizirana', upitiDenormalizirana);
 
 fs.writeFileSync(
     path.join(__dirname, '../rezultati.csv'),

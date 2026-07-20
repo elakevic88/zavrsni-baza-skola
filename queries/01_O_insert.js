@@ -1,6 +1,6 @@
 const Database = require('better-sqlite3');
 const path = require('path');
-const { procitajCsv, ocisti } = require('../scripts/utils/csvLoader');
+const { procitajCsv, ocisti, ispravakDatuma } = require('../scripts/utils/csvLoader');
 
 const baza = new Database(path.join(__dirname, '../databases/dbs/01_schema_original.db'));
 baza.pragma('foreign_keys = ON');
@@ -89,9 +89,9 @@ baza.transaction(() => {
     if (!id) continue;
     const zvanje = ocisti(zvanjeStr || '');
     const zvanjeId = zvanjeMap[zvanje] || 1;
-    const datum = ocisti(pocetakRada) || '2015-09-01';
-
-    stmt.run(parseInt(id), ocisti(ime), ocisti(prezime), ocisti(datumRodjenja), datum, null, ocisti(zavrseniFakulteti || ''), zvanjeId);
+    const datumRod = ispravakDatuma(ocisti(datumRodjenja));
+    const datum = ispravakDatuma(ocisti(pocetakRada)) || '2015-09-01';
+    stmt.run(parseInt(id), ocisti(ime), ocisti(prezime), datumRod, datum, null, ocisti(zavrseniFakulteti || ''), zvanjeId);
   }
 })();
 console.log('Uspješno uneseni nastavnici');
@@ -178,7 +178,7 @@ baza.transaction(() => {
     const postaId = svePoste.length > 0 ? svePoste[i % svePoste.length].ID_Posta : 1000;
     const oib = String(ucenikId).padStart(11, '0');
 
-    stmt.run(ucenikId, ocisti(ime), ocisti(prezime), ocisti(datumRodjenja), oib, imeOca, adresaTekst, brojPredmeta, razredId, postaId);
+    stmt.run(ucenikId, ocisti(ime), ocisti(prezime), ispravakDatuma(ocisti(datumRodjenja)), oib, imeOca, adresaTekst, brojPredmeta, razredId, postaId);
   }
 })();
 console.log('Uspješno uneseni učenici');

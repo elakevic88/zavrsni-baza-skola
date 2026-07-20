@@ -19,7 +19,7 @@ CREATE TABLE SKOLE (
 
 CREATE TABLE ZVANJA (
   ID_Zvanje INTEGER PRIMARY KEY,
-  Naziv TEXT NOT NULL UNIQUE
+  Naziv TEXT NOT NULL
 );
 
 CREATE TABLE RAZREDI (
@@ -34,9 +34,9 @@ CREATE TABLE NASTAVNICI (
   ID_Nastavnik INTEGER PRIMARY KEY,
   Ime TEXT NOT NULL,
   Prezime TEXT NOT NULL,
-  Datum_rodjenja TEXT NOT NULL,
-  Pocetak_rada TEXT NOT NULL,
-  Kraj_rada TEXT,
+  Datum_rodjenja TEXT NOT NULL CHECK (Datum_rodjenja GLOB '[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]'),
+  Pocetak_rada TEXT NOT NULL CHECK (Pocetak_rada GLOB '[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]'),
+  Kraj_rada TEXT CHECK (Kraj_rada IS NULL OR Kraj_rada GLOB '[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]'),
   Lista_zavrsenih_skola TEXT,
   ZVANJA_ID_Zvanje INTEGER NOT NULL,
   FOREIGN KEY (ZVANJA_ID_Zvanje) REFERENCES ZVANJA(ID_Zvanje)
@@ -51,11 +51,11 @@ CREATE TABLE UCENICI (
   ID_Ucenik INTEGER PRIMARY KEY,
   Ime TEXT NOT NULL,
   Prezime TEXT NOT NULL,
-  Datum_rodjenja TEXT NOT NULL,
-  OIB INTEGER UNIQUE NOT NULL,
+  Datum_rodjenja TEXT NOT NULL CHECK (Datum_rodjenja GLOB '[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]'),
+  OIB TEXT UNIQUE NOT NULL CHECK (length(OIB) = 11 AND OIB GLOB '[0-9]*'),
   Ime_oca TEXT NOT NULL,
   Adresa TEXT NOT NULL,
-  Broj_upisanih_predmeta INTEGER,
+  Broj_upisanih_predmeta INTEGER CHECK (Broj_upisanih_predmeta >= 0),
   RAZREDI_ID_Razred INTEGER NOT NULL,
   POSTE_ID_Posta INTEGER NOT NULL,
   FOREIGN KEY (RAZREDI_ID_Razred) REFERENCES RAZREDI(ID_Razred),
@@ -65,7 +65,7 @@ CREATE TABLE UCENICI (
 CREATE TABLE OCJENE (
   ID_Ocjena INTEGER PRIMARY KEY,
   Ocjena TEXT NOT NULL,
-  Broj_ocjene INTEGER NOT NULL
+  Broj_ocjene INTEGER NOT NULL CHECK (Broj_ocjene BETWEEN 1 AND 5)
 );
 
 CREATE TABLE N_PREDMET (

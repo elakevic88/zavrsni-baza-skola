@@ -20,7 +20,7 @@ edge [fontname="Helvetica", fontsize=10, color="#555555", arrowsize=0.7];
         <tr><td colspan="2" bgcolor="#2c3e50"><font color="white"><b>NASTAVNIK_SKOLE</b></font></td></tr>
         <tr><td align="left" port="ID" bgcolor="#fff7e0"><b>ID</b> <font color="#b8860b"><b>PK</b></font></td><td align="left" bgcolor="#fff7e0"><font color="#666666">INTEGER</font></td></tr>
 <tr><td align="left" port="NASTAVNICI_ID_Nastavnik">NASTAVNICI_ID_Nastavnik <font color="#4169e1"><b>FK</b></font></td><td align="left"><font color="#666666">INTEGER</font></td></tr>
-<tr><td align="left" port="Naziv_skole">Naziv_skole</td><td align="left"><font color="#666666">TEXT</font></td></tr></table>>];
+<tr><td align="left" port="SKOLE_ID_Skola">SKOLE_ID_Skola <font color="#4169e1"><b>FK</b></font></td><td align="left"><font color="#666666">INTEGER</font></td></tr></table>>];
 
 "N_PREDMET" [label=<
         <table border="1" cellborder="0" cellspacing="0" cellpadding="6" bgcolor="white">
@@ -84,7 +84,7 @@ edge [fontname="Helvetica", fontsize=10, color="#555555", arrowsize=0.7];
 <tr><td align="left" port="Ime">Ime</td><td align="left"><font color="#666666">TEXT</font></td></tr>
 <tr><td align="left" port="Prezime">Prezime</td><td align="left"><font color="#666666">TEXT</font></td></tr>
 <tr><td align="left" port="Datum_rodjenja">Datum_rodjenja</td><td align="left"><font color="#666666">TEXT</font></td></tr>
-<tr><td align="left" port="OIB">OIB</td><td align="left"><font color="#666666">INTEGER</font></td></tr>
+<tr><td align="left" port="OIB">OIB</td><td align="left"><font color="#666666">TEXT</font></td></tr>
 <tr><td align="left" port="Ime_oca">Ime_oca</td><td align="left"><font color="#666666">TEXT</font></td></tr>
 <tr><td align="left" port="Adresa">Adresa</td><td align="left"><font color="#666666">TEXT</font></td></tr>
 <tr><td align="left" port="RAZREDI_ID_Razred">RAZREDI_ID_Razred <font color="#4169e1"><b>FK</b></font></td><td align="left"><font color="#666666">INTEGER</font></td></tr>
@@ -109,6 +109,7 @@ edge [fontname="Helvetica", fontsize=10, color="#555555", arrowsize=0.7];
 <tr><td align="left" port="Naziv">Naziv</td><td align="left"><font color="#666666">TEXT</font></td></tr></table>>];
 
 "NASTAVNICI":"ZVANJA_ID_Zvanje" -> "ZVANJA":"ID_Zvanje" [label="ZVANJA_ID_Zvanje -> ID_Zvanje"];
+"NASTAVNIK_SKOLE":"SKOLE_ID_Skola" -> "SKOLE":"ID_Skola" [label="SKOLE_ID_Skola -> ID_Skola"];
 "NASTAVNIK_SKOLE":"NASTAVNICI_ID_Nastavnik" -> "NASTAVNICI":"ID_Nastavnik" [label="NASTAVNICI_ID_Nastavnik -> ID_Nastavnik"];
 "N_PREDMET":"NASTAVNICI_ID_Nastavnik" -> "NASTAVNICI":"ID_Nastavnik" [label="NASTAVNICI_ID_Nastavnik -> ID_Nastavnik"];
 "N_PREDMET":"PREDMETI_ID_Predmet" -> "PREDMETI":"ID_Predmet" [label="PREDMETI_ID_Predmet -> ID_Predmet"];

@@ -16,4 +16,11 @@ function ocisti(tekst) {
     return String(tekst || '').trim();
 }
 
-module.exports = { procitajCsv, ocisti };
+function ispravakDatuma(date) {
+  if (!date) return null;
+  if (date.includes('-')) return ocisti(date);
+  const [month, day, year] = date.split('/');
+  return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
+}
+
+module.exports = { procitajCsv, ocisti, ispravakDatuma };

@@ -1,6 +1,6 @@
 const Database = require('better-sqlite3');
 const path = require('path');
-const { procitajCsv, ocisti } = require('../scripts/utils/csvLoader');
+const { procitajCsv, ocisti, ispravakDatuma } = require('../scripts/utils/csvLoader');
 
 const baza = new Database(path.join(__dirname, '../databases/dbs/02_schema_normalized.db'));
 baza.pragma('foreign_keys = ON');
@@ -89,27 +89,23 @@ baza.transaction(() => {
         if (!id) continue;
         const zvanje = ocisti(zvanjeStr || '');
         const zvanjeId = zvanjeMap[zvanje] || 1;
-        const pocetakRada = ocisti(pocetakRadaStr || '') || '2015-09-01';
+        const pocetakRada = ispravakDatuma(ocisti(pocetakRadaStr || '')) || '2015-09-01';
 
-        stmt.run(parseInt(id), ocisti(ime), ocisti(prezime), ocisti(datumRodjenja), pocetakRada, null, zvanjeId);
+        stmt.run(parseInt(id), ocisti(ime), ocisti(prezime), ispravakDatuma(ocisti(datumRodjenja)), pocetakRada, null, zvanjeId);
     }
 })();
 console.log('Uspješno uneseni nastavnici');
 
 const sviNastavnici = baza.prepare('SELECT ID_Nastavnik FROM NASTAVNICI').all();
-const skoleMap = {};
-for (const s of sveSkole) skoleMap[s.ID_Skola] = s.Naziv;
-
 const sviRazrediBaza = baza.prepare('SELECT ID_Razred, SKOLE_ID_Skola FROM RAZREDI').all();
 
 baza.transaction(() => {
-    const stmt = baza.prepare('INSERT OR IGNORE INTO NASTAVNIK_SKOLE (ID, NASTAVNICI_ID_Nastavnik, Naziv_skole) VALUES (?, ?, ?)');
+    const stmt = baza.prepare('INSERT OR IGNORE INTO NASTAVNIK_SKOLE (ID, NASTAVNICI_ID_Nastavnik, SKOLE_ID_Skola) VALUES (?, ?, ?)');
     let nastavnikSkolaId = 1;
     for (let i = 0; i < sviRazrediBaza.length; i++) {
         const skolaId = sviRazrediBaza[i].SKOLE_ID_Skola;
         const nastavnikId = sviNastavnici[i % sviNastavnici.length].ID_Nastavnik;
-        const nazivSkole = skoleMap[skolaId] || sveSkole[0].Naziv;
-        stmt.run(nastavnikSkolaId++, nastavnikId, nazivSkole);
+        stmt.run(nastavnikSkolaId++, nastavnikId, skolaId);
     }
 })();
 console.log('Uspješno unesene škole nastavnika');
@@ -175,7 +171,7 @@ baza.transaction(() => {
         const postaId = svePoste.length > 0 ? svePoste[i % svePoste.length].ID_Posta : 1000;
         const oib = String(ucenikId).padStart(11, '0');
 
-        stmt.run(ucenikId, ocisti(ime), ocisti(prezime), ocisti(datumRodjenja), oib, imeOca, adresaTekst, razredId, postaId);
+        stmt.run(ucenikId, ocisti(ime), ocisti(prezime), ispravakDatuma(ocisti(datumRodjenja)), oib, imeOca, adresaTekst, razredId, postaId);
     }
 })();
 console.log('Uspješno uneseni učenici');

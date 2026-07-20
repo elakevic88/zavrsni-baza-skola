@@ -276,7 +276,7 @@
 <text xml:space="preserve" text-anchor="start" x="583.69" y="-342.8" font-family="Helvetica,sans-Serif" font-size="14.00">Datum_rodjenja</text>
 <text xml:space="preserve" text-anchor="start" x="754.39" y="-342.8" font-family="Helvetica,sans-Serif" font-size="14.00" fill="#666666">TEXT</text>
 <text xml:space="preserve" text-anchor="start" x="583.69" y="-314" font-family="Helvetica,sans-Serif" font-size="14.00">OIB</text>
-<text xml:space="preserve" text-anchor="start" x="754.39" y="-314" font-family="Helvetica,sans-Serif" font-size="14.00" fill="#666666">INTEGER</text>
+<text xml:space="preserve" text-anchor="start" x="754.39" y="-314" font-family="Helvetica,sans-Serif" font-size="14.00" fill="#666666">TEXT</text>
 <text xml:space="preserve" text-anchor="start" x="583.69" y="-285.2" font-family="Helvetica,sans-Serif" font-size="14.00">Ime_oca</text>
 <text xml:space="preserve" text-anchor="start" x="754.39" y="-285.2" font-family="Helvetica,sans-Serif" font-size="14.00" fill="#666666">TEXT</text>
 <text xml:space="preserve" text-anchor="start" x="583.69" y="-256.4" font-family="Helvetica,sans-Serif" font-size="14.00">Adresa</text>

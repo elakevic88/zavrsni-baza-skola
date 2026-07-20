@@ -20,13 +20,17 @@ for (let i = 0; i < redovi.length; i++) {
         baza: stupci[0],
         upit: stupci[1],
         prosjekMs: parseFloat(stupci[2]),
-        minMs: parseFloat(stupci[3]),
-        maxMs: parseFloat(stupci[4]),
-        throughput: parseInt(stupci[5]),
-        hopovi: parseInt(stupci[6]),
-        brojTablica: parseInt(stupci[7]),
-        skeniranja: parseInt(stupci[8]),
-        pretrazivanja: parseInt(stupci[9])
+        medijanMs: parseFloat(stupci[3]),
+        minMs: parseFloat(stupci[4]),
+        maxMs: parseFloat(stupci[5]),
+        stdDevMs: parseFloat(stupci[6]),
+        p5Ms: parseFloat(stupci[7]),
+        p95Ms: parseFloat(stupci[8]),
+        throughput: parseInt(stupci[9]),
+        hopovi: parseInt(stupci[10]),
+        brojTablica: parseInt(stupci[11]),
+        skeniranja: parseInt(stupci[12]),
+        pretrazivanja: parseInt(stupci[13])
     });
 }
 
@@ -88,17 +92,30 @@ function buildTableDot(podaci) {
         const hopKlasa = r.hopovi === 0 ? 'color="#27ae60" fontweight="bold"' : '';
 
         return `<tr>
-        <td align="left" border="1" bgcolor="${bojaBaze}"><font color="white"><b>${escapeHtml(oznaka)}</b></font></td>
-        <td align="left" border="1">${escapeHtml(r.upit)}</td>
+        <td align="left" border="1" bgcolor="${bojaBaze}">
+            <font color="white"><b>${escapeHtml(oznaka)}</b></font>
+        </td>
+        <td align="left" border="1">
+            ${escapeHtml(r.upit)}
+        </td>
         <td align="right" border="1"><b>${r.prosjekMs.toFixed(3)} ms</b></td>
+        <td align="right" border="1">${r.medijanMs.toFixed(3)} ms</td>
         <td align="right" border="1">${r.minMs.toFixed(3)} ms</td>
         <td align="right" border="1">${r.maxMs.toFixed(3)} ms</td>
-        <td align="right" border="1" bgcolor="#f8f9fa"><b>${r.throughput.toLocaleString('hr-HR')}</b></td>
-        <td align="center" border="1"><font ${hopKlasa}><b>${r.hopovi}</b></font></td>
+        <td align="right" border="1">${r.stdDevMs.toFixed(3)}</td>
+        <td align="right" border="1">${r.p5Ms.toFixed(3)} ms</td>
+        <td align="right" border="1">${r.p95Ms.toFixed(3)} ms</td>
+        <td align="right" border="1" bgcolor="#f8f9fa">
+            <b>${r.throughput.toLocaleString('hr-HR')}</b>
+        </td>
+        <td align="center" border="1">
+            <font ${hopKlasa}><b>${r.hopovi}</b></font>
+        </td>
         <td align="center" border="1">${r.brojTablica}</td>
         <td align="center" border="1">${r.skeniranja}</td>
         <td align="center" border="1">${r.pretrazivanja}</td>
-      </tr>`;
+
+        </tr>`;
     }).join('\n');
 
     dot += `tablica [label=<
@@ -121,6 +138,11 @@ function buildTableDot(podaci) {
         </td>
 
         <td align="center">
+            <font color="white"><b>Medijan (ms)</b></font><br/>
+            <font color="white" point-size="9">Medijan vremena izvršavanja</font>
+        </td>
+
+        <td align="center">
             <font color="white"><b>Min (ms)</b></font><br/>
             <font color="white" point-size="9">Minimalno vrijeme</font>
         </td>
@@ -128,6 +150,21 @@ function buildTableDot(podaci) {
         <td align="center">
             <font color="white"><b>Max (ms)</b></font><br/>
             <font color="white" point-size="9">Maksimalno vrijeme</font>
+        </td>
+
+        <td align="center">
+            <font color="white"><b>Std.dev</b></font><br/>
+            <font color="white" point-size="9">Standardna devijacija</font>
+        </td>
+
+        <td align="center">
+            <font color="white"><b>P5 (ms)</b></font><br/>
+            <font color="white" point-size="9">5. percentil</font>
+        </td>
+
+        <td align="center">
+            <font color="white"><b>P95 (ms)</b></font><br/>
+            <font color="white" point-size="9">95. percentil</font>
         </td>
 
         <td align="center">
@@ -154,19 +191,24 @@ function buildTableDot(podaci) {
             <font color="white"><b>SEARCH</b></font><br/>
             <font color="white" point-size="9">Pretraživanja indeksa</font>
         </td>
+
     </tr>
 
-    <tr bgcolor="#ecf0f1">
-        <td align="center"><font point-size="10"><b>Shema baze</b></font></td>
-        <td align="center"><font point-size="10"><b>Naziv upita</b></font></td>
-        <td align="center"><font point-size="10">Prosječno vrijeme izvršavanja</font></td>
-        <td align="center"><font point-size="10">Minimalno vrijeme</font></td>
-        <td align="center"><font point-size="10">Maksimalno vrijeme</font></td>
-        <td align="center"><font point-size="10">Broj izvršenih upita u sekundi</font></td>
-        <td align="center"><font point-size="10">Broj JOIN operacija</font></td>
-        <td align="center"><font point-size="10">Broj korištenih tablica</font></td>
-        <td align="center"><font point-size="10">Potpuno skeniranje tablica</font></td>
-        <td align="center"><font point-size="10">Pretraživanje pomoću indeksa</font></td>
+   <tr bgcolor="#ecf0f1">
+    <td align="center"><font point-size="10"><b>Shema baze</b></font></td>
+    <td align="center"><font point-size="10"><b>Naziv upita</b></font></td>
+    <td align="center"><font point-size="10">Prosječno vrijeme izvršavanja</font></td>
+    <td align="center"><font point-size="10">Medijan vremena izvršavanja</font></td>
+    <td align="center"><font point-size="10">Minimalno vrijeme</font></td>
+    <td align="center"><font point-size="10">Maksimalno vrijeme</font></td>
+    <td align="center"><font point-size="10">Standardna devijacija</font></td>
+    <td align="center"><font point-size="10">5. percentil</font></td>
+    <td align="center"><font point-size="10">95. percentil</font></td>
+    <td align="center"><font point-size="10">Broj izvršenih upita u sekundi</font></td>
+    <td align="center"><font point-size="10">Broj JOIN operacija</font></td>
+    <td align="center"><font point-size="10">Broj korištenih tablica</font></td>
+    <td align="center"><font point-size="10">Potpuno skeniranje tablica</font></td>
+    <td align="center"><font point-size="10">Pretraživanje pomoću indeksa</font></td>
     </tr>
 
     ${rows}

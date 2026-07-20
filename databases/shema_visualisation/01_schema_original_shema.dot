@@ -78,7 +78,7 @@ edge [fontname="Helvetica", fontsize=10, color="#555555", arrowsize=0.7];
 <tr><td align="left" port="Ime">Ime</td><td align="left"><font color="#666666">TEXT</font></td></tr>
 <tr><td align="left" port="Prezime">Prezime</td><td align="left"><font color="#666666">TEXT</font></td></tr>
 <tr><td align="left" port="Datum_rodjenja">Datum_rodjenja</td><td align="left"><font color="#666666">TEXT</font></td></tr>
-<tr><td align="left" port="OIB">OIB</td><td align="left"><font color="#666666">INTEGER</font></td></tr>
+<tr><td align="left" port="OIB">OIB</td><td align="left"><font color="#666666">TEXT</font></td></tr>
 <tr><td align="left" port="Ime_oca">Ime_oca</td><td align="left"><font color="#666666">TEXT</font></td></tr>
 <tr><td align="left" port="Adresa">Adresa</td><td align="left"><font color="#666666">TEXT</font></td></tr>
 <tr><td align="left" port="Broj_upisanih_predmeta">Broj_upisanih_predmeta</td><td align="left"><font color="#666666">INTEGER</font></td></tr>

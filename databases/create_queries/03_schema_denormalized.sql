@@ -19,7 +19,7 @@ CREATE TABLE SKOLE (
 
 CREATE TABLE ZVANJA (
   ID_Zvanje INTEGER PRIMARY KEY,
-  Naziv TEXT NOT NULL UNIQUE
+  Naziv TEXT NOT NULL
 );
 
 CREATE TABLE RAZREDI (
@@ -34,9 +34,9 @@ CREATE TABLE NASTAVNICI (
   ID_Nastavnik INTEGER PRIMARY KEY,
   Ime TEXT NOT NULL,
   Prezime TEXT NOT NULL,
-  Datum_rodjenja TEXT NOT NULL,
-  Pocetak_rada TEXT NOT NULL,
-  Kraj_rada TEXT,
+  Datum_rodjenja TEXT NOT NULL CHECK (Datum_rodjenja GLOB '[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]'),
+  Pocetak_rada TEXT NOT NULL CHECK (Pocetak_rada GLOB '[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]'),
+  Kraj_rada TEXT CHECK (Kraj_rada IS NULL OR Kraj_rada GLOB '[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]'),
   ZVANJA_ID_Zvanje INTEGER NOT NULL,
   FOREIGN KEY (ZVANJA_ID_Zvanje) REFERENCES ZVANJA(ID_Zvanje)
 );
@@ -51,18 +51,18 @@ CREATE TABLE NASTAVNIK_SKOLE (
 CREATE TABLE PREDMETI (
   ID_Predmet INTEGER PRIMARY KEY,
   Naziv TEXT NOT NULL,
-  Broj_sati_tjedno INTEGER NOT NULL
+  Broj_sati_tjedno INTEGER NOT NULL CHECK (Broj_sati_tjedno > 0)
 );
 
 CREATE TABLE UCENICI (
   ID_Ucenik INTEGER PRIMARY KEY,
   Ime TEXT NOT NULL,
   Prezime TEXT NOT NULL,
-  Datum_rodjenja TEXT NOT NULL,
-  OIB INTEGER UNIQUE NOT NULL,
+  Datum_rodjenja TEXT NOT NULL CHECK (Datum_rodjenja GLOB '[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]'),
+  OIB TEXT UNIQUE NOT NULL CHECK (length(OIB)=11 AND OIB GLOB '[0-9]*'),
   Ime_oca TEXT NOT NULL,
   Adresa TEXT NOT NULL,
-  Broj_upisanih_predmeta INTEGER,
+  Broj_upisanih_predmeta INTEGER CHECK (Broj_upisanih_predmeta>=0),
   RAZREDI_ID_Razred INTEGER NOT NULL,
   POSTE_ID_Posta INTEGER NOT NULL,
   FOREIGN KEY (RAZREDI_ID_Razred) REFERENCES RAZREDI(ID_Razred),
@@ -72,7 +72,7 @@ CREATE TABLE UCENICI (
 CREATE TABLE OCJENE (
   ID_Ocjena INTEGER PRIMARY KEY,
   Ocjena TEXT NOT NULL,
-  Broj_ocjene INTEGER NOT NULL
+  Broj_ocjene INTEGER NOT NULL CHECK (Broj_ocjene BETWEEN 1 AND 5)
 );
 
 CREATE TABLE N_PREDMET (
@@ -111,8 +111,8 @@ CREATE TABLE UCENIK_PREGLED (
   ID_Ucenik INTEGER PRIMARY KEY,
   Ime TEXT NOT NULL,
   Prezime TEXT NOT NULL,
-  Datum_rodjenja TEXT NOT NULL,
-  OIB INTEGER NOT NULL,
+  Datum_rodjenja TEXT NOT NULL CHECK (Datum_rodjenja GLOB '[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]'),
+  OIB TEXT NOT NULL CHECK (length(OIB)=11 AND OIB GLOB '[0-9]*'),
   Adresa TEXT NOT NULL,
   Broj_razreda INTEGER NOT NULL,
   Slovo_razreda TEXT NOT NULL,
@@ -121,7 +121,7 @@ CREATE TABLE UCENIK_PREGLED (
   Postanski_broj INTEGER NOT NULL,
   Mjesto TEXT NOT NULL,
   Naziv_zupanije TEXT NOT NULL,
-  Broj_upisanih_predmeta INTEGER NOT NULL,
+  Broj_upisanih_predmeta INTEGER NOT NULL CHECK (Broj_upisanih_predmeta>=0),
   FOREIGN KEY (ID_Ucenik) REFERENCES UCENICI(ID_Ucenik)
 );
 
@@ -129,10 +129,10 @@ CREATE TABLE NASTAVNIK_INFO (
   ID_Nastavnik INTEGER PRIMARY KEY,
   Ime TEXT NOT NULL,
   Prezime TEXT NOT NULL,
-  Datum_rodjenja TEXT NOT NULL,
-  Pocetak_rada TEXT NOT NULL,
+  Datum_rodjenja TEXT NOT NULL CHECK (Datum_rodjenja GLOB '[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]'),
+  Pocetak_rada TEXT NOT NULL CHECK (Pocetak_rada GLOB '[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]'),
   Naziv_zvanja TEXT NOT NULL,
-  Broj_predmeta INTEGER NOT NULL
+  Broj_predmeta INTEGER NOT NULL CHECK (Broj_predmeta>=0)
 );
 
 CREATE INDEX idx_ucenik_pregled_skola_zupanija ON UCENIK_PREGLED(Naziv_skole, Naziv_zupanije);
