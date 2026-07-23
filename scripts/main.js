@@ -48,13 +48,10 @@ function izmjeriVrijeme(baza, sql, ponavljanja = 500) {
     const prosjek = vremena.reduce((a, b) => a + b, 0) / vremena.length;
     const varijanca = vremena.reduce((s, v) => s + Math.pow(v - prosjek, 2), 0) / vremena.length;
     const stdDev = Math.sqrt(varijanca);
-    const rez = Math.floor(vremena.length * 0.1);
-    const obrezano = vremena.slice(rez, vremena.length - rez);
-    const trimmedProsjek = obrezano.reduce((a, b) => a + b, 0) / obrezano.length;
 
     return {
-        prosjek: trimmedProsjek,
-        medijan: medijan,
+        prosjek,
+        medijan,
         p5,
         p95,
         stdDev,
