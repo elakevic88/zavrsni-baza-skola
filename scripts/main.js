@@ -25,7 +25,7 @@ function ucitajSql(imeDatoteke) {
         .trim();
 }
 
-// -> vrijeme ivršavanja
+// -> vrijeme izvršavanja
 function izmjeriVrijeme(baza, sql, ponavljanja = 500) {
     const stmt = baza.prepare(sql);
     const vremena = [];
@@ -166,7 +166,7 @@ const upitiNormalizirana = [
     }
 ];
 
-// -> upiti - denormalozirana 
+// -> upiti - denormalizirana 
 const upitiDenormalizirana = [
     {
         naziv: 'Opterećenje nastavnika',

@@ -37,7 +37,6 @@ CREATE TABLE NASTAVNICI (
   Datum_rodjenja TEXT NOT NULL CHECK (Datum_rodjenja GLOB '[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]'),
   Pocetak_rada TEXT NOT NULL CHECK (Pocetak_rada GLOB '[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]'),
   Kraj_rada TEXT CHECK (Kraj_rada IS NULL OR Kraj_rada GLOB '[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]'),
-  Lista_zavrsenih_skola TEXT,
   ZVANJA_ID_Zvanje INTEGER NOT NULL,
   FOREIGN KEY (ZVANJA_ID_Zvanje) REFERENCES ZVANJA(ID_Zvanje)
 );
@@ -114,3 +113,4 @@ CREATE INDEX idx_p_ucenik_ucenik ON P_UCENIK(UCENICI_ID_Ucenik);
 CREATE INDEX idx_p_ucenik_predmet ON P_UCENIK(PREDMETI_ID_Predmet);
 CREATE INDEX idx_zavrsna_o_ucenik ON ZAVRSNA_O(UCENICI_ID_Ucenik);
 CREATE INDEX idx_zavrsna_o_ocjena ON ZAVRSNA_O(OCJENE_ID_Ocjena);
+CREATE UNIQUE INDEX idx_zvanja_naziv ON ZVANJA(Naziv);

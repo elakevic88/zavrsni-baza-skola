@@ -13,7 +13,6 @@ edge [fontname="Helvetica", fontsize=10, color="#555555", arrowsize=0.7];
 <tr><td align="left" port="Datum_rodjenja">Datum_rodjenja</td><td align="left"><font color="#666666">TEXT</font></td></tr>
 <tr><td align="left" port="Pocetak_rada">Pocetak_rada</td><td align="left"><font color="#666666">TEXT</font></td></tr>
 <tr><td align="left" port="Kraj_rada">Kraj_rada</td><td align="left"><font color="#666666">TEXT</font></td></tr>
-<tr><td align="left" port="Lista_zavrsenih_skola">Lista_zavrsenih_skola</td><td align="left"><font color="#666666">TEXT</font></td></tr>
 <tr><td align="left" port="ZVANJA_ID_Zvanje">ZVANJA_ID_Zvanje <font color="#4169e1"><b>FK</b></font></td><td align="left"><font color="#666666">INTEGER</font></td></tr></table>>];
 
 "N_PREDMET" [label=<

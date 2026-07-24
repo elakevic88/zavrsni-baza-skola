@@ -81,137 +81,89 @@ function escapeHtml(str) {
         .replace(/>/g, '&gt;');
 }
 
+function wrapUpitName(str) {
+    if (str === 'Rang škola po broju učenika') {
+        return 'Rang škola po<br/>broju učenika';
+    }
+    if (str === 'Podaci učenika s lokacijom') {
+        return 'Podaci učenika<br/>s lokacijom';
+    }
+    if (str === 'Optimizirani upit nastavnika') {
+        return 'Optimizirani upit<br/>nastavnika';
+    }
+    return str;
+}
+
 function buildTableDot(podaci) {
     let dot = 'digraph G {\n';
     dot += 'rankdir=LR;\n';
-    dot += 'node [shape=plain, fontname="Helvetica"];\n\n';
+    dot += 'graph [pad="0.2", nodesep="0.2", ranksep="0.2", dpi=300];\n';
+    dot += 'node [shape=plain, fontname="Helvetica", fontsize=10];\n\n';
 
-    let rows = podaci.map(r => {
-        const oznaka = r.baza;
-        const bojaBaze = boje[oznaka] || '#95a5a6';
-        const hopKlasa = r.hopovi === 0 ? 'color="#27ae60" fontweight="bold"' : '';
+    const grupirano = {};
+    podaci.forEach(r => {
+        if (!grupirano[r.baza]) grupirano[r.baza] = [];
+        grupirano[r.baza].push(r);
+    });
 
-        return `<tr>
-        <td align="left" border="1" bgcolor="${bojaBaze}">
-            <font color="white"><b>${escapeHtml(oznaka)}</b></font>
-        </td>
-        <td align="left" border="1">
-            ${escapeHtml(r.upit)}
-        </td>
-        <td align="right" border="1"><b>${r.prosjekMs.toFixed(3)} ms</b></td>
-        <td align="right" border="1">${r.medijanMs.toFixed(3)} ms</td>
-        <td align="right" border="1">${r.minMs.toFixed(3)} ms</td>
-        <td align="right" border="1">${r.maxMs.toFixed(3)} ms</td>
-        <td align="right" border="1">${r.stdDevMs.toFixed(3)}</td>
-        <td align="right" border="1">${r.p5Ms.toFixed(3)} ms</td>
-        <td align="right" border="1">${r.p95Ms.toFixed(3)} ms</td>
-        <td align="right" border="1" bgcolor="#f8f9fa">
-            <b>${r.throughput.toLocaleString('hr-HR')}</b>
-        </td>
-        <td align="center" border="1">
-            <font ${hopKlasa}><b>${r.hopovi}</b></font>
-        </td>
-        <td align="center" border="1">${r.brojTablica}</td>
-        <td align="center" border="1">${r.skeniranja}</td>
-        <td align="center" border="1">${r.pretrazivanja}</td>
+    let htmlRedovi = '';
 
-        </tr>`;
-    }).join('\n');
+    for (const [shemaNaziv, redoviSheme] of Object.entries(grupirano)) {
+        const bojaBaze = boje[shemaNaziv] || '#333333';
+
+        redoviSheme.forEach((r, idx) => {
+            const isFirst = idx === 0;
+            const hopKlasa = r.hopovi === 0 ? 'color="#27ae60"' : 'color="#000000"';
+
+            htmlRedovi += '<tr>\n';
+
+            if (isFirst) {
+                htmlRedovi += `  <td rowspan="${redoviSheme.length}" align="center" valign="middle" bgcolor="${bojaBaze}" width="110">
+                    <font color="white" point-size="11"><b>${escapeHtml(shemaNaziv)}</b></font>
+                </td>\n`;
+            }
+
+            const prelomljeniUpit = wrapUpitName(escapeHtml(r.upit));
+
+            htmlRedovi += `  <td align="center" valign="middle" width="180"><font point-size="10">${prelomljeniUpit}</font></td>\n`;
+            htmlRedovi += `  <td align="center" valign="middle" width="120"><font point-size="10"><b>${r.prosjekMs.toFixed(3)} ms</b></font></td>\n`;
+            htmlRedovi += `  <td align="center" valign="middle" width="110"><font point-size="10">${r.medijanMs.toFixed(3)} ms</font></td>\n`;
+            htmlRedovi += `  <td align="center" valign="middle" width="100"><font point-size="10">${r.minMs.toFixed(3)} ms</font></td>\n`;
+            htmlRedovi += `  <td align="center" valign="middle" width="100"><font point-size="10">${r.maxMs.toFixed(3)} ms</font></td>\n`;
+            htmlRedovi += `  <td align="center" valign="middle" width="100"><font point-size="10">${r.stdDevMs.toFixed(3)}</font></td>\n`;
+            htmlRedovi += `  <td align="center" valign="middle" width="100"><font point-size="10">${r.p5Ms.toFixed(3)} ms</font></td>\n`;
+            htmlRedovi += `  <td align="center" valign="middle" width="100"><font point-size="10">${r.p95Ms.toFixed(3)} ms</font></td>\n`;
+            htmlRedovi += `  <td align="center" valign="middle" width="120"><font point-size="10"><b>${r.throughput.toLocaleString('hr-HR')}</b></font></td>\n`;
+            htmlRedovi += `  <td align="center" valign="middle" width="90"><font point-size="10" ${hopKlasa}><b>${r.hopovi}</b></font></td>\n`;
+            htmlRedovi += `  <td align="center" valign="middle" width="90"><font point-size="10">${r.brojTablica}</font></td>\n`;
+            htmlRedovi += `  <td align="center" valign="middle" width="100"><font point-size="10">${r.skeniranja}</font></td>\n`;
+            htmlRedovi += `  <td align="center" valign="middle" width="100"><font point-size="10">${r.pretrazivanja}</font></td>\n`;
+            htmlRedovi += '</tr>\n';
+        });
+    }
+
+    const zBoja = '#1c2d42'; 
 
     dot += `tablica [label=<
-    <table border="0" cellborder="1" cellspacing="0" cellpadding="10" bgcolor="white">
+    <table border="1" cellborder="1" cellspacing="0" cellpadding="8" bgcolor="white">
+        <tr>
+            <td align="center" valign="middle" bgcolor="${zBoja}" width="110"><font color="white" point-size="10"><b>Shema baze<br/>(model)</b></font></td>
+            <td align="center" valign="middle" bgcolor="${zBoja}" width="180"><font color="white" point-size="10"><b>Naziv upita<br/>(opis)</b></font></td>
+            <td align="center" valign="middle" bgcolor="${zBoja}" width="120"><font color="white" point-size="10"><b>Prosječno<br/>vrijeme<br/>izvršavanja (ms)</b></font></td>
+            <td align="center" valign="middle" bgcolor="${zBoja}" width="110"><font color="white" point-size="10"><b>Medijan<br/>vremena<br/>izvršavanja (ms)</b></font></td>
+            <td align="center" valign="middle" bgcolor="${zBoja}" width="100"><font color="white" point-size="10"><b>Minimalno<br/>vrijeme (ms)</b></font></td>
+            <td align="center" valign="middle" bgcolor="${zBoja}" width="100"><font color="white" point-size="10"><b>Maksimalno<br/>vrijeme (ms)</b></font></td>
+            <td align="center" valign="middle" bgcolor="${zBoja}" width="100"><font color="white" point-size="10"><b>Standardna<br/>devijacija<br/>(ms)</b></font></td>
+            <td align="center" valign="middle" bgcolor="${zBoja}" width="100"><font color="white" point-size="10"><b>5. percentil<br/>(ms)</b></font></td>
+            <td align="center" valign="middle" bgcolor="${zBoja}" width="100"><font color="white" point-size="10"><b>95. percentil<br/>(ms)</b></font></td>
+            <td align="center" valign="middle" bgcolor="${zBoja}" width="120"><font color="white" point-size="10"><b>Broj izvršenih<br/>upita u sekundi<br/>(throughput)</b></font></td>
+            <td align="center" valign="middle" bgcolor="${zBoja}" width="90"><font color="white" point-size="10"><b>Broj JOIN<br/>operacija<br/>(HOP)</b></font></td>
+            <td align="center" valign="middle" bgcolor="${zBoja}" width="90"><font color="white" point-size="10"><b>Broj korištenih<br/>tablica<br/>(count)</b></font></td>
+            <td align="center" valign="middle" bgcolor="${zBoja}" width="100"><font color="white" point-size="10"><b>Potpuno<br/>skeniranje<br/>tablica (SCAN)</b></font></td>
+            <td align="center" valign="middle" bgcolor="${zBoja}" width="100"><font color="white" point-size="10"><b>Pretraživanje<br/>pomoću indeksa<br/>(SEARCH)</b></font></td>
+        </tr>
 
-    <tr bgcolor="#2c3e50">
-        <td align="center">
-            <font color="white"><b>Baza</b></font><br/>
-            <font color="white" point-size="9">Shema baze</font>
-        </td>
-
-        <td align="center">
-            <font color="white"><b>Upit</b></font><br/>
-            <font color="white" point-size="9">Naziv upita</font>
-        </td>
-
-        <td align="center">
-            <font color="white"><b>Prosjek (ms)</b></font><br/>
-            <font color="white" point-size="9">Prosječno vrijeme izvršavanja</font>
-        </td>
-
-        <td align="center">
-            <font color="white"><b>Medijan (ms)</b></font><br/>
-            <font color="white" point-size="9">Medijan vremena izvršavanja</font>
-        </td>
-
-        <td align="center">
-            <font color="white"><b>Min (ms)</b></font><br/>
-            <font color="white" point-size="9">Minimalno vrijeme</font>
-        </td>
-
-        <td align="center">
-            <font color="white"><b>Max (ms)</b></font><br/>
-            <font color="white" point-size="9">Maksimalno vrijeme</font>
-        </td>
-
-        <td align="center">
-            <font color="white"><b>Std.dev</b></font><br/>
-            <font color="white" point-size="9">Standardna devijacija</font>
-        </td>
-
-        <td align="center">
-            <font color="white"><b>P5 (ms)</b></font><br/>
-            <font color="white" point-size="9">5. percentil</font>
-        </td>
-
-        <td align="center">
-            <font color="white"><b>P95 (ms)</b></font><br/>
-            <font color="white" point-size="9">95. percentil</font>
-        </td>
-
-        <td align="center">
-            <font color="white"><b>Throughput</b></font><br/>
-            <font color="white" point-size="9">Broj upita u sekundi</font>
-        </td>
-
-        <td align="center">
-            <font color="white"><b>HOP</b></font><br/>
-            <font color="white" point-size="9">Broj skokova</font>
-        </td>
-
-        <td align="center">
-            <font color="white"><b>Tablice</b></font><br/>
-            <font color="white" point-size="9">Broj tablica</font>
-        </td>
-
-        <td align="center">
-            <font color="white"><b>SCAN</b></font><br/>
-            <font color="white" point-size="9">Potpuna skeniranja</font>
-        </td>
-
-        <td align="center">
-            <font color="white"><b>SEARCH</b></font><br/>
-            <font color="white" point-size="9">Pretraživanja indeksa</font>
-        </td>
-
-    </tr>
-
-   <tr bgcolor="#ecf0f1">
-    <td align="center"><font point-size="10"><b>Shema baze</b></font></td>
-    <td align="center"><font point-size="10"><b>Naziv upita</b></font></td>
-    <td align="center"><font point-size="10">Prosječno vrijeme izvršavanja</font></td>
-    <td align="center"><font point-size="10">Medijan vremena izvršavanja</font></td>
-    <td align="center"><font point-size="10">Minimalno vrijeme</font></td>
-    <td align="center"><font point-size="10">Maksimalno vrijeme</font></td>
-    <td align="center"><font point-size="10">Standardna devijacija</font></td>
-    <td align="center"><font point-size="10">5. percentil</font></td>
-    <td align="center"><font point-size="10">95. percentil</font></td>
-    <td align="center"><font point-size="10">Broj izvršenih upita u sekundi</font></td>
-    <td align="center"><font point-size="10">Broj JOIN operacija</font></td>
-    <td align="center"><font point-size="10">Broj korištenih tablica</font></td>
-    <td align="center"><font point-size="10">Potpuno skeniranje tablica</font></td>
-    <td align="center"><font point-size="10">Pretraživanje pomoću indeksa</font></td>
-    </tr>
-
-    ${rows}
+        ${htmlRedovi}
 
     </table>>];\n`;
 
@@ -219,90 +171,75 @@ function buildTableDot(podaci) {
     return dot;
 }
 
-
 function buildChartDot(naslov, metrikiKljuc, maxVal) {
     let dot = 'digraph G {\n';
-    dot += 'rankdir=BT;\n';
-    dot += 'graph [fontname="Helvetica", bgcolor="white", nodesep=1.2, ranksep=1.2];\n';
-    dot += 'node [shape=plain, fontname="Helvetica"];\n\n';
+    dot += '  compound=true;\n';
+    dot += '  rankdir=TB;\n';
+    dot += '  newrank=true;\n';
+    dot += '  graph [splines=false, nodesep=0.5, ranksep=0.4, pad="0.4", dpi=300, bgcolor="white"];\n';
+    dot += '  node [fontname="Helvetica", fontsize=11];\n\n';
 
-    dot += `naslov [shape=none, label="${escapeHtml(naslov)}", fontsize=22, fontname="Helvetica-Bold"];\n`;
+    const jedinica = metrikiKljuc === 'prosjekMs' ? 'ms' : '';
+    const maxVisinaPx = 170;
 
-    const maxVisinaStupca = 180;
+    jedinstveniUpiti.forEach((grupa, i) => {
+        dot += `  subgraph cluster_${i} {\n`;
+        dot += '    style="rounded,filled";\n';
+        dot += '    color="#d1d5db";\n';
+        dot += '    fillcolor="#fafafa";\n';
+        dot += '    margin=16;\n';
 
-    jedinstveniUpiti.forEach(grupa => {
-        let stupciHtml = sheme.map(shema => {
-            const match = podaci.find(r => {
-                if (!shema.filter(r)) return false;
+        const naslovHtml = `<table border="0" cellborder="0" cellspacing="0" cellpadding="6" bgcolor="#e5e7eb">
+            <tr><td align="center"><b><font color="#1f2937" point-size="11">${escapeHtml(grupa.naslov)}</font></b></td></tr>
+        </table>`;
+        dot += `    label=<${naslovHtml}>;\n`;
+        dot += '    labeljust="c";\n';
+        dot += '    labelloc="t";\n\n';
 
-                return grupa.upiti.includes(r.upit);
-            });
+        let prevBarId = null;
+
+        sheme.forEach((shema, j) => {
+            const barId = `bar_${i}_${j}`;
+            const match = podaci.find(r => shema.filter(r) && grupa.upiti.includes(r.upit));
             const boja = boje[shema.naziv] || '#95a5a6';
 
-            if (!match) {
-                return `<td valign="bottom" border="0">
-                <table border="0" cellspacing="0" cellpadding="2">
-                <tr>
-                    <td align="center" border="0">
-                        <font point-size="16"><b>N/A</b></font>
-                    </td>
-                </tr>
-                <tr>
-                    <td height="5" width="55" border="0"></td>
-                </tr>
-                <tr>
-                    <td align="center" border="0">
-                    <font point-size="13" color="#7f8c8d">${escapeHtml(shema.naziv)}</font>
-                </td>
-                </tr>
-                </table>
-                </td>`;
-            }
-            const val = match[metrikiKljuc];
-            let visina = Math.round((val / maxVal) * maxVisinaStupca);
-            if (visina < 5) visina = 5;
-            const ispisVrijednosti =
-                metrikiKljuc === 'prosjekMs'
-                    ? val.toFixed(3)
+            let valText = 'N/A';
+            let visinaPx = 5;
+
+            if (match) {
+                const val = match[metrikiKljuc];
+                valText = metrikiKljuc === 'prosjekMs' 
+                    ? `${val.toFixed(3)} ${jedinica}`.trim()
                     : val.toLocaleString('hr-HR');
+                
+                visinaPx = Math.max(5, Math.round((val / maxVal) * maxVisinaPx));
+            }
 
-            return `<td valign="bottom" border="0">
-            <table border="0" cellspacing="0" cellpadding="2">
-            <tr>
-            <td align="center" border="0">
-                <font point-size="16"><b>${ispisVrijednosti}</b></font>
-            </td>
-            </tr>
-            <tr>
-            <td bgcolor="${boja}" height="${visina}" width="55" border="0"></td>
-            </tr>
-            <tr>
-                <td align="center" border="0">
-                <font point-size="13" color="#7f8c8d">${escapeHtml(shema.naziv)}</font>
-            </td>
-            </tr>
-            </table>
-            </td>`;
-        }).join('\n');
+            const barLabel = `<table border="0" cellborder="0" cellspacing="0" cellpadding="2">
+                <tr><td align="center"><b><font color="#000000" point-size="11">${valText}</font></b></td></tr>
+                <tr><td bgcolor="${boja}" width="65" height="${visinaPx}"></td></tr>
+                <tr><td align="center"><font color="#333333" point-size="10"><b>${escapeHtml(shema.naziv)}</b></font></td></tr>
+            </table>`;
 
-        const cvorId = grupa.naslov.replace(/[^a-zA-Z0-9]/g, '_');
+            dot += `    ${barId} [shape=plain, label=<${barLabel}>];\n`;
 
-        dot += `"${cvorId}" [label=<
-        <table border="1" cellborder="0" cellspacing="8" cellpadding="10" bgcolor="#fafafa" style="border-radius: 4px;">
-          <tr><td colspan="3" bgcolor="#e5e7eb" align="center"><b>${escapeHtml(grupa.naslov)}</b></td></tr>
-          <tr>
-            ${stupciHtml}
-          </tr>
-        </table>
-      >];\n`;
+            if (prevBarId) {
+                dot += `    ${prevBarId} -> ${barId} [style=invis];\n`;
+            }
+            prevBarId = barId;
+        });
+
+        dot += `    { rank=same; ${sheme.map((_, j) => `bar_${i}_${j}`).join('; ')} }\n`;
+        dot += '  }\n\n';
     });
 
-    for (const grupa of jedinstveniUpiti) {
-        const cvorId = grupa.naslov.replace(/[^a-zA-Z0-9]/g, '_');
-        dot += `naslov -> "${cvorId}" [style=invis];\n`;
-    }
-
+    const glavniNaslovHtml = `<table border="0" cellborder="0" cellspacing="0" cellpadding="8">
+        <tr><td align="center"><b><font color="#111827" point-size="14">${escapeHtml(naslov)}</font></b></td></tr>
+    </table>`;
+    
+    dot += `  glavni_naslov [shape=plain, label=<${glavniNaslovHtml}>];\n`;
     dot += '}\n';
+
     return dot;
 }
 
@@ -311,28 +248,49 @@ function buildAverageChartDot() {
         const redovi = podaci.filter(shema.filter);
         return {
             naziv: shema.naziv,
-            prosjek:
-                redovi.reduce((a, b) => a + b.prosjekMs, 0) /
-                redovi.length
+            prosjek: redovi.length > 0 
+                ? redovi.reduce((a, b) => a + b.prosjekMs, 0) / redovi.length 
+                : 0
         };
     });
 
     const max = Math.max(...prosjek.map(x => x.prosjek));
-    let dot = `digraph G{rankdir=BT;node[shape=plain];`;
-    dot += `naslov[label="Prosječno vrijeme izvršavanja po shemi baze",shape=none,fontname="Helvetica-Bold",fontsize=22];`;
-    prosjek.forEach(p => {
-        const visina = Math.max(5, Math.round((p.prosjek / max) * 180));
-        dot += `"${p.naziv}"[label=<<table border="0" cellborder="0">
-        <tr><td align="center"><b>${p.prosjek.toFixed(3)}</b></td></tr>
-        <tr><td bgcolor="${boje[p.naziv]}" width="70" height="${visina}"></td></tr>
-        <tr><td align="center">${p.naziv}</td></tr>
-        </table>
-        >
-    ];`;
-        dot += `naslov->"${p.naziv}"[style=invis];`;
+    let dot = 'digraph G {\n';
+    dot += '  compound=true;\n';
+    dot += '  rankdir=TB;\n';
+    dot += '  graph [splines=false, nodesep=0.6, pad="0.4", dpi=300, bgcolor="white"];\n';
+    dot += '  node [fontname="Helvetica", fontsize=11];\n\n';
 
+    let prevBarId = null;
+
+    prosjek.forEach((p, j) => {
+        const barId = `avg_bar_${j}`;
+        const visinaPx = Math.max(5, Math.round((p.prosjek / max) * 170));
+        const boja = boje[p.naziv] || '#333333';
+
+        const barLabel = `<table border="0" cellborder="0" cellspacing="0" cellpadding="2">
+            <tr><td align="center"><b><font color="#000000" point-size="11">${p.prosjek.toFixed(3)} ms</font></b></td></tr>
+            <tr><td bgcolor="${boja}" width="75" height="${visinaPx}"></td></tr>
+            <tr><td align="center"><font color="#333333" point-size="10"><b>${escapeHtml(p.naziv)}</b></font></td></tr>
+        </table>`;
+
+        dot += `  ${barId} [shape=plain, label=<${barLabel}>];\n`;
+
+        if (prevBarId) {
+            dot += `  ${prevBarId} -> ${barId} [style=invis];\n`;
+        }
+        prevBarId = barId;
     });
-    dot += "}";
+
+    dot += `  { rank=same; ${prosjek.map((_, j) => `avg_bar_${j}`).join('; ')} }\n\n`;
+
+    const glavniNaslovHtml = `<table border="0" cellborder="0" cellspacing="0" cellpadding="8">
+        <tr><td align="center"><b><font color="#111827" point-size="14">Prosječno vrijeme izvršavanja po shemi baze</font></b></td></tr>
+    </table>`;
+
+    dot += `  glavni_naslov [shape=plain, label=<${glavniNaslovHtml}>];\n`;
+    dot += '}\n';
+
     return dot;
 }
 
@@ -347,10 +305,10 @@ async function spremiSliku(dot, outputIme) {
         const svg = viz.renderString(dot, { format: 'svg' });
 
         await sharp(Buffer.from(svg), {
-            density: 200,
+            density: 300,
             limitInputPixels: false
         }).resize({
-            width: 2600,
+            width: 3400,
             withoutEnlargement: true
         }).png().toFile(outPng);
 
@@ -361,7 +319,6 @@ async function spremiSliku(dot, outputIme) {
 }
 
 async function main() {
-
     const tablicaDot = buildTableDot(podaci);
     await spremiSliku(tablicaDot, 'rezultati_tablica');
 

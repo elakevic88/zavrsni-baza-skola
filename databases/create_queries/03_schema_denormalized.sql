@@ -138,3 +138,4 @@ CREATE TABLE NASTAVNIK_INFO (
 CREATE INDEX idx_ucenik_pregled_skola_zupanija ON UCENIK_PREGLED(Naziv_skole, Naziv_zupanije);
 CREATE INDEX idx_ucenik_pregled_razred ON UCENIK_PREGLED(Broj_razreda, Slovo_razreda);
 CREATE INDEX idx_nastavnik_info_order ON NASTAVNIK_INFO(Broj_predmeta DESC, Ime, Prezime, Datum_rodjenja, Pocetak_rada, Naziv_zvanja);
+CREATE UNIQUE INDEX idx_zvanja_naziv ON ZVANJA(Naziv);

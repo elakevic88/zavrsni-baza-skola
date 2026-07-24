@@ -121,3 +121,4 @@ CREATE INDEX idx_p_ucenik_ucenik ON P_UCENIK(UCENICI_ID_Ucenik);
 CREATE INDEX idx_p_ucenik_predmet ON P_UCENIK(PREDMETI_ID_Predmet);
 CREATE INDEX idx_zavrsna_o_ucenik ON ZAVRSNA_O(UCENICI_ID_Ucenik);
 CREATE INDEX idx_zavrsna_o_ocjena ON ZAVRSNA_O(OCJENE_ID_Ocjena);
+CREATE UNIQUE INDEX idx_zvanja_naziv ON ZVANJA(Naziv);

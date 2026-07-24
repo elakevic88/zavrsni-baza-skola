@@ -82,16 +82,16 @@ console.log('Uspješno uneseni razredi');
 
 baza.transaction(() => {
   const stmt = baza.prepare(`
-    INSERT INTO NASTAVNICI (ID_Nastavnik, Ime, Prezime, Datum_rodjenja, Pocetak_rada, Kraj_rada, Lista_zavrsenih_skola, ZVANJA_ID_Zvanje)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?)`);
+    INSERT INTO NASTAVNICI (ID_Nastavnik, Ime, Prezime, Datum_rodjenja, Pocetak_rada, Kraj_rada, ZVANJA_ID_Zvanje)
+    VALUES (?, ?, ?, ?, ?, ?, ?)`);
   for (let i = 0; i < registrari.length; i++) {
-    const [id, ime, , prezime, datumRodjenja, , zvanjeStr, zavrseniFakulteti, pocetakRada] = registrari[i];
+    const [id, ime, , prezime, datumRodjenja, , zvanjeStr, , pocetakRada] = registrari[i];
     if (!id) continue;
     const zvanje = ocisti(zvanjeStr || '');
     const zvanjeId = zvanjeMap[zvanje] || 1;
     const datumRod = ispravakDatuma(ocisti(datumRodjenja));
     const datum = ispravakDatuma(ocisti(pocetakRada)) || '2015-09-01';
-    stmt.run(parseInt(id), ocisti(ime), ocisti(prezime), datumRod, datum, null, ocisti(zavrseniFakulteti || ''), zvanjeId);
+    stmt.run(parseInt(id), ocisti(ime), ocisti(prezime), datumRod, datum, null, zvanjeId);
   }
 })();
 console.log('Uspješno uneseni nastavnici');
