@@ -93,16 +93,16 @@ db.transaction(() => {
 })();
 console.log('Uspješno uneseni razredi');
 
-const sviRazredi = db.prepare('SELECT R.ID_Razred, R.SKOLE_ID_Skola, S.Naziv AS Naziv_skole FROM RAZREDI R JOIN SKOLE S ON R.SKOLE_ID_Skola = S.ID_Skola').all();
+const sviRazredi = db.prepare(`SELECT R.ID_Razred, S.Naziv AS Naziv_skole FROM RAZREDI R JOIN SKOLE S ON R.SKOLE_ID_Skola = S.ID_Skola`).all();
 db.transaction(() => {
-    const stmt = db.prepare('INSERT OR IGNORE INTO N_SKOLE (NASTAVNICI_ID_Nastavnik, SKOLE_ID_Skola, Naziv_skole) VALUES (?, ?, ?)');
+    const stmt = db.prepare(`INSERT OR IGNORE INTO N_SKOLE (NASTAVNICI_ID_Nastavnik, Naziv_skole) VALUES (?, ?)`);
     for (let i = 0; i < sviRazredi.length; i++) {
-        const skolaId = sviRazredi[i].SKOLE_ID_Skola;
-        const nazivSkole = sviRazredi[i].Naziv_skole;
         const nastavnikId = sviNastavnici[i % sviNastavnici.length].ID_Nastavnik;
-        stmt.run(nastavnikId, skolaId, nazivSkole);
+        const nazivSkole = sviRazredi[i].Naziv_skole;
+        stmt.run(nastavnikId, nazivSkole);
     }
 })();
+
 console.log('Uspješno unesene škole nastavnika');
 
 const predmeti = procitajCsv('subjects.csv');
@@ -242,8 +242,7 @@ db.transaction(() => {
 console.log('Uspješno unesena završna ocjena');
 
 db.prepare(`INSERT INTO UCENIK_PREGLED (ID_Ucenik, Ime, Prezime, Datum_rodjenja, OIB, Adresa, Broj_razreda, Slovo_razreda, Naziv_skole, Adresa_skole, Postanski_broj, Mjesto, Naziv_zupanije, Broj_upisanih_predmeta)
-SELECT
-    u.ID_Ucenik, u.Ime, u.Prezime, u.Datum_rodjenja, u.OIB, u.Adresa, r.Broj_razreda, r.Slovo_razreda, s.Naziv, s.Adresa, p.Postanski_broj, p.Mjesto, z.Naziv, u.Broj_upisanih_predmeta
+SELECT u.ID_Ucenik, u.Ime, u.Prezime, u.Datum_rodjenja, u.OIB, u.Adresa, r.Broj_razreda, r.Slovo_razreda, s.Naziv, s.Adresa, p.Postanski_broj, p.Mjesto, z.Naziv, u.Broj_upisanih_predmeta
 FROM UCENICI u
 JOIN RAZREDI r ON u.RAZREDI_ID_Razred = r.ID_Razred
 JOIN SKOLE s ON r.SKOLE_ID_Skola = s.ID_Skola
@@ -252,8 +251,7 @@ JOIN ZUPANIJE z ON p.ZUPANIJE_ID_Zupanija = z.ID_Zupanija`).run();
 console.log('Uspješno popunjen UCENIK_PREGLED');
 
 db.prepare(`INSERT INTO NASTAVNIK_INFO (ID_Nastavnik, Ime, Prezime, Datum_rodjenja, Pocetak_rada, Naziv_zvanja, Broj_predmeta)
-SELECT
-    n.ID_Nastavnik, n.Ime, n.Prezime, n.Datum_rodjenja, n.Pocetak_rada, z.Naziv, COUNT(np.PREDMETI_ID_Predmet)
+SELECT n.ID_Nastavnik, n.Ime, n.Prezime, n.Datum_rodjenja, n.Pocetak_rada, z.Naziv, COUNT(np.PREDMETI_ID_Predmet)
 FROM NASTAVNICI n
 JOIN ZVANJA z ON n.ZVANJA_ID_Zvanje = z.ID_Zvanje
 LEFT JOIN N_PREDMET np ON n.ID_Nastavnik = np.NASTAVNICI_ID_Nastavnik

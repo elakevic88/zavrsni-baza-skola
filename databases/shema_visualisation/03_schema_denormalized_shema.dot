@@ -42,7 +42,6 @@ edge [fontname="Helvetica", fontsize=10, color="#555555", arrowsize=0.7];
         <table border="1" cellborder="0" cellspacing="0" cellpadding="6" bgcolor="white">
         <tr><td colspan="2" bgcolor="#2c3e50"><font color="white"><b>N_SKOLE</b></font></td></tr>
         <tr><td align="left" port="NASTAVNICI_ID_Nastavnik" bgcolor="#fff7e0"><b>NASTAVNICI_ID_Nastavnik</b> <font color="#b8860b"><b>PK</b></font></td><td align="left" bgcolor="#fff7e0"><font color="#666666">INTEGER</font></td></tr>
-<tr><td align="left" port="SKOLE_ID_Skola" bgcolor="#fff7e0"><b>SKOLE_ID_Skola</b> <font color="#b8860b"><b>PK</b></font></td><td align="left" bgcolor="#fff7e0"><font color="#666666">INTEGER</font></td></tr>
 <tr><td align="left" port="Naziv_skole">Naziv_skole</td><td align="left"><font color="#666666">TEXT</font></td></tr></table>>];
 
 "OCJENE" [label=<
@@ -144,7 +143,6 @@ edge [fontname="Helvetica", fontsize=10, color="#555555", arrowsize=0.7];
 "N_PREDMET":"PREDMETI_ID_Predmet" -> "PREDMETI":"ID_Predmet" [label="PREDMETI_ID_Predmet -> ID_Predmet"];
 "N_RAZRED":"NASTAVNICI_ID_Nastavnik" -> "NASTAVNICI":"ID_Nastavnik" [label="NASTAVNICI_ID_Nastavnik -> ID_Nastavnik"];
 "N_RAZRED":"RAZREDI_ID_Razred" -> "RAZREDI":"ID_Razred" [label="RAZREDI_ID_Razred -> ID_Razred"];
-"N_SKOLE":"SKOLE_ID_Skola" -> "SKOLE":"ID_Skola" [label="SKOLE_ID_Skola -> ID_Skola"];
 "N_SKOLE":"NASTAVNICI_ID_Nastavnik" -> "NASTAVNICI":"ID_Nastavnik" [label="NASTAVNICI_ID_Nastavnik -> ID_Nastavnik"];
 "POSTE":"ZUPANIJE_ID_Zupanija" -> "ZUPANIJE":"ID_Zupanija" [label="ZUPANIJE_ID_Zupanija -> ID_Zupanija"];
 "P_UCENIK":"PREDMETI_ID_Predmet" -> "PREDMETI":"ID_Predmet" [label="PREDMETI_ID_Predmet -> ID_Predmet"];
