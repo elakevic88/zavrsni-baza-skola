@@ -41,11 +41,13 @@ CREATE TABLE NASTAVNICI (
   FOREIGN KEY (ZVANJA_ID_Zvanje) REFERENCES ZVANJA(ID_Zvanje)
 );
 
-CREATE TABLE NASTAVNIK_SKOLE (
-  ID INTEGER PRIMARY KEY,
+CREATE TABLE N_SKOLE (
   NASTAVNICI_ID_Nastavnik INTEGER NOT NULL,
+  SKOLE_ID_Skola INTEGER NOT NULL,
   Naziv_skole TEXT NOT NULL,
-  FOREIGN KEY (NASTAVNICI_ID_Nastavnik) REFERENCES NASTAVNICI(ID_Nastavnik)
+  PRIMARY KEY (NASTAVNICI_ID_Nastavnik, SKOLE_ID_Skola),
+  FOREIGN KEY (NASTAVNICI_ID_Nastavnik) REFERENCES NASTAVNICI(ID_Nastavnik),
+  FOREIGN KEY (SKOLE_ID_Skola) REFERENCES SKOLE(ID_Skola)
 );
 
 CREATE TABLE PREDMETI (
@@ -132,10 +134,12 @@ CREATE TABLE NASTAVNIK_INFO (
   Datum_rodjenja TEXT NOT NULL CHECK (Datum_rodjenja GLOB '[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]'),
   Pocetak_rada TEXT NOT NULL CHECK (Pocetak_rada GLOB '[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]'),
   Naziv_zvanja TEXT NOT NULL,
-  Broj_predmeta INTEGER NOT NULL CHECK (Broj_predmeta>=0)
+  Broj_predmeta INTEGER NOT NULL CHECK (Broj_predmeta>=0),
+  FOREIGN KEY (ID_Nastavnik) REFERENCES NASTAVNICI(ID_Nastavnik)
 );
 
 CREATE INDEX idx_ucenik_pregled_skola_zupanija ON UCENIK_PREGLED(Naziv_skole, Naziv_zupanije);
 CREATE INDEX idx_ucenik_pregled_razred ON UCENIK_PREGLED(Broj_razreda, Slovo_razreda);
 CREATE INDEX idx_nastavnik_info_order ON NASTAVNIK_INFO(Broj_predmeta DESC, Ime, Prezime, Datum_rodjenja, Pocetak_rada, Naziv_zvanja);
+CREATE INDEX idx_nastavnik_skole_nastavnik ON N_SKOLE(NASTAVNICI_ID_Nastavnik);
 CREATE UNIQUE INDEX idx_zvanja_naziv ON ZVANJA(Naziv);

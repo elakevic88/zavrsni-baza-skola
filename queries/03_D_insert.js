@@ -93,14 +93,14 @@ db.transaction(() => {
 })();
 console.log('Uspješno uneseni razredi');
 
-const sviRazredi = db.prepare('SELECT R.ID_Razred, S.Naziv AS Naziv_skole FROM RAZREDI R JOIN SKOLE S ON R.SKOLE_ID_Skola = S.ID_Skola').all();
-
+const sviRazredi = db.prepare('SELECT R.ID_Razred, R.SKOLE_ID_Skola, S.Naziv AS Naziv_skole FROM RAZREDI R JOIN SKOLE S ON R.SKOLE_ID_Skola = S.ID_Skola').all();
 db.transaction(() => {
-    const stmt = db.prepare('INSERT OR IGNORE INTO NASTAVNIK_SKOLE (ID, NASTAVNICI_ID_Nastavnik, Naziv_skole) VALUES (?, ?, ?)');
+    const stmt = db.prepare('INSERT OR IGNORE INTO N_SKOLE (NASTAVNICI_ID_Nastavnik, SKOLE_ID_Skola, Naziv_skole) VALUES (?, ?, ?)');
     for (let i = 0; i < sviRazredi.length; i++) {
-        const skolaNaziv = sviRazredi[i].Naziv_skole;
+        const skolaId = sviRazredi[i].SKOLE_ID_Skola;
+        const nazivSkole = sviRazredi[i].Naziv_skole;
         const nastavnikId = sviNastavnici[i % sviNastavnici.length].ID_Nastavnik;
-        stmt.run(i + 1, nastavnikId, skolaNaziv);
+        stmt.run(nastavnikId, skolaId, nazivSkole);
     }
 })();
 console.log('Uspješno unesene škole nastavnika');

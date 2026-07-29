@@ -100,12 +100,11 @@ const sviNastavnici = baza.prepare('SELECT ID_Nastavnik FROM NASTAVNICI').all();
 const sviRazrediBaza = baza.prepare('SELECT ID_Razred, SKOLE_ID_Skola FROM RAZREDI').all();
 
 baza.transaction(() => {
-    const stmt = baza.prepare('INSERT OR IGNORE INTO NASTAVNIK_SKOLE (ID, NASTAVNICI_ID_Nastavnik, SKOLE_ID_Skola) VALUES (?, ?, ?)');
-    let nastavnikSkolaId = 1;
+    const stmt = baza.prepare('INSERT OR IGNORE INTO N_SKOLE (NASTAVNICI_ID_Nastavnik, SKOLE_ID_Skola) VALUES (?, ?)');
     for (let i = 0; i < sviRazrediBaza.length; i++) {
         const skolaId = sviRazrediBaza[i].SKOLE_ID_Skola;
         const nastavnikId = sviNastavnici[i % sviNastavnici.length].ID_Nastavnik;
-        stmt.run(nastavnikSkolaId++, nastavnikId, skolaId);
+        stmt.run(nastavnikId, skolaId);
     }
 })();
 console.log('Uspješno unesene škole nastavnika');
