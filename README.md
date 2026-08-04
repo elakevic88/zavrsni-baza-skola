@@ -1,31 +1,45 @@
 # Usporedba nenormalizirane, normalizirane i denormalizirane baze podataka
 
 ## Opis projekta
-Ovaj projekt izrađen je u sklopu završnog rada. Cilj projekta je usporediti performanse nenormalizirane, normalizirane i denormalizirane baze podataka 
-koristeći iste skupove podataka i iste SQL upite.
 
-U projektu se mjeri:
+Ovaj projekt izrađen je u sklopu završnog rada s ciljem usporedbe performansi nenormalizirane, normalizirane i denormalizirane baze podataka. Sve tri baze koriste isti skup podataka, dok se usporedba provodi izvođenjem istih SQL upita nad svakim modelom.
 
-- prosječno vrijeme izvršavanja upita
-- minimalno i maksimalno vrijeme izvršavanja
-- throughput (broj upita u sekundi)
-- HOP metrika
-- Query Plan (SCAN i SEARCH operacije)
+Projekt mjeri sljedeće metrike:
 
+- vrijeme izvršavanja SQL upita (INSERT, SELECT, UPDATE i DELETE)
+- prosječno, medijalno, minimalno i maksimalno vrijeme izvršavanja
+- standardnu devijaciju
+- 5. i 95. percentil
+- throughput (broj izvršenih SELECT upita u sekundi)
+- HOP metriku (broj JOIN operacija)
+- broj tablica uključenih u izvršavanje upita
+- plan izvršavanja SQL upita (SCAN i SEARCH operacije)
+- veličinu baze podataka
 
-## Pokretanje
-1. Instalirati potrebne pakete:
+## Pokretanje projekta
+
+### 1. Instalacija ovisnosti
+
+```bash
 npm install
+```
 
-2. Pokrenuti benchmark:
+### 2. Pokretanje benchmarka
+
+```bash
 node scripts/main.js
+```
 
-3. Generirati grafove:
+### 3. Generiranje grafova
+
+```bash
 node scripts/visualise.js
+```
 
-Rezultati se spremaju u datoteku **rezultati.csv**, dok se grafovi spremaju u mapu **results**.
+Rezultati mjerenja spremaju se u datoteku **rezultati.csv**, dok se generirani grafovi spremaju u mapu **results**.
 
-## U ovom projektu se koriste:
+## Korištene tehnologije
+
 - Node.js
 - SQLite
 - better-sqlite3
