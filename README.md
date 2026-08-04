@@ -9,7 +9,7 @@ Projekt mjeri sljedeće metrike:
 - vrijeme izvršavanja SQL upita (INSERT, SELECT, UPDATE i DELETE)
 - prosječno, medijalno, minimalno i maksimalno vrijeme izvršavanja
 - standardnu devijaciju
--  95. i 5. percentil
+- percentil
 - throughput (broj izvršenih SELECT upita u sekundi)
 - HOP metriku (broj JOIN operacija)
 - broj tablica uključenih u izvršavanje upita
