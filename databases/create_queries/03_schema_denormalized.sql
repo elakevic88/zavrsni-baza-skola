@@ -1,6 +1,6 @@
 CREATE TABLE ZUPANIJE (
   ID_Zupanija INTEGER PRIMARY KEY,
-  Naziv TEXT NOT NULL
+  Naziv TEXT NOT NULL UNIQUE
 );
 
 CREATE TABLE POSTE (
@@ -8,18 +8,20 @@ CREATE TABLE POSTE (
   Postanski_broj INTEGER NOT NULL,
   Mjesto TEXT NOT NULL,
   ZUPANIJE_ID_Zupanija INTEGER NOT NULL,
+  UNIQUE (Postanski_broj, Mjesto),
   FOREIGN KEY (ZUPANIJE_ID_Zupanija) REFERENCES ZUPANIJE(ID_Zupanija)
 );
 
 CREATE TABLE SKOLE (
   ID_Skola INTEGER PRIMARY KEY,
   Naziv TEXT NOT NULL,
-  Adresa TEXT NOT NULL
+  Adresa TEXT NOT NULL,
+  UNIQUE (Naziv, Adresa)
 );
 
 CREATE TABLE ZVANJA (
   ID_Zvanje INTEGER PRIMARY KEY,
-  Naziv TEXT NOT NULL
+  Naziv TEXT NOT NULL UNIQUE
 );
 
 CREATE TABLE RAZREDI (
@@ -27,6 +29,7 @@ CREATE TABLE RAZREDI (
   Broj_razreda INTEGER NOT NULL,
   Slovo_razreda TEXT NOT NULL,
   SKOLE_ID_Skola INTEGER NOT NULL,
+  UNIQUE (Broj_razreda, Slovo_razreda, SKOLE_ID_Skola),
   FOREIGN KEY (SKOLE_ID_Skola) REFERENCES SKOLE(ID_Skola)
 );
 
@@ -36,21 +39,22 @@ CREATE TABLE NASTAVNICI (
   Prezime TEXT NOT NULL,
   Datum_rodjenja TEXT NOT NULL CHECK (Datum_rodjenja GLOB '[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]'),
   Pocetak_rada TEXT NOT NULL CHECK (Pocetak_rada GLOB '[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]'),
-  Kraj_rada TEXT CHECK (Kraj_rada IS NULL OR Kraj_rada GLOB '[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]'),
+  Kraj_rada TEXT NULL,
   ZVANJA_ID_Zvanje INTEGER NOT NULL,
+  UNIQUE (Ime, Prezime, Datum_rodjenja),
   FOREIGN KEY (ZVANJA_ID_Zvanje) REFERENCES ZVANJA(ID_Zvanje)
 );
 
 CREATE TABLE N_SKOLE (
   NASTAVNICI_ID_Nastavnik INTEGER PRIMARY KEY,
   Naziv_skole TEXT NOT NULL,
+  Adresa_skole TEXT NOT NULL,
   FOREIGN KEY (NASTAVNICI_ID_Nastavnik) REFERENCES NASTAVNICI(ID_Nastavnik)
 );
 
 CREATE TABLE PREDMETI (
   ID_Predmet INTEGER PRIMARY KEY,
-  Naziv TEXT NOT NULL,
-  Broj_sati_tjedno INTEGER NOT NULL CHECK (Broj_sati_tjedno > 0)
+  Naziv TEXT NOT NULL UNIQUE
 );
 
 CREATE TABLE UCENICI (
@@ -70,49 +74,47 @@ CREATE TABLE UCENICI (
 
 CREATE TABLE OCJENE (
   ID_Ocjena INTEGER PRIMARY KEY,
-  Ocjena TEXT NOT NULL,
-  Broj_ocjene INTEGER NOT NULL CHECK (Broj_ocjene BETWEEN 1 AND 5)
+  Ocjena INTEGER NOT NULL CHECK (Ocjena BETWEEN 1 AND 5)
 );
 
-CREATE TABLE N_PREDMET (
+CREATE TABLE NASTAVA (
+  ID_Nastava INTEGER PRIMARY KEY,
   PREDMETI_ID_Predmet INTEGER NOT NULL,
   NASTAVNICI_ID_Nastavnik INTEGER NOT NULL,
-  PRIMARY KEY (PREDMETI_ID_Predmet, NASTAVNICI_ID_Nastavnik),
-  FOREIGN KEY (PREDMETI_ID_Predmet) REFERENCES PREDMETI(ID_Predmet),
-  FOREIGN KEY (NASTAVNICI_ID_Nastavnik) REFERENCES NASTAVNICI(ID_Nastavnik)
-);
-
-CREATE TABLE N_RAZRED (
   RAZREDI_ID_Razred INTEGER NOT NULL,
-  NASTAVNICI_ID_Nastavnik INTEGER NOT NULL,
-  PRIMARY KEY (RAZREDI_ID_Razred, NASTAVNICI_ID_Nastavnik),
-  FOREIGN KEY (RAZREDI_ID_Razred) REFERENCES RAZREDI(ID_Razred),
-  FOREIGN KEY (NASTAVNICI_ID_Nastavnik) REFERENCES NASTAVNICI(ID_Nastavnik)
+  Broj_sati_tjedno INTEGER NOT NULL CHECK (Broj_sati_tjedno > 0),
+  UNIQUE (PREDMETI_ID_Predmet, NASTAVNICI_ID_Nastavnik, RAZREDI_ID_Razred),
+  FOREIGN KEY (PREDMETI_ID_Predmet) REFERENCES PREDMETI(ID_Predmet),
+  FOREIGN KEY (NASTAVNICI_ID_Nastavnik) REFERENCES NASTAVNICI(ID_Nastavnik),
+  FOREIGN KEY (RAZREDI_ID_Razred) REFERENCES RAZREDI(ID_Razred)
 );
 
 CREATE TABLE P_UCENIK (
   UCENICI_ID_Ucenik INTEGER NOT NULL,
-  PREDMETI_ID_Predmet INTEGER NOT NULL,
-  PRIMARY KEY (UCENICI_ID_Ucenik, PREDMETI_ID_Predmet),
+  NASTAVA_ID_Nastava INTEGER NOT NULL,
+  PRIMARY KEY (UCENICI_ID_Ucenik, NASTAVA_ID_Nastava),
   FOREIGN KEY (UCENICI_ID_Ucenik) REFERENCES UCENICI(ID_Ucenik),
-  FOREIGN KEY (PREDMETI_ID_Predmet) REFERENCES PREDMETI(ID_Predmet)
+  FOREIGN KEY (NASTAVA_ID_Nastava) REFERENCES NASTAVA(ID_Nastava)
 );
 
-CREATE TABLE ZAVRSNA_O (
+CREATE TABLE GODISNJI_USPJEH (
   UCENICI_ID_Ucenik INTEGER NOT NULL,
+  NASTAVA_ID_Nastava INTEGER NOT NULL,
   OCJENE_ID_Ocjena INTEGER NOT NULL,
-  PRIMARY KEY (UCENICI_ID_Ucenik, OCJENE_ID_Ocjena),
+  PRIMARY KEY (UCENICI_ID_Ucenik, NASTAVA_ID_Nastava),
   FOREIGN KEY (UCENICI_ID_Ucenik) REFERENCES UCENICI(ID_Ucenik),
+  FOREIGN KEY (NASTAVA_ID_Nastava) REFERENCES NASTAVA(ID_Nastava),
   FOREIGN KEY (OCJENE_ID_Ocjena) REFERENCES OCJENE(ID_Ocjena)
 );
 
-CREATE TABLE UCENIK_PREGLED (
+CREATE TABLE UCENIK_INFO (
   ID_Ucenik INTEGER PRIMARY KEY,
   Ime TEXT NOT NULL,
   Prezime TEXT NOT NULL,
   Datum_rodjenja TEXT NOT NULL CHECK (Datum_rodjenja GLOB '[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]'),
   OIB TEXT NOT NULL CHECK (length(OIB)=11 AND OIB GLOB '[0-9]*'),
   Adresa TEXT NOT NULL,
+  Ime_oca TEXT NOT NULL,
   Broj_razreda INTEGER NOT NULL,
   Slovo_razreda TEXT NOT NULL,
   Naziv_skole TEXT NOT NULL,
@@ -130,13 +132,22 @@ CREATE TABLE NASTAVNIK_INFO (
   Prezime TEXT NOT NULL,
   Datum_rodjenja TEXT NOT NULL CHECK (Datum_rodjenja GLOB '[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]'),
   Pocetak_rada TEXT NOT NULL CHECK (Pocetak_rada GLOB '[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]'),
+  Kraj_rada TEXT NULL,
   Naziv_zvanja TEXT NOT NULL,
   Broj_predmeta INTEGER NOT NULL CHECK (Broj_predmeta>=0),
   FOREIGN KEY (ID_Nastavnik) REFERENCES NASTAVNICI(ID_Nastavnik)
 );
 
-CREATE INDEX idx_ucenik_pregled_skola_zupanija ON UCENIK_PREGLED(Naziv_skole, Naziv_zupanije);
-CREATE INDEX idx_ucenik_pregled_razred ON UCENIK_PREGLED(Broj_razreda, Slovo_razreda);
+CREATE INDEX idx_ucenik_info_skola_zupanija ON UCENIK_INFO(Naziv_skole, Naziv_zupanije);
+CREATE INDEX idx_ucenik_info_razred ON UCENIK_INFO(Broj_razreda, Slovo_razreda);
 CREATE INDEX idx_nastavnik_info_order ON NASTAVNIK_INFO(Broj_predmeta DESC, Ime, Prezime, Datum_rodjenja, Pocetak_rada, Naziv_zvanja);
 CREATE INDEX idx_nastavnik_skole_nastavnik ON N_SKOLE(NASTAVNICI_ID_Nastavnik);
-CREATE UNIQUE INDEX idx_zvanja_naziv ON ZVANJA(Naziv);
+CREATE INDEX idx_ucenici_razred ON UCENICI(RAZREDI_ID_Razred);
+CREATE INDEX idx_ucenici_posta ON UCENICI(POSTE_ID_Posta);
+CREATE INDEX idx_nastava_predmet ON NASTAVA(PREDMETI_ID_Predmet);
+CREATE INDEX idx_nastava_nastavnik ON NASTAVA(NASTAVNICI_ID_Nastavnik);
+CREATE INDEX idx_nastava_razred ON NASTAVA(RAZREDI_ID_Razred);
+CREATE INDEX idx_p_ucenik_ucenik ON P_UCENIK(UCENICI_ID_Ucenik);
+CREATE INDEX idx_p_ucenik_nastava ON P_UCENIK(NASTAVA_ID_Nastava);
+CREATE INDEX idx_godisnji_uspjeh_nastava ON GODISNJI_USPJEH(NASTAVA_ID_Nastava);
+CREATE INDEX idx_godisnji_uspjeh_ocjena ON GODISNJI_USPJEH(OCJENE_ID_Ocjena);

@@ -2,250 +2,187 @@ const Database = require('better-sqlite3');
 const path = require('path');
 const { procitajCsv, ocisti, ispravakDatuma } = require('../scripts/utils/csvLoader');
 
-const baza = new Database(path.join(__dirname, '../databases/dbs/02_schema_normalized.db'));
-baza.pragma('foreign_keys = ON');
-
-const zupanije = procitajCsv('province.csv');
-baza.transaction(() => {
-    const stmt = baza.prepare('INSERT INTO ZUPANIJE (ID_Zupanija, Naziv) VALUES (?, ?)');
-    for (let i = 0; i < zupanije.length; i++) {
-        const [id, naziv] = zupanije[i];
-        if (!id) continue;
-        stmt.run(parseInt(id), ocisti(naziv));
+function insertNormalizirana(baza, podaci) {
+  baza.transaction(() => {
+    const stmt = baza.prepare(`INSERT OR IGNORE INTO ZUPANIJE (Naziv) VALUES (?)`);
+    for (let i = 0; i < podaci.length; i++) {
+      stmt.run(ocisti(podaci[i][9]));
     }
-})();
-console.log('Uspješno unesene županije');
+  })();
 
-const gradovi = procitajCsv('city.csv');
-baza.transaction(() => {
-    const stmt = baza.prepare('INSERT INTO POSTE (ID_Posta, Postanski_broj, Mjesto, ZUPANIJE_ID_Zupanija) VALUES (?, ?, ?, ?)');
-    for (let i = 0; i < gradovi.length; i++) {
-        const [zupanijaId, gradId, naziv, zip] = gradovi[i];
-        if (!zupanijaId) continue;
-        const idPoste = parseInt(zupanijaId) * 1000 + parseInt(gradId);
-        stmt.run(idPoste, parseInt(zip) || 0, ocisti(naziv), parseInt(zupanijaId));
+  const zupanije = baza.prepare(`SELECT ID_Zupanija, Naziv FROM ZUPANIJE`).all();
+  const mapaZupanija = {};
+  for (let i = 0; i < zupanije.length; i++) {
+    mapaZupanija[zupanije[i].Naziv] = zupanije[i].ID_Zupanija;
+  }
+
+  baza.transaction(() => {
+    const stmt = baza.prepare(`INSERT OR IGNORE INTO POSTE (Postanski_broj, Mjesto, ZUPANIJE_ID_Zupanija) VALUES (?, ?, ?)`);
+    for (let i = 0; i < podaci.length; i++) {
+      const red = podaci[i];
+      stmt.run(parseInt(red[7]), ocisti(red[8]), mapaZupanija[ocisti(red[9])]);
     }
-})();
-console.log('Uspješno unešene pošte');
+  })();
 
-const adreseZaSkole = procitajCsv('address.csv');
-const listaAdresa = [];
-for (let i = 0; i < adreseZaSkole.length; i++) {
-    const red = adreseZaSkole[i];
-    if (!red || red.length < 2) continue;
-    listaAdresa.push(ocisti(red[1]));
+  baza.transaction(() => {
+    const stmt = baza.prepare(`INSERT OR IGNORE INTO SKOLE (Naziv, Adresa) VALUES (?, ?)`);
+    for (let i = 0; i < podaci.length; i++) {
+      const red = podaci[i];
+      stmt.run(ocisti(red[10]), ocisti(red[11]));
+    }
+  })();
+
+  baza.transaction(() => {
+    const stmt = baza.prepare(`INSERT OR IGNORE INTO ZVANJA (Naziv) VALUES (?)`);
+    for (let i = 0; i < podaci.length; i++) {
+      stmt.run(ocisti(podaci[i][21]));
+    }
+  })();
+
+  const skole = baza.prepare(`SELECT ID_Skola, Naziv, Adresa FROM SKOLE`).all();
+  const zvanja = baza.prepare(`SELECT ID_Zvanje, Naziv FROM ZVANJA`).all();
+  const mapaSkola = {};
+  const mapaZvanja = {};
+
+  for (let i = 0; i < skole.length; i++) {
+    mapaSkola[skole[i].Naziv + "|" + skole[i].Adresa] = skole[i].ID_Skola;
+  }
+  for (let i = 0; i < zvanja.length; i++) {
+    mapaZvanja[zvanja[i].Naziv] = zvanja[i].ID_Zvanje;
+  }
+
+  baza.transaction(() => {
+    const stmt = baza.prepare(`INSERT OR IGNORE INTO RAZREDI (Broj_razreda, Slovo_razreda, SKOLE_ID_Skola) VALUES (?, ?, ?)`);
+    for (let i = 0; i < podaci.length; i++) {
+      const red = podaci[i];
+      stmt.run(parseInt(red[12]), ocisti(red[13]), mapaSkola[ocisti(red[10]) + "|" + ocisti(red[11])]);
+    }
+  })();
+
+  const razredi = baza.prepare(`SELECT ID_Razred, Broj_razreda, Slovo_razreda, SKOLE_ID_Skola FROM RAZREDI`).all();
+  const mapaRazreda = {};
+  for (let i = 0; i < razredi.length; i++) {
+    const kljuc = razredi[i].Broj_razreda + "|" + razredi[i].Slovo_razreda + "|" + razredi[i].SKOLE_ID_Skola;
+    mapaRazreda[kljuc] = razredi[i].ID_Razred;
+  }
+
+  baza.transaction(() => {
+    const stmt = baza.prepare(`INSERT OR IGNORE INTO NASTAVNICI (Ime, Prezime, Datum_rodjenja, Pocetak_rada, Kraj_rada, ZVANJA_ID_Zvanje) VALUES (?, ?, ?, ?, ?, ?)`);
+    for (let i = 0; i < podaci.length; i++) {
+      const red = podaci[i];
+      stmt.run(ocisti(red[16]), ocisti(red[17]), ispravakDatuma(ocisti(red[18])), ispravakDatuma(ocisti(red[19])), red[20] ? ispravakDatuma(ocisti(red[20])) : null, mapaZvanja[ocisti(red[21])]);
+    }
+  })();
+
+  const nastavnici = baza.prepare(`SELECT ID_Nastavnik, Ime, Prezime, Datum_rodjenja FROM NASTAVNICI`).all();
+  const mapaNastavnika = {};
+  for (let i = 0; i < nastavnici.length; i++) {
+    const kljuc = nastavnici[i].Ime + "|" + nastavnici[i].Prezime + "|" + nastavnici[i].Datum_rodjenja;
+    mapaNastavnika[kljuc] = nastavnici[i].ID_Nastavnik;
+  }
+
+  baza.transaction(() => {
+    const stmt = baza.prepare(`INSERT OR IGNORE INTO PREDMETI (Naziv) VALUES (?)`);
+    for (let i = 0; i < podaci.length; i++) {
+      const red = podaci[i];
+      stmt.run(ocisti(red[14]));
+    }
+  })();
+
+  const predmeti = baza.prepare(`SELECT ID_Predmet, Naziv FROM PREDMETI`).all();
+  const mapaPredmeta = {};
+  for (let i = 0; i < predmeti.length; i++) {
+    mapaPredmeta[predmeti[i].Naziv] = predmeti[i].ID_Predmet;
+  }
+
+  const poste = baza.prepare(`SELECT ID_Posta, Postanski_broj FROM POSTE`).all();
+  const mapaPosta = {};
+  for (let i = 0; i < poste.length; i++) {
+    mapaPosta[poste[i].Postanski_broj] = poste[i].ID_Posta;
+  }
+
+  baza.transaction(() => {
+    const stmt = baza.prepare(`INSERT OR IGNORE INTO UCENICI (ID_Ucenik, Ime, Prezime, Datum_rodjenja, OIB, Ime_oca, Adresa, RAZREDI_ID_Razred, POSTE_ID_Posta) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`);
+    for (let i = 0; i < podaci.length; i++) {
+      const red = podaci[i];
+      const skolaId = mapaSkola[ocisti(red[10]) + "|" + ocisti(red[11])];
+      const kljucRazreda = parseInt(red[12]) + "|" + ocisti(red[13]) + "|" + skolaId;
+      stmt.run(parseInt(red[0]), ocisti(red[1]), ocisti(red[2]), ispravakDatuma(ocisti(red[3])), ocisti(red[4]), ocisti(red[5]), ocisti(red[6]), mapaRazreda[kljucRazreda], mapaPosta[parseInt(red[7])]);
+    }
+  })();
+
+  baza.transaction(() => {
+    const stmt = baza.prepare(`INSERT OR IGNORE INTO N_SKOLE (NASTAVNICI_ID_Nastavnik, SKOLE_ID_Skola) VALUES (?, ?)`);
+    for (let i = 0; i < podaci.length; i++) {
+      const red = podaci[i];
+      const nastavnikId = mapaNastavnika[ocisti(red[16]) + "|" + ocisti(red[17]) + "|" + ispravakDatuma(ocisti(red[18]))];
+      const skolaId = mapaSkola[ocisti(red[10]) + "|" + ocisti(red[11])];
+      stmt.run(nastavnikId, skolaId);
+    }
+  })();
+
+  baza.transaction(() => {
+    const stmt = baza.prepare(`INSERT OR IGNORE INTO NASTAVA (PREDMETI_ID_Predmet, NASTAVNICI_ID_Nastavnik, RAZREDI_ID_Razred, Broj_sati_tjedno) VALUES (?, ?, ?, ?)`);
+    for (let i = 0; i < podaci.length; i++) {
+      const red = podaci[i];
+      const predmetId = mapaPredmeta[ocisti(red[14])];
+      const nastavnikId = mapaNastavnika[ocisti(red[16]) + "|" + ocisti(red[17]) + "|" + ispravakDatuma(ocisti(red[18]))];
+      const skolaId = mapaSkola[ocisti(red[10]) + "|" + ocisti(red[11])];
+      const kljucRazreda = parseInt(red[12]) + "|" + ocisti(red[13]) + "|" + skolaId;
+      stmt.run(predmetId, nastavnikId, mapaRazreda[kljucRazreda], parseInt(red[15]));
+    }
+  })();
+
+  const nastava = baza.prepare(`SELECT ID_Nastava, PREDMETI_ID_Predmet, NASTAVNICI_ID_Nastavnik, RAZREDI_ID_Razred FROM NASTAVA`).all();
+  const mapaNastave = {};
+  for (let i = 0; i < nastava.length; i++) {
+    const kljuc = nastava[i].PREDMETI_ID_Predmet + "|" + nastava[i].NASTAVNICI_ID_Nastavnik + "|" + nastava[i].RAZREDI_ID_Razred;
+    mapaNastave[kljuc] = nastava[i].ID_Nastava;
+  }
+
+  baza.transaction(() => {
+    const stmt = baza.prepare(`INSERT OR IGNORE INTO P_UCENIK (UCENICI_ID_Ucenik, NASTAVA_ID_Nastava) VALUES (?, ?)`);
+    for (let i = 0; i < podaci.length; i++) {
+      const red = podaci[i];
+      const predmetId = mapaPredmeta[ocisti(red[14])];
+      const nastavnikId = mapaNastavnika[ocisti(red[16]) + "|" + ocisti(red[17]) + "|" + ispravakDatuma(ocisti(red[18]))];
+      const skolaId = mapaSkola[ocisti(red[10]) + "|" + ocisti(red[11])];
+      const kljucRazreda = parseInt(red[12]) + "|" + ocisti(red[13]) + "|" + skolaId;
+      const razredId = mapaRazreda[kljucRazreda];
+      const kljucNastave = predmetId + "|" + nastavnikId + "|" + razredId;
+      stmt.run(parseInt(red[0]), mapaNastave[kljucNastave]);
+    }
+  })();
+
+  baza.transaction(() => {
+    const stmt = baza.prepare(`INSERT OR IGNORE INTO OCJENE (ID_Ocjena, Ocjena) VALUES (?, ?)`);
+    for (let i = 1; i <= 5; i++) {
+      stmt.run(i, i);
+    }
+  })();
+
+  baza.transaction(() => {
+    const stmt = baza.prepare(`INSERT OR IGNORE INTO GODISNJI_USPJEH (UCENICI_ID_Ucenik, NASTAVA_ID_Nastava, OCJENE_ID_Ocjena) VALUES (?, ?, ?)`);
+    for (let i = 0; i < podaci.length; i++) {
+      const red = podaci[i];
+      const predmetId = mapaPredmeta[ocisti(red[14])];
+      const nastavnikId = mapaNastavnika[ocisti(red[16]) + "|" + ocisti(red[17]) + "|" + ispravakDatuma(ocisti(red[18]))];
+      const skolaId = mapaSkola[ocisti(red[10]) + "|" + ocisti(red[11])];
+      const kljucRazreda = parseInt(red[12]) + "|" + ocisti(red[13]) + "|" + skolaId;
+      const razredId = mapaRazreda[kljucRazreda];
+      const kljucNastave = predmetId + "|" + nastavnikId + "|" + razredId;
+      stmt.run(parseInt(red[0]), mapaNastave[kljucNastave], parseInt(red[22]));
+    }
+  })();
 }
 
-const zgrade = procitajCsv('bldg.csv');
-baza.transaction(() => {
-    const stmt = baza.prepare('INSERT INTO SKOLE (ID_Skola, Naziv, Adresa) VALUES (?, ?, ?)');
-    for (let i = 0; i < zgrade.length; i++) {
-        const [id, , naziv] = zgrade[i];
-        if (!id) continue;
-        const adresa = listaAdresa[i % listaAdresa.length];
-        stmt.run(parseInt(id), ocisti(naziv), adresa);
-    }
-})();
-console.log('Uspješno unesene škole');
+module.exports = { insertNormalizirana };
 
-const nastavniciCsv = procitajCsv('registrar.csv');
-baza.transaction(() => {
-    const stmt = baza.prepare('INSERT OR IGNORE INTO ZVANJA (Naziv) VALUES (?)');
-    for (let i = 0; i < nastavniciCsv.length; i++) {
-        const zvanje = ocisti(nastavniciCsv[i][6] || '');
-        if (zvanje) {
-            stmt.run(zvanje);
-        }
-    }
-})();
-console.log('Uspješno unesena zvanja');
-
-const svaZvanja = baza.prepare('SELECT ID_Zvanje, Naziv FROM ZVANJA').all();
-const zvanjeMap = {};
-for (const z of svaZvanja) zvanjeMap[z.Naziv] = z.ID_Zvanje;
-
-const sveSkole = baza.prepare('SELECT ID_Skola, Naziv FROM SKOLE').all();
-const razredi = procitajCsv('classsection.csv');
-
-baza.transaction(() => {
-    const stmt = baza.prepare('INSERT INTO RAZREDI (ID_Razred, Broj_razreda, Slovo_razreda, SKOLE_ID_Skola) VALUES (?, ?, ?, ?)');
-    for (let i = 0; i < razredi.length; i++) {
-        const [idStr, , razredStr, , , imeRazreda] = razredi[i];
-        if (!idStr) continue;
-        const id = parseInt(idStr);
-        const razred = parseInt(razredStr);
-        const skolaId = sveSkole.length > 0 ? sveSkole[i % sveSkole.length].ID_Skola : 1;
-        stmt.run(id, razred, ocisti(imeRazreda).charAt(0), skolaId);
-    }
-})();
-console.log('Uspješno uneseni razredi');
-
-baza.transaction(() => {
-    const stmt = baza.prepare(`
-    INSERT INTO NASTAVNICI (ID_Nastavnik, Ime, Prezime, Datum_rodjenja, Pocetak_rada, Kraj_rada, ZVANJA_ID_Zvanje)
-    VALUES (?, ?, ?, ?, ?, ?, ?)`);
-    for (let i = 0; i < nastavniciCsv.length; i++) {
-        const [id, ime, , prezime, datumRodjenja, , zvanjeStr, , pocetakRadaStr] = nastavniciCsv[i];
-        if (!id) continue;
-        const zvanje = ocisti(zvanjeStr || '');
-        const zvanjeId = zvanjeMap[zvanje] || 1;
-        const pocetakRada = ispravakDatuma(ocisti(pocetakRadaStr || '')) || '2015-09-01';
-
-        stmt.run(parseInt(id), ocisti(ime), ocisti(prezime), ispravakDatuma(ocisti(datumRodjenja)), pocetakRada, null, zvanjeId);
-    }
-})();
-console.log('Uspješno uneseni nastavnici');
-
-const sviNastavnici = baza.prepare('SELECT ID_Nastavnik FROM NASTAVNICI').all();
-const sviRazrediBaza = baza.prepare('SELECT ID_Razred, SKOLE_ID_Skola FROM RAZREDI').all();
-
-baza.transaction(() => {
-    const stmt = baza.prepare('INSERT OR IGNORE INTO N_SKOLE (NASTAVNICI_ID_Nastavnik, SKOLE_ID_Skola) VALUES (?, ?)');
-    for (let i = 0; i < sviRazrediBaza.length; i++) {
-        const skolaId = sviRazrediBaza[i].SKOLE_ID_Skola;
-        const nastavnikId = sviNastavnici[i % sviNastavnici.length].ID_Nastavnik;
-        stmt.run(nastavnikId, skolaId);
-    }
-})();
-console.log('Uspješno unesene škole nastavnika');
-
-const predmeti = procitajCsv('subjects.csv');
-baza.transaction(() => {
-    const stmt = baza.prepare('INSERT INTO PREDMETI (ID_Predmet, Naziv, Broj_sati_tjedno) VALUES (?, ?, ?)');
-    for (let i = 0; i < predmeti.length; i++) {
-        const [id, naziv] = predmeti[i];
-        if (!id) continue;
-        const brojSati = (i % 2 === 0) ? 2 : 3;
-        stmt.run(parseInt(id), ocisti(naziv), brojSati);
-    }
-})();
-console.log('Uspješno uneseni predmeti');
-
-const sviPredmetiId = predmeti.filter(p => p[0]).map(p => parseInt(p[0]));
-
-const adrese = procitajCsv('address.csv');
-const adresaMap = {};
-for (let i = 0; i < adrese.length; i++) {
-    const [adresaId, adresaTekst] = adrese[i];
-    if (!adresaId) continue;
-    adresaMap[parseInt(adresaId)] = ocisti(adresaTekst);
+if (require.main === module) {
+  const baza = new Database(path.join(__dirname, '../databases/dbs/02_schema_normalized.db'));
+  baza.pragma('foreign_keys = ON');
+  const podaci = procitajCsv('srednja_skola.csv');
+  insertNormalizirana(baza, podaci);
+  console.log('Gotovo!');
+  baza.close();
 }
-const sveAdrese = Object.values(adresaMap);
-
-const upisi = procitajCsv('enroll.csv');
-const ucenikURazredu = {};
-for (let i = 0; i < upisi.length; i++) {
-    const [, ucenikId, razredId] = upisi[i];
-    if (!ucenikId) continue;
-    ucenikURazredu[parseInt(ucenikId)] = parseInt(razredId);
-}
-
-const dodjele = procitajCsv('classSectionAssignment.csv');
-const razredPredmeti = {};
-for (let i = 0; i < dodjele.length; i++) {
-    const [, razredId, predmetId] = dodjele[i];
-    if (!razredId) continue;
-    const rId = parseInt(razredId);
-    if (!razredPredmeti[rId]) razredPredmeti[rId] = [];
-    razredPredmeti[rId].push(parseInt(predmetId));
-}
-
-const ucenici = procitajCsv('student.csv', false);
-const imeOcaRedovi = procitajCsv('ime_oca.csv');
-const svePoste = baza.prepare('SELECT ID_Posta FROM POSTE').all();
-
-baza.transaction(() => {
-    const stmt = baza.prepare(`
-    INSERT INTO UCENICI (ID_Ucenik, Ime, Prezime, Datum_rodjenja, OIB, Ime_oca, Adresa, RAZREDI_ID_Razred, POSTE_ID_Posta)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`);
-    for (let i = 0; i < ucenici.length; i++) {
-        const [idStr, ime, , prezime, datumRodjenja, , , adresaIdStr] = ucenici[i];
-        if (!idStr) continue;
-        const ucenikId = parseInt(idStr);
-        const adresaId = parseInt(adresaIdStr);
-        const razredId = ucenikURazredu[ucenikId] || 1701;
-        const imeOcaStr = imeOcaRedovi[i % imeOcaRedovi.length] ? imeOcaRedovi[i % imeOcaRedovi.length][0] : '';
-        const imeOca = ocisti(imeOcaStr);
-        const adresaTekst = adresaMap[adresaId] ?? sveAdrese[Math.floor(Math.random() * sveAdrese.length)];
-        const postaId = svePoste.length > 0 ? svePoste[i % svePoste.length].ID_Posta : 1000;
-        const oib = String(ucenikId).padStart(11, '0');
-
-        stmt.run(ucenikId, ocisti(ime), ocisti(prezime), ispravakDatuma(ocisti(datumRodjenja)), oib, imeOca, adresaTekst, razredId, postaId);
-    }
-})();
-console.log('Uspješno uneseni učenici');
-
-const ocjene = [['Nedovoljan', 1], ['Dovoljan', 2], ['Dobar', 3], ['Vrlo dobar', 4], ['Odličan', 5]];
-baza.transaction(() => {
-    const stmt = baza.prepare('INSERT INTO OCJENE (ID_Ocjena, Ocjena, Broj_ocjene) VALUES (?, ?, ?)');
-    for (const [naziv, broj] of ocjene) {
-        stmt.run(broj, naziv, broj);
-    }
-})();
-console.log('Uspješno unesene ocjene');
-
-baza.transaction(() => {
-    const stmt = baza.prepare('INSERT OR IGNORE INTO N_PREDMET(PREDMETI_ID_Predmet, NASTAVNICI_ID_Nastavnik) VALUES (?, ?)');
-    for (const nastavnik of sviNastavnici) {
-        const brojPredmeta = Math.floor(Math.random() * 3) + 3;
-        const dodijeljeni = new Set();
-        while (dodijeljeni.size < brojPredmeta) {
-            const predmetId = sviPredmetiId[Math.floor(Math.random() * sviPredmetiId.length)];
-            if (!dodijeljeni.has(predmetId)) {
-                dodijeljeni.add(predmetId);
-                stmt.run(predmetId, nastavnik.ID_Nastavnik);
-            }
-        }
-    }
-})();
-console.log("Uspješno uneseni nastavnici i predmeti");
-
-baza.transaction(() => {
-    const stmt = baza.prepare('INSERT OR IGNORE INTO N_RAZRED (RAZREDI_ID_Razred, NASTAVNICI_ID_Nastavnik) VALUES (?, ?)');
-    for (let i = 0; i < razredi.length; i++) {
-        const [id] = razredi[i];
-        if (!id) continue;
-        const nastavnikId = sviNastavnici[i % sviNastavnici.length].ID_Nastavnik;
-        stmt.run(parseInt(id), nastavnikId);
-    }
-})();
-console.log('Uspješno unesen nastavnik razred');
-
-baza.transaction(() => {
-    const stmt = baza.prepare('INSERT OR IGNORE INTO P_UCENIK (UCENICI_ID_Ucenik, PREDMETI_ID_Predmet) VALUES (?, ?)');
-    for (let i = 0; i < upisi.length; i++) {
-        const [, ucenikIdStr, razredIdStr] = upisi[i];
-        if (!ucenikIdStr) continue;
-        const ucenikId = parseInt(ucenikIdStr);
-        const predmetiRazreda = razredPredmeti[parseInt(razredIdStr)] || [];
-        for (const predmetId of predmetiRazreda) {
-            stmt.run(ucenikId, predmetId);
-        }
-    }
-})();
-console.log('Uspješno unesen predmet učenik');
-
-const upisMap = {};
-for (let i = 0; i < upisi.length; i++) {
-    const [enrollId, ucenikId] = upisi[i];
-    if (!enrollId) continue;
-    upisMap[parseInt(enrollId)] = parseInt(ucenikId);
-}
-
-const moguceOcjene = [2, 3, 3, 4, 4, 4, 5, 5];
-const ispiti = procitajCsv('studentexams.csv');
-baza.transaction(() => {
-    const stmt = baza.prepare('INSERT OR IGNORE INTO ZAVRSNA_O (UCENICI_ID_Ucenik, OCJENE_ID_Ocjena) VALUES (?, ?)');
-    for (let i = 0; i < ispiti.length; i++) {
-        const [, enrollIdStr] = ispiti[i];
-        if (!enrollIdStr) continue;
-        const ucenikId = upisMap[parseInt(enrollIdStr)];
-        if (!ucenikId) continue;
-        const ocjena = moguceOcjene[Math.floor(Math.random() * moguceOcjene.length)];
-        stmt.run(ucenikId, ocjena);
-    }
-})();
-console.log('Uspješno unesena završna ocjena');
-
-baza.close();
-console.log('Normalizirana baza je napunjena.');

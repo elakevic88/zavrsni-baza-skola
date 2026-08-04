@@ -2,46 +2,59 @@ const Database = require('better-sqlite3');
 const fs = require('fs');
 const path = require('path');
 const { performance } = require('perf_hooks');
+const { procitajCsv } = require('./utils/csvLoader');
 
-// -> povezivanje sve 3 baze
-const originalDb = new Database(
-    path.join(__dirname, '../databases/dbs/01_schema_original.db'),
-    { readonly: true }
-);
-const normDb = new Database(
-    path.join(__dirname, '../databases/dbs/02_schema_normalized.db'),
-    { readonly: true }
-);
-const denormDb = new Database(
-    path.join(__dirname, '../databases/dbs/03_schema_denormalized.db'),
-    { readonly: true }
-);
+const { insertOriginalna } = require('../queries/01_O_insert');
+const { insertNormalizirana } = require('../queries/02_N_insert');
+const { insertDenormalizirana } = require('../queries/03_D_insert');
 
-function ucitajSql(imeDatoteke) {
-    const putanja = path.join(__dirname, '../queries', imeDatoteke);
+const upiti_ponavljanja = 15;
+const select_ponavljanja = 500;
+
+const shemaDir = path.join(__dirname, '../databases/create_queries');
+const queriesDir = path.join(__dirname, '../queries');
+const tmpDir = path.join(__dirname, '../databases/tmp');
+fs.mkdirSync(tmpDir, { recursive: true });
+
+const podaci = procitajCsv('srednja_skola.csv');
+
+const modeli = [
+    {
+        naziv: 'Originalna',
+        shemaSql: '01_schema_original.sql',
+        napuni: insertOriginalna,
+        deleteSql: '01_O_delete.sql',
+        updateSql: '01_O_update.sql',
+        selectSql: '01_O_select.sql'
+    },
+    {
+        naziv: 'Normalizirana',
+        shemaSql: '02_schema_normalized.sql',
+        napuni: insertNormalizirana,
+        deleteSql: '02_N_delete.sql',
+        updateSql: '02_N_update.sql',
+        selectSql: '02_N_select.sql'
+    },
+    {
+        naziv: 'Denormalizirana',
+        shemaSql: '03_schema_denormalized.sql',
+        napuni: insertDenormalizirana,
+        deleteSql: '03_D_delete.sql',
+        updateSql: '03_D_update.sql',
+        selectSql: '03_D_select.sql'
+    }
+];
+
+function ucitajUpit(imeDatoteke) {
+    const putanja = path.join(queriesDir, imeDatoteke);
     return fs.readFileSync(putanja, 'utf8')
         .replace(/^\uFEFF/, '')
         .replace(/\r/g, '')
         .trim();
 }
 
-// -> vrijeme izvršavanja
-function izmjeriVrijeme(baza, sql, ponavljanja = 500) {
-    const stmt = baza.prepare(sql);
-    const vremena = [];
-
-    for (let i = 0; i < 10; i++) {
-        try { stmt.all(); } catch (e) { }
-    }
-
-    for (let i = 0; i < ponavljanja; i++) {
-        const pocetak = performance.now();
-        stmt.all();
-        vremena.push(performance.now() - pocetak);
-    }
-
+function statistika(vremena) {
     vremena.sort((a, b) => a - b);
-
     const medijan = vremena.length % 2 === 0 ? (vremena[vremena.length / 2 - 1] + vremena[vremena.length / 2]) / 2 : vremena[Math.floor(vremena.length / 2)];
     const p5 = vremena[Math.floor(vremena.length * 0.05)];
     const p95 = vremena[Math.floor(vremena.length * 0.95)];
@@ -60,248 +73,167 @@ function izmjeriVrijeme(baza, sql, ponavljanja = 500) {
     };
 }
 
-// -> broj upita po sekundi
-function izmjeriThroughput(baza, sql, trajanjeSek = 2) {
-    const stmt = baza.prepare(sql);
-    let brojac = 0;
-    const pocetak = performance.now();
-    let proteklo;
+function kreirajPraznuBazu(shemaSqlDatoteka, oznaka) {
+    const putanja = path.join(tmpDir, `prazna_${oznaka}.db`);
+    if (fs.existsSync(putanja)) fs.unlinkSync(putanja);
 
+    const sql = fs.readFileSync(path.join(shemaDir, shemaSqlDatoteka), 'utf8');
+    const baza = new Database(putanja);
+    baza.pragma('foreign_keys = ON');
+    baza.exec(sql);
+    baza.close();
+
+    return putanja;
+}
+
+function izmjeriInsert(model, ponavljanja) {
+    const vremena = [];
+
+    for (let i = 0; i < ponavljanja; i++) {
+        const praznaBaza = kreirajPraznuBazu(model.shemaSql, `${model.naziv}_insert_${i}`);
+        const baza = new Database(praznaBaza);
+        baza.pragma('foreign_keys = ON');
+
+        const pocetak = performance.now();
+        model.napuni(baza, podaci);
+        vremena.push(performance.now() - pocetak);
+
+        baza.close();
+        fs.unlinkSync(praznaBaza);
+    }
+
+    return statistika(vremena);
+}
+
+function kreirajPocetnuBazu(model) {
+    const putanja = path.join(tmpDir, `pocetna_${model.naziv}.db`);
+    if (fs.existsSync(putanja)) fs.unlinkSync(putanja);
+
+    const sql = fs.readFileSync(path.join(shemaDir, model.shemaSql), 'utf8');
+    const baza = new Database(putanja);
+    baza.pragma('foreign_keys = ON');
+    baza.exec(sql);
+    model.napuni(baza, podaci);
+    baza.close();
+
+    return putanja;
+}
+
+function izmjeriDeleteUpdate(pocetnaPutanja, sqlDatoteka, ponavljanja, oznaka) {
+    const sql = ucitajUpit(sqlDatoteka);
+    const vremena = [];
+
+    for (let i = 0; i < ponavljanja; i++) {
+        const privremenaPutanja = path.join(tmpDir, `privremena_${oznaka}_${i}.db`);
+        fs.copyFileSync(pocetnaPutanja, privremenaPutanja);
+
+        const baza = new Database(privremenaPutanja);
+        baza.pragma('foreign_keys = ON');
+
+        const pocetak = performance.now();
+        baza.exec(sql);
+        vremena.push(performance.now() - pocetak);
+
+        baza.close();
+        fs.unlinkSync(privremenaPutanja);
+    }
+
+    return statistika(vremena);
+}
+
+function izmjeriSelect(pocetnaPutanja, sqlDatoteka, ponavljanja) {
+    const sql = ucitajUpit(sqlDatoteka);
+    const baza = new Database(pocetnaPutanja, { readonly: true });
+    const stmt = baza.prepare(sql);
+    const vremena = [];
+
+    for (let i = 0; i < 10; i++) {
+        try { stmt.all(); } catch (e) { }
+    }
+
+    for (let i = 0; i < ponavljanja; i++) {
+        const pocetak = performance.now();
+        stmt.all();
+        vremena.push(performance.now() - pocetak);
+    }
+
+    let brojac = 0;
+    const pocetakThroughput = performance.now();
+    let proteklo;
     do {
         stmt.all();
         brojac++;
-        proteklo = performance.now() - pocetak;
-    } while (proteklo < trajanjeSek * 1000);
+        proteklo = performance.now() - pocetakThroughput;
+    } while (proteklo < 2000);
+    const throughput = Math.round(brojac / (proteklo / 1000));
 
-    const stvarnoTrajanjeSek = proteklo / 1000;
-    return Math.round(brojac / stvarnoTrajanjeSek);
-}
-
-// -> veličina baze na disku u megabajtima
-function velicina(imeDatoteke) {
-    const putanja = path.join(__dirname, '../databases/dbs', imeDatoteke);
-    return (fs.statSync(putanja).size / (1024 * 1024)).toFixed(2);
-}
-
-// -> query plan
-function analizaPlana(baza, sql) {
     const plan = baza.prepare(`EXPLAIN QUERY PLAN ${sql}`).all();
     const skeniranja = plan.filter(r => r.detail.includes('SCAN')).length;
     const pretrazivanja = plan.filter(r => r.detail.includes('SEARCH')).length;
     const detalji = plan.map(r => r.detail).join(' | ');
-    return { skeniranja, pretrazivanja, detalji };
-}
 
-// -> hop
-function prebrojHopove(sql) {
-    const tekst = sql.toUpperCase();
-    if (tekst.includes("FROM NASTAVNIK_INFO") ||
-        tekst.includes("FROM UCENIK_PREGLED")) {
-        return {
-            hopovi: 0,
-            brojTablica: 1
-        };
-    }
-    const brojJoinova = (tekst.match(/\bJOIN\b/g) || []).length;
+    baza.close();
+
     return {
-        hopovi: brojJoinova,
-        brojTablica: brojJoinova + 1
+        vrijeme: statistika(vremena),
+        throughput,
+        plan: { skeniranja, pretrazivanja, detalji }
     };
 }
 
-// -> ispisi
-function ispisi(naziv, rezultati) {
-    console.log(`\n ${naziv}`);
-    console.log(`Prosjek: ${rezultati.vrijeme.prosjek.toFixed(3)} ms`);
-    console.log(`Medijan: ${rezultati.vrijeme.medijan.toFixed(3)} ms`);
-    console.log(`5. percentil: ${rezultati.vrijeme.p5.toFixed(3)} ms`);
-    console.log(`95. percentil: ${rezultati.vrijeme.p95.toFixed(3)} ms`);
-    console.log(`Std.dev: ${rezultati.vrijeme.stdDev.toFixed(3)} ms`);
-    console.log(`Min: ${rezultati.vrijeme.min.toFixed(3)} ms`);
-    console.log(`Max: ${rezultati.vrijeme.max.toFixed(3)} ms`);
-    console.log(`Throughput: ${rezultati.throughput} upita/s`);
-    console.log(`HOP (broj skokova): ${rezultati.hop.hopovi} (uključuje ${rezultati.hop.brojTablica} tablica)`);
-    console.log(`SCAN: ${rezultati.plan.skeniranja}`);
-    console.log(`SEARCH: ${rezultati.plan.pretrazivanja}`);
-    console.log(`Plan: ${rezultati.plan.detalji}`);
+function ispisi(naziv, operacija, rez) {
+    console.log(`\n[${operacija}] ${naziv}`);
+    console.log(`Prosjek: ${rez.prosjek.toFixed(3)} ms`);
+    console.log(`Medijan: ${rez.medijan.toFixed(3)} ms`);
+    console.log(`5. percentil: ${rez.p5.toFixed(3)} ms`);
+    console.log(`95. percentil: ${rez.p95.toFixed(3)} ms`);
+    console.log(`Std.dev: ${rez.stdDev.toFixed(3)} ms`);
+    console.log(`Min: ${rez.min.toFixed(3)} ms`);
+    console.log(`Max: ${rez.max.toFixed(3)} ms`);
 }
 
-// -> upiti - originalna baza
-const upitiOriginalna = [
-    {
-        naziv: 'Opterećenje nastavnika',
-        sql: ucitajSql('01_select_opterecenje_nastavnika_O.sql')
-    },
-    {
-        naziv: 'Rang škola po broju učenika',
-        sql: ucitajSql('01_select_rang_skola_O.sql')
-    },
-    {
-        naziv: 'Optimizirani upit nastavnika',
-        sql: ucitajSql('01_select_optimiziran_nastavnik_O.sql')
-    },
-    {
-        naziv: 'Podaci učenika s lokacijom',
-        sql: ucitajSql('01_select_optimiziran_ucenik_O.sql')
-    }
-];
+const rezultati = {};
+const csvRedovi = ['Model,Operacija,ProsjekMs,MedijanMs,MinMs,MaxMs,StdDevMs,P5Ms,P95Ms'];
 
-// -> upiti - normalizirana baza
-const upitiNormalizirana = [
-    {
-        naziv: 'Opterećenje nastavnika',
-        sql: ucitajSql('02_select_opterecenje_nastavnika_N.sql')
-    },
-    {
-        naziv: 'Rang škola po broju učenika',
-        sql: ucitajSql('02_select_rang_skola_N.sql')
-    },
-    {
-        naziv: 'Optimizirani upit nastavnika',
-        sql: ucitajSql('02_select_optimiziran_nastavnik_N.sql')
-    },
-    {
-        naziv: 'Podaci učenika s lokacijom',
-        sql: ucitajSql('02_select_optimiziran_ucenik_N.sql')
-    }
-];
+for (const model of modeli) {
+    rezultati[model.naziv] = {};
 
-// -> upiti - denormalizirana 
-const upitiDenormalizirana = [
-    {
-        naziv: 'Opterećenje nastavnika',
-        sql: ucitajSql('03_select_opterecenje_nastavnika_D.sql')
-    },
-    {
-        naziv: 'Rang škola po broju učenika',
-        sql: ucitajSql('03_select_ucenik_pregled_D.sql')
-    },
-    {
-        naziv: 'Optimizirani upit nastavnika',
-        sql: ucitajSql('03_select_optimiziran_nastavnik_info_D.sql')
-    },
-    {
-        naziv: 'Podaci učenika s lokacijom',
-        sql: ucitajSql('03_select_ucenik_podaci_D.sql')
-    }
-];
+    const rezInsert = izmjeriInsert(model, upiti_ponavljanja);
+    rezultati[model.naziv].Insert = rezInsert;
+    ispisi(model.naziv, 'INSERT', rezInsert);
+    csvRedovi.push(`${model.naziv},Insert,${rezInsert.prosjek.toFixed(3)},${rezInsert.medijan.toFixed(3)},${rezInsert.min.toFixed(3)},${rezInsert.max.toFixed(3)},${rezInsert.stdDev.toFixed(3)},${rezInsert.p5.toFixed(3)},${rezInsert.p95.toFixed(3)}`);
 
-const spremljeniRezultati = {};
+    const pocetnaPutanja = kreirajPocetnuBazu(model);
+    const velicinaMB = (fs.statSync(pocetnaPutanja).size / (1024 * 1024)).toFixed(2);
+    console.log(`Veličina napunjene baze: ${velicinaMB} MB`);
 
-// -> veličine baza
-console.log(`Originalna: ${velicina('01_schema_original.db')} MB`);
-console.log(`Normalizirana: ${velicina('02_schema_normalized.db')} MB`);
-console.log(`Denormalizirana: ${velicina('03_schema_denormalized.db')} MB`);
+    const rezDelete = izmjeriDeleteUpdate(pocetnaPutanja, model.deleteSql, upiti_ponavljanja, `${model.naziv}_delete`);
+    rezultati[model.naziv].Delete = rezDelete;
+    ispisi(model.naziv, 'DELETE', rezDelete);
+    csvRedovi.push(`${model.naziv},Delete,${rezDelete.prosjek.toFixed(3)},${rezDelete.medijan.toFixed(3)},${rezDelete.min.toFixed(3)},${rezDelete.max.toFixed(3)},${rezDelete.stdDev.toFixed(3)},${rezDelete.p5.toFixed(3)},${rezDelete.p95.toFixed(3)}`);
 
-// -> originalna baza
-console.log('ORIGINALNA BAZA (nenormalizirana)');
-for (const upit of upitiOriginalna) {
-    const rezultati = {
-        vrijeme: izmjeriVrijeme(originalDb, upit.sql),
-        throughput: izmjeriThroughput(originalDb, upit.sql),
-        hop: prebrojHopove(upit.sql),
-        plan: analizaPlana(originalDb, upit.sql)
-    };
+    const rezUpdate = izmjeriDeleteUpdate(pocetnaPutanja, model.updateSql, upiti_ponavljanja, `${model.naziv}_update`);
+    rezultati[model.naziv].Update = rezUpdate;
+    ispisi(model.naziv, 'UPDATE', rezUpdate);
+    csvRedovi.push(`${model.naziv},Update,${rezUpdate.prosjek.toFixed(3)},${rezUpdate.medijan.toFixed(3)},${rezUpdate.min.toFixed(3)},${rezUpdate.max.toFixed(3)},${rezUpdate.stdDev.toFixed(3)},${rezUpdate.p5.toFixed(3)},${rezUpdate.p95.toFixed(3)}`);
 
-    if (!spremljeniRezultati.Originalna)
-        spremljeniRezultati.Originalna = {};
-    spremljeniRezultati.Originalna[upit.naziv] = rezultati;
-    ispisi(upit.naziv, rezultati);
+    const rezSelect = izmjeriSelect(pocetnaPutanja, model.selectSql, select_ponavljanja);
+    rezultati[model.naziv].Select = rezSelect.vrijeme;
+    ispisi(model.naziv, 'SELECT', rezSelect.vrijeme);
+    console.log(`Throughput: ${rezSelect.throughput} upita/s`);
+    console.log(`SCAN: ${rezSelect.plan.skeniranja} | SEARCH: ${rezSelect.plan.pretrazivanja}`);
+    console.log(`Plan: ${rezSelect.plan.detalji}`);
+    csvRedovi.push(`${model.naziv},Select,${rezSelect.vrijeme.prosjek.toFixed(3)},${rezSelect.vrijeme.medijan.toFixed(3)},${rezSelect.vrijeme.min.toFixed(3)},${rezSelect.vrijeme.max.toFixed(3)},${rezSelect.vrijeme.stdDev.toFixed(3)},${rezSelect.vrijeme.p5.toFixed(3)},${rezSelect.vrijeme.p95.toFixed(3)}`);
+
+    fs.unlinkSync(pocetnaPutanja);
 }
 
-// -> normalizirana baza
-console.log('NORMALIZIRANA BAZA (3NF)');
-for (const upit of upitiNormalizirana) {
-    const rezultati = {
-        vrijeme: izmjeriVrijeme(normDb, upit.sql),
-        throughput: izmjeriThroughput(normDb, upit.sql),
-        hop: prebrojHopove(upit.sql),
-        plan: analizaPlana(normDb, upit.sql)
-    };
-    if (!spremljeniRezultati.Normalizirana)
-        spremljeniRezultati.Normalizirana = {};
-    spremljeniRezultati.Normalizirana[upit.naziv] = rezultati;
-    ispisi(upit.naziv, rezultati);
+const upiti = ['Insert', 'Delete', 'Update', 'Select'];
+console.log(`${'Model'.padEnd(18)} ${upiti.map(o => o.padEnd(14)).join('')}`);
+for (const model of modeli) {
+    const redak = upiti.map(op => `${rezultati[model.naziv][op].prosjek.toFixed(3)} ms`.padEnd(14)).join('');
+    console.log(`${model.naziv.padEnd(18)} ${redak}`);
 }
-
-// -> denormalizirana baza
-console.log('DENORMALIZIRANA BAZA');
-for (const upit of upitiDenormalizirana) {
-    const rezultati = {
-        vrijeme: izmjeriVrijeme(denormDb, upit.sql),
-        throughput: izmjeriThroughput(denormDb, upit.sql),
-        hop: prebrojHopove(upit.sql),
-        plan: analizaPlana(denormDb, upit.sql)
-    };
-    if (!spremljeniRezultati.Denormalizirana)
-        spremljeniRezultati.Denormalizirana = {};
-    spremljeniRezultati.Denormalizirana[upit.naziv] = rezultati;
-    ispisi(upit.naziv, rezultati);
-}
-
-// -> usporedba tablica
-const usporedba = [
-    {
-        naziv: 'Opterećenje nastavnika',
-        original: upitiOriginalna[0].sql,
-        norm: upitiNormalizirana[0].sql,
-        denorm: upitiDenormalizirana[0].sql
-    },
-    {
-        naziv: 'Rang škola po broju učenika',
-        original: upitiOriginalna[1].sql,
-        norm: upitiNormalizirana[1].sql,
-        denorm: upitiDenormalizirana[1].sql
-    },
-    {
-        naziv: 'Optimizirani upit nastavnika',
-        original: upitiOriginalna[2].sql,
-        norm: upitiNormalizirana[2].sql,
-        denorm: upitiDenormalizirana[2].sql
-    },
-    {
-        naziv: 'Podaci učenika s lokacijom',
-        original: upitiOriginalna[3].sql,
-        norm: upitiNormalizirana[3].sql,
-        denorm: upitiDenormalizirana[3].sql
-    }
-];
-
-for (const u of usporedba) {
-    console.log(`\n${u.naziv}`);
-    console.log(`${'Baza'.padEnd(20)} ${'Prosjek (ms)'.padEnd(15)} ${'Throughput'.padEnd(15)} ${'HOP'.padEnd(6)}`);
-
-    const redovi = [
-        { naziv: 'Originalna' },
-        { naziv: 'Normalizirana' },
-        { naziv: 'Denormalizirana' }
-    ];
-
-    for (const red of redovi) {
-        const vr = spremljeniRezultati[red.naziv][u.naziv].vrijeme;
-        const th = spremljeniRezultati[red.naziv][u.naziv].throughput;
-        const hp = spremljeniRezultati[red.naziv][u.naziv].hop;
-
-        console.log(`${red.naziv.padEnd(20)} ${vr.prosjek.toFixed(3).padEnd(15)} ${th.toString().padEnd(15)} ${hp.hopovi}`);
-    }
-}
-
-// -> spremamo u csv dadoteku
-const csvRedovi = ['Baza,Upit,ProsjekMs,MedijanMs,MinMs,MaxMs,StdDevMs,P5Ms,P95Ms,ThroughputQs,Hopovi,BrojTablica,Skeniranja,Pretrazivanja'];
-function dodajUCsv(nazivBaze, upiti) {
-    for (const upit of upiti) {
-        const rez = spremljeniRezultati[nazivBaze][upit.naziv];
-        const vr = rez.vrijeme;
-        const th = rez.throughput;
-        const hp = rez.hop;
-        const pl = rez.plan;
-        csvRedovi.push(`${nazivBaze},"${upit.naziv}",${vr.prosjek.toFixed(3)},${vr.medijan.toFixed(3)},${vr.min.toFixed(3)},${vr.max.toFixed(3)},${vr.stdDev.toFixed(3)},${vr.p5.toFixed(3)},${vr.p95.toFixed(3)},${th},${hp.hopovi},${hp.brojTablica},${pl.skeniranja},${pl.pretrazivanja}`);
-    }
-}
-
-dodajUCsv('Originalna', upitiOriginalna);
-dodajUCsv('Normalizirana', upitiNormalizirana);
-dodajUCsv('Denormalizirana', upitiDenormalizirana);
 
 fs.writeFileSync(
     path.join(__dirname, '../rezultati.csv'),
@@ -310,6 +242,4 @@ fs.writeFileSync(
 );
 console.log('\nSpremljeno u rezultati.csv');
 
-originalDb.close();
-normDb.close();
-denormDb.close();
+fs.rmSync(tmpDir, { recursive: true, force: true });

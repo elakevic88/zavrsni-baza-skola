@@ -1,13 +1,13 @@
-Baza,Upit,ProsjekMs,MedijanMs,MinMs,MaxMs,StdDevMs,P5Ms,P95Ms,ThroughputQs,Hopovi,BrojTablica,Skeniranja,Pretrazivanja
-Originalna,"Opterećenje nastavnika",2.093,1.956,1.890,5.304,0.368,1.909,2.770,484,2,3,1,2
-Originalna,"Rang škola po broju učenika",0.600,0.554,0.543,3.214,0.182,0.545,0.928,1718,2,3,1,2
-Originalna,"Optimizirani upit nastavnika",2.770,2.629,2.573,6.190,0.430,2.585,3.400,371,1,2,1,1
-Originalna,"Podaci učenika s lokacijom",1.544,1.473,1.442,3.327,0.215,1.451,1.969,652,4,5,1,4
-Normalizirana,"Opterećenje nastavnika",2.028,1.909,1.862,4.487,0.340,1.873,2.560,495,2,3,1,2
-Normalizirana,"Rang škola po broju učenika",0.599,0.558,0.546,2.009,0.143,0.548,0.886,1712,2,3,1,2
-Normalizirana,"Optimizirani upit nastavnika",1.522,1.456,1.424,3.235,0.208,1.434,1.905,662,1,2,1,1
-Normalizirana,"Podaci učenika s lokacijom",1.523,1.471,1.440,2.960,0.164,1.449,1.809,634,4,5,1,4
-Denormalizirana,"Opterećenje nastavnika",0.715,0.663,0.649,2.839,0.184,0.652,1.009,1432,0,1,1,0
-Denormalizirana,"Rang škola po broju učenika",0.226,0.197,0.194,1.715,0.104,0.194,0.416,4525,0,1,1,0
-Denormalizirana,"Optimizirani upit nastavnika",0.635,0.598,0.581,2.521,0.151,0.585,0.883,1604,0,1,1,0
-Denormalizirana,"Podaci učenika s lokacijom",0.310,0.278,0.273,1.864,0.126,0.274,0.475,3425,0,1,1,0
+Model,Operacija,ProsjekMs,MedijanMs,MinMs,MaxMs,StdDevMs,P5Ms,P95Ms
+Originalna,Insert,29.427,28.250,22.174,37.048,4.232,22.174,37.048
+Originalna,Delete,9.818,9.493,8.292,15.320,1.676,8.292,15.320
+Originalna,Update,10.434,9.673,9.351,16.998,1.906,9.351,16.998
+Originalna,Select,1.580,1.689,0.837,4.316,0.471,0.866,2.136
+Normalizirana,Insert,221.560,219.376,187.371,247.260,15.424,187.371,247.260
+Normalizirana,Delete,39.738,40.071,37.099,42.241,1.374,37.099,42.241
+Normalizirana,Update,9.866,9.664,9.203,10.688,0.547,9.203,10.688
+Normalizirana,Select,1.420,1.545,0.762,7.378,0.709,0.773,2.452
+Denormalizirana,Insert,252.985,253.488,208.248,293.760,27.744,208.248,293.760
+Denormalizirana,Delete,53.771,53.962,49.567,58.718,2.813,49.567,58.718
+Denormalizirana,Update,32.511,29.273,27.656,60.244,8.222,27.656,60.244
+Denormalizirana,Select,0.666,0.608,0.248,4.530,0.273,0.514,0.967
