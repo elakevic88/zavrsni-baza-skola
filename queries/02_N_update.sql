@@ -1,3 +1,3 @@
 UPDATE SKOLE
 SET Naziv = 'Gimnazija Ela Peroci'
-WHERE Naziv = 'Srednja škola Brdo';
+WHERE Naziv = 'Gimnazija Središte';

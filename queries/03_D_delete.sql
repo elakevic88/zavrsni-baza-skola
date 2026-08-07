@@ -5,7 +5,7 @@ WHERE NASTAVA_ID_Nastava IN (
     WHERE NASTAVNICI_ID_Nastavnik = (
         SELECT ID_Nastavnik
         FROM NASTAVNICI
-        WHERE Ime='Derrik' AND Prezime='Tregust'
+        WHERE Ime='Ivana' AND Prezime='Pavić'
     )
 );
 
@@ -20,7 +20,7 @@ WHERE ID_Ucenik IN (
         WHERE NASTAVNICI_ID_Nastavnik = (
             SELECT ID_Nastavnik
             FROM NASTAVNICI
-            WHERE Ime='Derrik' AND Prezime='Tregust'
+            WHERE Ime='Ivana' AND Prezime='Pavić'
         )
     )
 );
@@ -32,7 +32,7 @@ WHERE NASTAVA_ID_Nastava IN (
     WHERE NASTAVNICI_ID_Nastavnik = (
         SELECT ID_Nastavnik
         FROM NASTAVNICI
-        WHERE Ime='Derrik' AND Prezime='Tregust'
+        WHERE Ime='Ivana' AND Prezime='Pavić'
     )
 );
 
@@ -40,22 +40,22 @@ DELETE FROM NASTAVA
 WHERE NASTAVNICI_ID_Nastavnik = (
     SELECT ID_Nastavnik
     FROM NASTAVNICI
-    WHERE Ime='Derrik' AND Prezime='Tregust'
+    WHERE Ime='Ivana' AND Prezime='Pavić'
 );
 
 DELETE FROM N_SKOLE
 WHERE NASTAVNICI_ID_Nastavnik = (
     SELECT ID_Nastavnik
     FROM NASTAVNICI
-    WHERE Ime='Derrik' AND Prezime='Tregust'
+    WHERE Ime='Ivana' AND Prezime='Pavić'
 );
 
 DELETE FROM NASTAVNIK_INFO
 WHERE ID_Nastavnik = (
     SELECT ID_Nastavnik
     FROM NASTAVNICI
-    WHERE Ime='Derrik' AND Prezime='Tregust'
+    WHERE Ime='Ivana' AND Prezime='Pavić'
 );
 
 DELETE FROM NASTAVNICI
-WHERE Ime='Derrik' AND Prezime='Tregust';
+WHERE Ime='Ivana' AND Prezime='Pavić';
