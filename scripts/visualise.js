@@ -13,20 +13,28 @@ const redovi = parse(csvSadrzaj, {
     from_line: 2
 });
 
-const podaci = redovi.map(s => ({
-    model: s[0],
-    operacija: s[1],
-    prosjekMs: parseFloat(s[2]),
-    medijanMs: parseFloat(s[3]),
-    minMs: parseFloat(s[4]),
-    maxMs: parseFloat(s[5]),
-    stdDevMs: parseFloat(s[6]),
-    p5Ms: parseFloat(s[7]),
-    p95Ms: parseFloat(s[8])
-}));
+const podaci = redovi.map(s => {
+    let modelNaziv = s[0] ? s[0].trim() : '';
+    // Ako u CSV-u piše "Originalna", preimenuj u "Nenormalizirana"
+    if (modelNaziv === 'Originalna') {
+        modelNaziv = 'Nenormalizirana';
+    }
+
+    return {
+        model: modelNaziv,
+        operacija: s[1],
+        prosjekMs: parseFloat(s[2]),
+        medijanMs: parseFloat(s[3]),
+        minMs: parseFloat(s[4]),
+        maxMs: parseFloat(s[5]),
+        stdDevMs: parseFloat(s[6]),
+        p5Ms: parseFloat(s[7]),
+        p95Ms: parseFloat(s[8])
+    };
+});
 
 const boje = {
-    'Originalna': '#2563eb',
+    'Nenormalizirana': '#2563eb',
     'Normalizirana': '#059669',
     'Denormalizirana': '#d97706'
 };
@@ -36,7 +44,7 @@ const bojaRuba = '#cbd5e1';
 const bojaZebra = '#f1f5f9';
 const bojaTekst = '#0f172a';
 
-const modeli = ['Originalna', 'Normalizirana', 'Denormalizirana'];
+const modeli = ['Nenormalizirana', 'Normalizirana', 'Denormalizirana'];
 const operacije = ['Insert', 'Delete', 'Update', 'Select'];
 
 const nazivOperacije = {
