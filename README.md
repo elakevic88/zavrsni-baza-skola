@@ -2,19 +2,17 @@
 
 ## Opis projekta
 
-Ovaj projekt izrađen je u sklopu završnog rada s ciljem usporedbe performansi nenormalizirane, normalizirane i denormalizirane baze podataka. Sve tri baze koriste isti skup podataka, dok se usporedba provodi izvođenjem istih SQL upita nad svakim modelom.
+Ovaj projekt izrađen je u sklopu završnog rada s ciljem usporedbe performansi nenormalizirane, normalizirane i denormalizirane baze podataka. Sve tri baze koriste isti skup podataka, dok se usporedba provodi izvođenjem istih SQL operacija nad svakim modelom.
 
-Projekt mjeri sljedeće metrike:
+U projektu se mjere sljedeće metrike:
 
-- vrijeme izvršavanja SQL upita (INSERT, SELECT, UPDATE i DELETE)
-- prosječno, medijalno, minimalno i maksimalno vrijeme izvršavanja
-- standardnu devijaciju
-- percentil
-- throughput (broj izvršenih SELECT upita u sekundi)
-- HOP metriku (broj JOIN operacija)
-- broj tablica uključenih u izvršavanje upita
-- plan izvršavanja SQL upita (SCAN i SEARCH operacije)
-- veličinu baze podataka
+- vrijeme izvršavanja SQL operacija (INSERT, SELECT, UPDATE i DELETE)
+- prosječno vrijeme izvršavanja
+- medijan
+- minimalno i maksimalno vrijeme izvršavanja
+- standardna devijacija
+- 5. i 95. percentil
+- veličina baze podataka
 
 ## Pokretanje projekta
 
@@ -30,19 +28,23 @@ npm install
 node scripts/main.js
 ```
 
+Benchmark izvršava INSERT, UPDATE, DELETE i SELECT operacije nad sva tri modela baze podataka te izračunava navedene metrike.
+
 ### 3. Generiranje grafova
 
 ```bash
 node scripts/visualise.js
 ```
 
-Rezultati mjerenja spremaju se u datoteku **rezultati.csv**, dok se generirani grafovi spremaju u mapu **results**.
+Rezultati mjerenja spremaju se u datoteku `rezultati.csv`, dok se generirani grafovi spremaju u mapu `results`.
 
 ## Korištene tehnologije
 
 - Node.js
+- JavaScript
 - SQLite
 - better-sqlite3
 - Graphviz
+- @viz-js/viz
 - Sharp
 - CSV Parser
